@@ -1,0 +1,297 @@
+﻿@{
+    ViewBag.Title = "网站体检系统";
+    string url = ViewData["url"] as string;
+    bool isHostory = bool.Parse(ViewData["isHostory"].ToString());
+    int siteId = int.Parse(ViewData["siteId"].ToString());
+}
+<style type="text/css">
+    #scrod
+    {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        padding-top: 30px;
+        padding-left: 30px;
+        -webkit-border-radius: 50px;
+        -moz-border-radius: 50px;
+        -o-border-radius: 50px;
+        border-radius: 50px;
+        background-color: darkturquoise;
+        font-size: 30px;
+    }
+    
+    .font_list
+    {
+        color: black;
+    }
+    .row
+    {
+        margin-right: 0px;
+    }
+    .marginleft15
+    {
+        margin-left: 15px;
+    }
+    
+    .line_right
+    {
+        float: right;
+        width: 50px;
+    }
+    .icon_size
+    {
+        width: 15px;
+        height: 15px;
+    }
+   
+</style>
+@if (string.IsNullOrWhiteSpace(url) && isHostory == false)
+{
+    <span>体检网址不能为空!</span>
+}
+else
+{
+   
+    <div class="row" style="margin-right: 0px">
+        <div>
+            <div class="box box-widget widget-user-2">
+                <div class="widget-user-header bg-green" id="scrod_bg_color">
+                    <div class="col-md-12">
+                        <div class="widget-user-header">
+                            <div class="widget-user-image">
+                                <img class="img-circle" src="../dist/img/user7-128x128.jpg" alt="假装有Logo">
+                                <h3>
+                                    网站体检系统</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div id="scrod">
+                                <span id="score">100</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <h4>
+                                    目前正在体检的网址是:<span id="siteUrl">@url</span>
+                                </h4>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span>网站基础</span><span style="margin-left: 10px;">网站优化</span> <span style="margin-left: 10px;">
+                                        网站安全</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="progress progress-sm active">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="process">
+                                            <span class="sr-only">20% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <span>正在为你检测:<span class="text-muted" id="view"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div id="features" style="width: 80px; margin-top: 10px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="box-footer no-padding">
+                        <ul class="nav nav-stacked" style="background-color: #eee">
+                            <li><a class="marginleft15">共检查<span id="item_count"></span>项，以下<span id="problem">0</span>项有问题
+                                <span id="Export"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="list">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        var request = new Array();
+        var siteId = 0;
+        var checkSite_interval;
+        var sitelUrl = '@url';
+        $(function () {
+            $("#siteUrl").text(sitelUrl);
+           if ('@isHostory.ToString().ToLower()' == 'false') {
+               checkSite_interval = setInterval(checkSite, "1000");
+           } else {
+              var result = jQuery.parseJSON(window.external.GetSiteExaminationInfo('@siteId'));
+               sitelUrl = result.SiteUrl;
+              $("#siteUrl").text(sitelUrl);
+              load('@siteId');
+           }
+
+        });
+
+        //登录检查
+        function checkSite() {
+            $("#view").text("正在进行登录检查...");
+            clearTimeout(checkSite_interval);
+            var result = jQuery.parseJSON(window.external.CheckSite(sitelUrl));
+            if (result.Result) {
+                start();
+            } else {
+                window.location.href = "@Url.Action("Index", new { isLogin = true, message = "网站需要登陆才能看到内容", url = url })";
+            }
+        }
+        var item_count = 0;
+        //启动体检
+        function start() {
+            request = new Array();
+            siteId = 0;
+            i = 1;
+            score = 100;
+            problem = 0;
+
+            $("#score").text(score);
+            //调用启动体检
+            var startjson = jQuery.parseJSON(window.external.Start(sitelUrl));
+            if (!startjson.Result) {
+                alert(startjson.Message);
+            }
+            load(startjson.Data);
+        }
+
+        var interval;
+        //启动定时器
+        function run() {
+            interval = setInterval(chat, "3000");
+            $("#features").html("<button class='btn btn-block btn-danger' onclick=\"stop()\">取消</button>");
+        }
+
+        function load(Ids) {
+              //id
+            siteId = Ids;
+            item_count = 0;
+            var json = jQuery.parseJSON(window.external.GetExaminationItem());
+            var list = $("#list");
+            list.empty();
+            var body = "";
+            var param = [];
+            $.each(json, function (i, v) {
+                body += "  <div class='row'><div class='box box-default collapsed-box' style='margin: 0 auto; border: none;'><div class='box-header with-border'>";
+                body += "<h3 class='box-title col-md-1 marginleft15' style='margin-left:10px;'>" + v.Name + "</h3><div class='box-tools pull-right'><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-plus'></i></button></div></div>";
+
+                body += "<div class='box-body font_list' style='display: block;'>";
+                body += "<ul>";
+                $.each(v.ExaminationItemDetail, function (index, val) {
+                    body += "<li class='marginleft15'>" + val.Name + "    <span  id='detail_" + val.DetailId + "'  class='line_right'></span></li>";
+                    param = [siteId, val.DetailId];
+                    request.push(param);
+                    item_count++;
+                });
+                body += "</div></div></div>";
+            });
+            list.append(body);
+            $("#item_count").text(item_count);
+            run();
+        }
+
+        var i = 1;
+        //评分
+        var score = 100;
+        //问题项
+        var problem = 0;
+        //请求体检结果
+        function chat() {
+            $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检中");
+            i++;
+
+            var cach = new Array();
+            $(request).each(function (i, v) {
+                var result = jQuery.parseJSON(window.external.GetDetailResult(v[0], v[1]));
+                if (result.Result) {
+                    if (result.Data.IsPass) {
+                      $("#detail_" + v[1]).text(result.Data.Score + "分");
+                    } else {
+                     //   $("#detail_" + v[1]).text("不通过!" + result.Data.Result + ". 要求:" + result.Data.Require);
+                     $("#detail_" + v[1]).html("<img src='@Url.Content("~/Content/images/error.png")' class='icon_size' title='这是标题'>");
+                        score = score - result.Data.Score;
+                        problem++;
+                        $("#score").text(score);
+                        $("#problem").text(problem);
+                    }
+                } else {
+                    cach.push(v);
+                }
+            });
+
+            request = cach;
+
+
+            if (request.length == 0) {
+                clearTimeout(interval);
+                $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检完成");
+                $("#Export").html("<a href='javascript:void(0);' onclick=\"ExportReport()\">生成报告</a>");
+                $("#features").html("<button class='btn btn-block btn-danger' onclick='start()'>重新体检</button>");
+            }
+
+            $("#process").css("width",(((item_count-request.length)/item_count).toFixed(2)*100 )+ "%");
+            if (score < 90 && score > 60) {
+                warning();
+            }
+             else if( score < 60) {
+                danger();
+            }
+        }
+
+        //导出体检报告
+        function ExportReport() {
+            window.external.ExportFile(siteId);
+        }
+
+        //取消体检
+        function stop() {
+            var json = jQuery.parseJSON(window.external.Stop());
+            if (json.Result) {
+                clearTimeout(interval);
+                $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检取消");
+                $("#features").html("<button class='btn btn-block btn-danger'  onclick='start()'>重新体检</button>");
+            } else {
+                alert("取消失败：" + json.Message);
+            }
+        }
+
+        //clear
+        function clearColor() {
+            $("#scrod_bg_color").removeClass("bg-green").removeClass("bg-red").removeClass("bg-yellow");
+            $("#process").removeClass("progress-bar-success").removeClass("progress-bar-danger").removeClass("progress-striped .progress-bar-warning");
+        }
+
+        function success() {
+            clearColor();
+            $("#scrod_bg_color").addClass("bg-green");
+            $("#process").addClass("progress-bar-success");
+            $("#scrod").css("background-color", "darkturquoise");
+        }
+
+        function warning() {
+            clearColor();
+            $("#scrod_bg_color").addClass("bg-yellow");
+            $("#process").addClass("progress-bar-warning");
+            $("#scrod").css("background-color", "#f0ad4e");
+        }
+
+        function danger() {
+            clearColor();
+            $("#scrod_bg_color").addClass("bg-red");
+            $("#process").addClass("progress-bar-danger");
+            $("#scrod").css("background-color", "#f45344");
+        }
+    </script>
+}
