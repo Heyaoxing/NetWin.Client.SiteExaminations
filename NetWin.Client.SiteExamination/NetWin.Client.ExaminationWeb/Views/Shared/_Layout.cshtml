@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.SystemName = "网址体检系统";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/admin-lte/css/AdminLTE.min.css")"/>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bootstrap.min.css")"/>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/font-awesome.min.css")"/>
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body class="hold-transition skin-blue sidebar-mini bg-blue" style="height: 97%">
+    @RenderBody()
+@RenderSection("scripts", required: false)
+</body>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/admin-lte/js/app.min.js")"></script>
+</html>

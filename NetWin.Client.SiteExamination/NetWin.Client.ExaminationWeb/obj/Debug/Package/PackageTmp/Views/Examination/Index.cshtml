@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "体检详情页";
+    bool isError = (bool)ViewData["isError"];
+    string message = ViewData["message"] as string;
+    string url = ViewData["url"] as string;
+
+}
+<section class="content ">
+    <div class="row">
+        <div class="col-md-12  box-widget widget-user-2  bg-blue">
+            <div class="col-md-12">
+                <div class="widget-user-header">
+                    <div class="widget-user-image">
+                        <img class="img-circle" src="../dist/img/user7-128x128.jpg" alt="假装有Logo">
+                        <h1>网站体检系统</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="widget-user-header text-center">
+                    <div>
+                        <h2>网站体检</h2>
+                        <p>提供优质、完整的检测，量身定做更为优质的优化意见，帮助您全面了解自己、优化自己！</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="widget-user-header text-center">
+                    <form action="@Url.Action("StartPage")" method="POST">
+
+                        <p class="text-red">@message</p>
+                        <input class="form-control input-lg" placeholder="输入需要体检的网址,如:http://www.baidu.com" type="text" name="examinationUrl" id="examinationUrl" value="@url" style="width: 400px; display: inline;"/>
+                        <input type="submit" class="btn  btn-default btn-lg" value="开始体检" style="margin-left: 20px;"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript" src="@Url.Content("~/Scripts/chosen.input.js")"></script>
+<script type="text/javascript">
+    //建立实例，第一个参数是实例对象的名称，第二个是最多显示的数量
+    var oo = new mSift('oo', 10);
+    //指定文本框对象建立特效
+    oo.Create(document.getElementById('examinationUrl'));
+
+    function SelectHistory(siteId) {
+        window.location.href = '@Url.Action("StartPage")?examinationUrl=&isHostory=true&siteId=' + siteId;
+    }
+</script>
