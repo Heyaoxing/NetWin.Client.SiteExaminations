@@ -1,6 +1,0 @@
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.SiteExamination\bin\Release\NetWin.Client.SiteExamination.dll
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.SiteExamination\bin\Release\NetWin.Client.SiteExamination.pdb
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.SiteExamination\bin\Release\System.Data.SQLite.dll
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.SiteExamination\bin\Release\System.Data.SQLite.xml
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.SiteExamination\obj\Release\NetWin.Client.SiteExamination.dll
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.SiteExamination\obj\Release\NetWin.Client.SiteExamination.pdb
