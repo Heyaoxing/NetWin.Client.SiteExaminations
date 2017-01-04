@@ -31,5 +31,7 @@ namespace NetWin.Client.SiteExamination.D_Data.Dto
         /// 是否通过
         /// </summary>
         public bool IsPass { set; get; }
+
+        public int ItemId { set; get; }
     }
 }

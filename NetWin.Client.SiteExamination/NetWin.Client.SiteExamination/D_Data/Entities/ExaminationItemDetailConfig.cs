@@ -40,5 +40,9 @@ namespace NetWin.Client.SiteExamination.D_Data.Entities
         /// 是否启用
         /// </summary>
         public bool IsEnable { set; get; }
+        /// <summary>
+        /// 科普介绍
+        /// </summary>
+        public string Department { set; get; }
     }
 }

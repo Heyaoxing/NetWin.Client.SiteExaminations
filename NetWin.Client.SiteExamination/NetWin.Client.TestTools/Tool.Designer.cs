@@ -37,14 +37,14 @@
             this.ToolWb.Location = new System.Drawing.Point(0, 0);
             this.ToolWb.MinimumSize = new System.Drawing.Size(20, 20);
             this.ToolWb.Name = "ToolWb";
-            this.ToolWb.Size = new System.Drawing.Size(696, 521);
+            this.ToolWb.Size = new System.Drawing.Size(696, 541);
             this.ToolWb.TabIndex = 0;
             // 
             // Tool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(696, 521);
+            this.ClientSize = new System.Drawing.Size(696, 541);
             this.Controls.Add(this.ToolWb);
             this.Name = "Tool";
             this.Text = "网站体检系统测试工具";

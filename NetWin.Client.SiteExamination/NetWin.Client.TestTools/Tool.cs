@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using NetWin.Client.SiteExamination.A_Core.Model;
+using NetWin.Client.SiteExamination.B_Common;
 using NetWin.Client.SiteExamination.D_Data.Dto;
 using NetWin.Client.SiteExamination.E_Services;
 
@@ -21,21 +24,41 @@ namespace NetWin.Client.TestTools
         public Tool()
         {
             InitializeComponent();
+            AddRegistry();
             ToolWb.ObjectForScripting = this;
-
             //修改webbrowser的属性使c#可以调用js方法： 
             ToolWb.ObjectForScripting = this;
+            ToolWb.Navigate(ConfigurationManager.AppSettings["ExaminationWeb_Url"]);
 
-            ToolWb.Navigate("http://localhost:8010/");
+            NetWin.Client.SiteExamination.A_Core.Config.SysConfig.LinkAmountLimit = Int32.Parse(ConfigurationManager.AppSettings["LinkAmountLimit"] ?? "50");
         }
 
         private void Tool_FormClosing(object sender, FormClosingEventArgs e)
         {
         }
 
+        /// <summary>
+        /// 检查注册表有没有指定ie版本,没有的话指定为ie 9
+        /// </summary>
+        private void AddRegistry()
+        {
+            try
+            {
+                string portName = RegistryHelper.GetRegistryData(Registry.LocalMachine, @"SOFTWARE\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", "NetWin.Client.TestTools.exe");
+                if (string.IsNullOrWhiteSpace(portName))
+                {
+                    RegistryHelper.SetRegistryData(Registry.LocalMachine, @"SOFTWARE\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", "NetWin.Client.TestTools.exe", "9999");
+                }
+                LogHelper.Info("注册表:" + RegistryHelper.GetRegistryData(Registry.LocalMachine, @"SOFTWARE\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", "NetWin.Client.TestTools.exe"));
+            }
+            catch (Exception exception)
+            {
+                LogHelper.Error("检查注册表异常:" + exception.Message);
+            }
+        }
+
 
         #region 调用体检系统接口
-
 
         /// <summary>
         /// 体检资源登录检查

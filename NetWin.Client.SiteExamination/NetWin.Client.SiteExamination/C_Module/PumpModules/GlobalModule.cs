@@ -45,7 +45,8 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     AimsCount += site.OutsideLinkCount;
                     break;
                 case "nullsite":
-                    //TODO:关键字密度  AimsCount += string.IsNullOrWhiteSpace(site.InnerText) ? 1 : 0;
+                     AimsCount += string.IsNullOrWhiteSpace(site.InnerText) ? 1 : 0;
+                    WingManCount++;
                     break;
                
                 case "dynamic":

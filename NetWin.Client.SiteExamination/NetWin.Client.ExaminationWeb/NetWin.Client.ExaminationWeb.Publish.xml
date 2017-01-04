@@ -4,9 +4,8 @@
     <file relUrl="Content/themes/base/minified/jquery.ui.slider.min.css" publishTime="12/16/2016 09:07:49" />
     <file relUrl="Content/bootstrap.css" publishTime="12/27/2016 15:58:42" />
     <file relUrl="bin/Antlr3.Runtime.dll" publishTime="12/16/2016 09:07:57" />
-    <file relUrl="bin/System.Web.WebPages.dll" publishTime="12/16/2016 09:07:55" />
+    <file relUrl="Scripts/chosen.jquery.min.js" publishTime="12/29/2016 09:48:18" />
     <file relUrl="Content/fonts/fontawesome-webfont.svg" publishTime="12/27/2016 15:58:42" />
-    <file relUrl="Content/images/success.png" publishTime="12/30/2016 09:09:21" />
     <file relUrl="Content/themes/base/jquery.ui.datepicker.css" publishTime="12/16/2016 09:07:50" />
     <file relUrl="Scripts/jquery-3.1.1.min.js" publishTime="12/27/2016 15:54:23" />
     <file relUrl="admin-lte/css/skins/skin-green.min.css" publishTime="12/27/2016 15:58:44" />
@@ -17,6 +16,7 @@
     <file relUrl="Content/themes/base/minified/jquery.ui.autocomplete.min.css" publishTime="12/16/2016 09:07:49" />
     <file relUrl="bin/Microsoft.Web.Infrastructure.dll" publishTime="12/16/2016 09:07:54" />
     <file relUrl="Content/themes/base/images/ui-bg_highlight-soft_75_cccccc_1x100.png" publishTime="12/16/2016 09:07:52" />
+    <file relUrl="bin/System.Web.WebPages.dll" publishTime="12/16/2016 09:07:55" />
     <file relUrl="admin-lte/css/skins/_all-skins.min.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="admin-lte/css/skins/skin-yellow.min.css" publishTime="12/27/2016 15:58:43" />
     <file relUrl="Scripts/_references.js" publishTime="12/16/2016 09:07:34" />
@@ -38,11 +38,10 @@
     <file relUrl="Content/themes/base/minified/jquery.ui.progressbar.min.css" publishTime="12/16/2016 09:07:49" />
     <file relUrl="admin-lte/css/skins/skin-purple-light.css" publishTime="12/27/2016 15:58:43" />
     <file relUrl="Scripts/npm.js" publishTime="12/27/2016 15:58:41" />
-    <file relUrl="bin/NetWin.Client.ExaminationWeb.dll" publishTime="12/30/2016 11:22:17" />
+    <file relUrl="bin/NetWin.Client.ExaminationWeb.dll" publishTime="01/04/2017 10:35:33" />
     <file relUrl="admin-lte/css/skins/_all-skins.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="admin-lte/css/skins/skin-red-light.min.css" publishTime="12/27/2016 15:58:43" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_55_fbf9ee_1x400.png" publishTime="12/16/2016 09:07:52" />
-    <file relUrl="Scripts/chosen.input.js" publishTime="12/29/2016 17:34:00" />
     <file relUrl="Scripts/chosen.jquery.js" publishTime="12/29/2016 09:48:19" />
     <file relUrl="Content/themes/base/jquery-ui.css" publishTime="12/16/2016 09:07:50" />
     <file relUrl="bin/System.Web.Providers.dll" publishTime="12/16/2016 09:07:56" />
@@ -59,23 +58,24 @@
     <file relUrl="Content/themes/base/minified/jquery.ui.tabs.min.css" publishTime="12/16/2016 09:07:49" />
     <file relUrl="Scripts/bootstrap.js" publishTime="12/27/2016 15:58:41" />
     <file relUrl="bin/System.Web.WebPages.Deployment.dll" publishTime="12/16/2016 09:07:55" />
-    <file relUrl="Scripts/chosen.jquery.min.js" publishTime="12/29/2016 09:48:18" />
     <file relUrl="bin/zh-Hans/System.Net.Http.resources.dll" publishTime="07/10/2012 23:39:20" />
     <file relUrl="fonts/glyphicons-halflings-regular.svg" publishTime="12/27/2016 15:58:41" />
     <file relUrl="bin/zh-Hans/System.Web.Mvc.resources.dll" publishTime="07/10/2012 23:39:12" />
     <file relUrl="Scripts/jquery-ui-1.8.20.min.js" publishTime="12/16/2016 09:07:46" />
     <file relUrl="bin/zh-Hans/System.Web.WebPages.Razor.resources.dll" publishTime="07/10/2012 23:39:18" />
+    <file relUrl="Content/themes/base/jquery.ui.accordion.css" publishTime="12/16/2016 09:07:50" />
     <file relUrl="Global.asax" publishTime="12/16/2016 09:07:34" />
     <file relUrl="bin/EntityFramework.xml" publishTime="12/16/2016 09:07:39" />
     <file relUrl="admin-lte/css/skins/skin-blue.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="Scripts/bootstrap.min.js" publishTime="12/27/2016 15:58:41" />
     <file relUrl="Content/bootstrap.min.css" publishTime="12/27/2016 15:58:41" />
     <file relUrl="Content/themes/base/minified/jquery.ui.theme.min.css" publishTime="12/16/2016 09:07:49" />
-    <file relUrl="Web.config" publishTime="12/30/2016 14:03:52" />
+    <file relUrl="Web.config" publishTime="01/04/2017 10:35:41" />
     <file relUrl="packages.config" publishTime="12/29/2016 09:48:19" />
     <file relUrl="admin-lte/css/skins/skin-red.min.css" publishTime="12/27/2016 15:58:43" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_65_ffffff_1x400.png" publishTime="12/16/2016 09:07:50" />
     <file relUrl="bin/zh-Hans/System.Web.Http.resources.dll" publishTime="07/10/2012 23:39:16" />
+    <file relUrl="Content/themes/base/minified/images/ui-icons_454545_256x240.png" publishTime="12/16/2016 09:07:49" />
     <file relUrl="bin/System.Web.Mvc.xml" publishTime="12/16/2016 09:07:55" />
     <file relUrl="Scripts/jquery-3.1.1-vsdoc.js" publishTime="12/27/2016 15:54:22" />
     <file relUrl="Content/themes/base/jquery.ui.dialog.css" publishTime="12/16/2016 09:07:50" />
@@ -100,7 +100,7 @@
     <file relUrl="Scripts/jquery-3.1.1.slim.min.js" publishTime="12/27/2016 15:54:22" />
     <file relUrl="Scripts/jquery.validate-vsdoc.js" publishTime="12/16/2016 09:07:46" />
     <file relUrl="Content/themes/base/jquery.ui.theme.css" publishTime="12/16/2016 09:07:50" />
-    <file relUrl="Content/themes/base/minified/images/ui-icons_454545_256x240.png" publishTime="12/16/2016 09:07:49" />
+    <file relUrl="Scripts/chosen.input.js" publishTime="01/04/2017 11:02:49" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_95_fef1ec_1x400.png" publishTime="12/16/2016 09:07:52" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_75_dadada_1x400.png" publishTime="12/16/2016 09:07:49" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_flat_75_ffffff_40x100.png" publishTime="12/16/2016 09:07:50" />
@@ -112,21 +112,21 @@
     <file relUrl="Content/themes/base/jquery.ui.button.css" publishTime="12/16/2016 09:07:50" />
     <file relUrl="Content/themes/base/minified/images/ui-icons_888888_256x240.png" publishTime="12/16/2016 09:07:49" />
     <file relUrl="Content/themes/base/jquery.ui.core.css" publishTime="12/16/2016 09:07:50" />
-    <file relUrl="Views/Examination/StartPage.cshtml" publishTime="12/30/2016 15:50:28" />
+    <file relUrl="Views/Examination/StartPage.cshtml" publishTime="01/04/2017 15:33:25" />
     <file relUrl="admin-lte/css/AdminLTE.css" publishTime="12/27/2016 16:40:14" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_65_ffffff_1x400.png" publishTime="12/16/2016 09:07:52" />
     <file relUrl="bin/System.Web.WebPages.Razor.xml" publishTime="12/16/2016 09:07:55" />
     <file relUrl="admin-lte/css/skins/skin-black.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="bin/System.Web.Mvc.dll" publishTime="12/16/2016 09:07:55" />
-    <file relUrl="bin/NetWin.Client.ExaminationWeb.pdb" publishTime="12/30/2016 11:22:17" />
+    <file relUrl="bin/NetWin.Client.ExaminationWeb.pdb" publishTime="01/04/2017 10:35:33" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_95_fef1ec_1x400.png" publishTime="12/16/2016 09:07:49" />
     <file relUrl="Content/themes/base/images/ui-icons_cd0a0a_256x240.png" publishTime="12/16/2016 09:07:50" />
     <file relUrl="bin/WebGrease.dll" publishTime="12/16/2016 09:07:57" />
-    <file relUrl="Content/themes/base/jquery.ui.accordion.css" publishTime="12/16/2016 09:07:50" />
+    <file relUrl="Content/images/success.png" publishTime="12/30/2016 09:09:21" />
     <file relUrl="bin/System.Web.Http.WebHost.dll" publishTime="12/16/2016 09:07:56" />
     <file relUrl="Content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png" publishTime="12/16/2016 09:07:52" />
     <file relUrl="bin/zh-Hans/System.Web.WebPages.Deployment.resources.dll" publishTime="07/10/2012 23:39:18" />
-    <file relUrl="Views/Examination/Index.cshtml" publishTime="12/30/2016 14:02:07" />
+    <file relUrl="Views/Examination/Index.cshtml" publishTime="01/04/2017 11:23:36" />
     <file relUrl="admin-lte/css/skins/skin-blue.min.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="Content/themes/base/jquery.ui.slider.css" publishTime="12/16/2016 09:07:50" />
     <file relUrl="Content/themes/base/minified/jquery.ui.resizable.min.css" publishTime="12/16/2016 09:07:49" />

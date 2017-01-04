@@ -92,8 +92,8 @@
     <Compile Include="B_Common\HtmlAgilityPack\Trace.FullFramework.cs" />
     <Compile Include="B_Common\HtmlAgilityPack\Utilities.cs" />
     <Compile Include="B_Common\LogHelper.cs" />
+    <Compile Include="B_Common\RegistryHelper.cs" />
     <Compile Include="C_Module\PumpModules\IComputeRuleParam.cs" />
-    <Compile Include="C_Module\PumpModules\OutModule.cs" />
     <Compile Include="C_Module\PumpModules\OutPumpModule.cs" />
     <Compile Include="C_Module\SpiderModules\OutSpider.cs" />
     <Compile Include="D_Data\Base\DataConfig.cs" />
@@ -129,7 +129,6 @@
     <Compile Include="D_Data\Base\RepositoryBase.cs" />
     <Compile Include="D_Data\Repository\ExaminationItemDetailConfigRepository.cs" />
     <Compile Include="D_Data\Base\DataScript.cs" />
-    <Compile Include="D_Data\Repository\InitRepository.cs" />
     <Compile Include="D_Data\Repository\SiteExaminationDetailInfoRepository.cs" />
     <Compile Include="D_Data\Repository\SiteExaminationInfoRepository.cs" />
     <Compile Include="E_Services\ExaminationExecuteService.cs" />

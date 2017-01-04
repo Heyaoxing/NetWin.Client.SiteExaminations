@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 using NetWin.Client.SiteExamination.B_Common;
 using NetWin.Client.SiteExamination.D_Data.Repository;
 
@@ -29,8 +30,9 @@ namespace NetWin.Client.UnitTest
         {
             try
             {
-                string str = "更新时间: 2014年1月22日";
-                var date = RegexHelper.GetPublishDate(str);
+                string portName = RegistryHelper.GetRegistryData(Registry.LocalMachine, @"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "NetWin.Client.TestTools.exe");
+                RegistryHelper.SetRegistryData(Registry.LocalMachine, @"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "test", "9999");
+                Console.WriteLine(portName);
             }
             catch (Exception exception)
             {

@@ -10,3 +10,4 @@ E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Cli
 E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.TestTools\obj\x86\Debug\NetWin.Client.TestTools.csproj.GenerateResource.Cache
 E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.TestTools\obj\x86\Debug\NetWin.Client.TestTools.exe
 E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.TestTools\obj\x86\Debug\NetWin.Client.TestTools.pdb
+E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.TestTools\bin\Debug\NetWin.Client.TestTools.exe.config

@@ -5,6 +5,42 @@
     int siteId = int.Parse(ViewData["siteId"].ToString());
 }
 <style type="text/css">
+    .tag
+    {
+        width: 300px;
+        height: 100px;
+        border: 2px solid #999999;
+        position: absolute;
+        background-color: #FFF;
+        z-index: 9999;
+        color: black;
+        display: none;
+    }
+    .tag em
+    {
+        display: block;
+        border-width: 20px;
+        position: absolute;
+        bottom: 25px;
+        left: 297px;
+        border-style: solid;
+        border-color: transparent transparent transparent #999999;
+        font-size: 0;
+        line-height: 0;
+    }
+    .tag span
+    {
+        display: block;
+        border-width: 20px;
+        position: absolute;
+        bottom: 25px;
+        left: 295px;
+        border-style: solid;
+        border-color: transparent transparent transparent #FFF;
+        font-size: 0;
+        line-height: 0;
+    }
+    
     #scrod
     {
         width: 100px;
@@ -43,8 +79,12 @@
         width: 15px;
         height: 15px;
     }
-   
 </style>
+<div class="tag">
+    <em></em><span></span>
+    <div>
+    </div>
+</div>
 @if (string.IsNullOrWhiteSpace(url) && isHostory == false)
 {
     <span>体检网址不能为空!</span>
@@ -78,12 +118,10 @@ else
                                 </h4>
                             </p>
                             <div class="row">
-                                <div class="col-md-12">
-                                    <span>网站基础</span><span style="margin-left: 10px;">网站优化</span> <span style="margin-left: 10px;">
-                                        网站安全</span>
+                                <div class="col-md-12" id="view_item">
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row view_checking">
                                 <div class="col-md-12">
                                     <div class="progress progress-sm active">
                                         <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
@@ -93,9 +131,14 @@ else
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row view_checking">
                                 <div class="col-md-7">
                                     <span>正在为你检测:<span class="text-muted" id="view"></span></span>
+                                </div>
+                            </div>
+                            <div class="row view_result" style="display: none;">
+                                <div class="col-md-7">
+                                    <span id="result_text" style="color: white"></span>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +161,6 @@ else
             </div>
         </div>
     </div>
-
     <script type="text/javascript">
 
         var request = new Array();
@@ -140,6 +182,8 @@ else
 
         //登录检查
         function checkSite() {
+            $(".view_checking").css('display','block');
+            $(".view_result").css('display','none');
             $("#view").text("正在进行登录检查...");
             clearTimeout(checkSite_interval);
             var result = jQuery.parseJSON(window.external.CheckSite(sitelUrl));
@@ -152,6 +196,12 @@ else
         var item_count = 0;
         //启动体检
         function start() {
+            $("#Export").empty();
+            $(".detailname").css('color','black');
+            $(".itemname").css('color','black');
+            success();
+            $(".view_checking").css('display','block');
+            $(".view_result").css('display','none');
             request = new Array();
             siteId = 0;
             i = 1;
@@ -182,15 +232,16 @@ else
             var list = $("#list");
             list.empty();
             var body = "";
+            var viewItem = "";
             var param = [];
             $.each(json, function (i, v) {
-                body += "  <div class='row'><div class='box box-default collapsed-box' style='margin: 0 auto; border: none;'><div class='box-header with-border'>";
+                body += "<div class='row'><div class='box box-default collapsed-box' style='margin: 0 auto; border: none;'><div class='box-header with-border'>";
                 body += "<h3 class='box-title col-md-1 marginleft15' style='margin-left:10px;'>" + v.Name + "</h3><div class='box-tools pull-right'><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-plus'></i></button></div></div>";
-
+                viewItem += " <span class='itemname' style='margin-left:20px;color:#9EEA6A;' id='item_"+v.ItemId+"'>" + v.Name + "</span>";
                 body += "<div class='box-body font_list' style='display: block;'>";
                 body += "<ul>";
                 $.each(v.ExaminationItemDetail, function (index, val) {
-                    body += "<li class='marginleft15'>" + val.Name + "    <span  id='detail_" + val.DetailId + "'  class='line_right'></span></li>";
+                    body += "<li class='marginleft15 detailname' id='detail_name_"+ val.DetailId+"'>" + val.Name + "    <span  id='detail_" + val.DetailId + "'  class='line_right'></span></li>";
                     param = [siteId, val.DetailId];
                     request.push(param);
                     item_count++;
@@ -198,6 +249,8 @@ else
                 body += "</div></div></div>";
             });
             list.append(body);
+
+            $("#view_item").empty().append(viewItem);
             $("#item_count").text(item_count);
             run();
         }
@@ -209,9 +262,7 @@ else
         var problem = 0;
         //请求体检结果
         function chat() {
-            $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检中");
             i++;
-
             var cach = new Array();
             $(request).each(function (i, v) {
                 var result = jQuery.parseJSON(window.external.GetDetailResult(v[0], v[1]));
@@ -219,18 +270,21 @@ else
                     if (result.Data.IsPass) {
                       $("#detail_" + v[1]).text(result.Data.Score + "分");
                     } else {
-                     //   $("#detail_" + v[1]).text("不通过!" + result.Data.Result + ". 要求:" + result.Data.Require);
-                     $("#detail_" + v[1]).html("<img src='@Url.Content("~/Content/images/error.png")' class='icon_size' title='这是标题'>");
+                      $("#detail_name_" + v[1]).css('color','red');
+                     $("#detail_" + v[1]).html("<span onmouseover='modal_mouseover(this)' onmouseout='modal_mouseout(this)' siteId='"+v[0]+"' detailId='"+v[1]+"' ><img src='@Url.Content("~/Content/images/error.png")' class='icon_size'/></span>");
                         score = score - result.Data.Score;
                         problem++;
                         $("#score").text(score);
                         $("#problem").text(problem);
+                        $("#item_" + result.Data.ItemId).css('color', 'red');
                     }
+                    $("#view").text(result.Data.Name);
                 } else {
                     cach.push(v);
                 }
             });
 
+            $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检中");
             request = cach;
 
 
@@ -239,13 +293,15 @@ else
                 $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检完成");
                 $("#Export").html("<a href='javascript:void(0);' onclick=\"ExportReport()\">生成报告</a>");
                 $("#features").html("<button class='btn btn-block btn-danger' onclick='start()'>重新体检</button>");
+                $(".view_checking").css('display', 'none');
+                $(".view_result").css('display', 'block');
+                $("#result_text").html("您的网站体检得分是<span style='font-size:50px;'>" + score + "</span>分，建议您对网站进行优化");
             }
 
-            $("#process").css("width",(((item_count-request.length)/item_count).toFixed(2)*100 )+ "%");
-            if (score < 90 && score > 60) {
+            $("#process").css("width", (((item_count - request.length) / item_count).toFixed(2) * 100) + "%");
+            if (score < 80 && score >= 50) {
                 warning();
-            }
-             else if( score < 60) {
+            } else if (score < 50) {
                 danger();
             }
         }
@@ -262,6 +318,9 @@ else
                 clearTimeout(interval);
                 $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检取消");
                 $("#features").html("<button class='btn btn-block btn-danger'  onclick='start()'>重新体检</button>");
+                $(".view_checking").css('display', 'none');
+                $(".view_result").css('display', 'block');
+                $("#result_text").html("体检被取消！目前您的网站发现有<span style='font-size:50px;'>" + problem + "</span>项问题！");
             } else {
                 alert("取消失败：" + json.Message);
             }
@@ -278,6 +337,7 @@ else
             $("#scrod_bg_color").addClass("bg-green");
             $("#process").addClass("progress-bar-success");
             $("#scrod").css("background-color", "darkturquoise");
+            $("body").css("background-color", "darkturquoise");
         }
 
         function warning() {
@@ -285,6 +345,7 @@ else
             $("#scrod_bg_color").addClass("bg-yellow");
             $("#process").addClass("progress-bar-warning");
             $("#scrod").css("background-color", "#f0ad4e");
+            $("body").css("background-color", "#f0ad4e");
         }
 
         function danger() {
@@ -292,6 +353,40 @@ else
             $("#scrod_bg_color").addClass("bg-red");
             $("#process").addClass("progress-bar-danger");
             $("#scrod").css("background-color", "#f45344");
+            $("body").css("background-color", "#f45344");
         }
+
+
+        $(".modal_view").mouseover(function() {
+            modal_mouseover(this);
+        });
+
+        $(".modal_view").mouseout(function() {
+            modal_mouseout(this);
+        });
+
+        function modal_mouseover(obj) {
+          var content=  $(".tag >div");
+            content.empty();
+           var siteId= obj.attributes["siteId"].value;
+           var detailId= obj.attributes["detailId"].value;
+            var result = jQuery.parseJSON(window.external.GetDetailResult(siteId, detailId));
+            if (result.Result) {
+                var contentText = "<table>";
+                contentText += "<tr><td style='text-align:right;'>分析项:</td><td>"+result.Data.Name+"</td></tr>";
+                contentText += "<tr><td style='text-align:right;'>分析结果:</td><td>"+result.Data.Result+"</td></tr>";
+                contentText += "<tr><td style='text-align:right;'>要求:</td><td>"+result.Data.Require+"</td></tr>";
+                contentText += "</table>";
+                content.append(contentText);
+            }
+            $(".tag").css("margin-top",  obj.getBoundingClientRect().top+document.documentElement.scrollTop-$(".tag").height()/2+5);
+            $(".tag").css("margin-left", obj.getBoundingClientRect().left - $(".tag").width()-20);
+            $(".tag").css("display", "block");
+        }
+
+        function modal_mouseout() {
+            $(".tag").css("display", "none");
+        }
+
     </script>
 }

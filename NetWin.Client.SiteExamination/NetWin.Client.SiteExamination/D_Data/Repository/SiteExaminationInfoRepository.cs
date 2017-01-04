@@ -84,6 +84,7 @@ namespace NetWin.Client.SiteExamination.D_Data.Repository
                               c.Name as DetailName,
                               c.Require,
                               c.Suggest,
+                              c.Department,
                               d.Name as ItemName,
                               d.ItemId
                             FROM

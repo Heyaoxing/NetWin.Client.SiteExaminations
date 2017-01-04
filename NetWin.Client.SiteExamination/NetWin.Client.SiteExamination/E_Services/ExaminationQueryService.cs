@@ -88,9 +88,17 @@ namespace NetWin.Client.SiteExamination.E_Services
         /// <returns></returns>
         public static List<ExaminationHistoryDto> GetHistories(string siteUrl)
         {
-            return SiteExaminationInfoRepository.GetHistories(siteUrl);
+            try
+            {
+                return SiteExaminationInfoRepository.GetHistories(siteUrl);
+            }
+            catch
+            {
+                // ignored
+            }
+            return new List<ExaminationHistoryDto>();
         }
-       
+
 
         /// <summary>
         /// 获取体检报告
@@ -101,9 +109,9 @@ namespace NetWin.Client.SiteExamination.E_Services
         {
             var report = SiteExaminationInfoRepository.GetExaminationReport(siteId);
             if (report == null || !report.Any())
-                return ;
+                return;
 
-            string content= CreateTable(report) + CreateOptimization(report);
+            string content = CreateTable(report) + CreateOptimization(report);
             CreateFile(filePath, content);
         }
 
@@ -147,11 +155,10 @@ namespace NetWin.Client.SiteExamination.E_Services
             table.Append("<div style='margin:0 auto;text-align:center;height:100%'>");
             try
             {
-                table.Append("<table cellspacing='0' cellpadding='0' style='border-left:1px solid #000;border-top:1px solid #000;'>");
                 foreach (var item in reportDto.GroupBy(p => p.ItemId).Select(p => p.Key))
                 {
-                    table.AppendFormat("<tr style='text-align:left;'><td  rows='4'>{0}</td></tr>", reportDto.FirstOrDefault(p => p.ItemId == item).ItemName);
-
+                    table.AppendFormat("<p  style='font-size:20px;text-align:left;margin-top:10px;'><strong>{0}</strong></p>", reportDto.FirstOrDefault(p => p.ItemId == item).ItemName);
+                    table.Append("<table cellspacing='0' cellpadding='0' style='border-left:1px solid #000;border-top:1px solid #000;'>");
                     table.Append("<tr style='text-align:center;' >");
                     table.Append("<td style='border-bottom:1px solid #000;border-right:1px solid #000;border-top:1px solid #000;'>项目</td>");
                     table.Append("<td style='border-bottom:1px solid #000;border-right:1px solid #000;border-top:1px solid #000;'>结果</td>");
@@ -162,17 +169,17 @@ namespace NetWin.Client.SiteExamination.E_Services
                     {
                         table.Append("<tr>");
                         table.AppendFormat("<td  style='white-space:normal; display:block; width:80px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.DetailName);
-                        table.AppendFormat("<td  style='white-space:normal;display:block; width:150px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.Result);
+                        table.AppendFormat("<td  style='white-space:normal;display:block; width:220px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.Result);
                         table.AppendFormat("<td  style='white-space:normal;display:block; width:150px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.Require);
                         table.AppendFormat("<td  style='white-space:normal;display:block; width:100px;text-align:center;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.IsPass ? "" : "需优化");
                         table.Append("</tr>");
                     }
+                    table.Append("</table>");
                 }
-                table.Append("</table>");
             }
             catch (Exception exception)
             {
-                LogHelper.Error("创建报告表格异常:"+exception.Message);
+                LogHelper.Error("创建报告表格异常:" + exception.Message);
             }
             table.Append("</div>");
             return table.ToString();
@@ -185,7 +192,7 @@ namespace NetWin.Client.SiteExamination.E_Services
         /// <returns></returns>
         private static string CreateOptimization(List<ExaminationReportDto> reportDto)
         {
-            Dictionary<int,string> tip=new Dictionary<int, string>();
+            Dictionary<int, string> tip = new Dictionary<int, string>();
             tip.Add(1, "一");
             tip.Add(2, "二");
             tip.Add(3, "三");
@@ -197,22 +204,26 @@ namespace NetWin.Client.SiteExamination.E_Services
             tip.Add(9, "九");
             tip.Add(10, "十");
 
-            StringBuilder sb=new StringBuilder();
-            sb.Append("<div style='text-align:center;'>");
-            sb.Append("<div  cellspacing='0' cellpadding='0' style='white-space:normal; display:block;width:490px;text-align:left;' >");
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<div style='margin:0 auto;text-align:center;height:100%;white-space:normal; display:block;width:490px;margin-top:20px;'>");
+            sb.Append("<div  cellspacing='0' cellpadding='0' style='text-align:left;' >");
             try
             {
                 sb.Append("<div style='font-size:30px; float:right;'><strong>网站体检优化方案</strong></div>");
                 int bigTip = 1;
                 foreach (var item in reportDto.GroupBy(p => p.ItemId).Select(p => p.Key))
                 {
-                    sb.AppendFormat("<div  style='font-size:25px'><strong>{0}、{1}评分</strong></div><br/>", tip[bigTip], reportDto.FirstOrDefault(p => p.ItemId == item).ItemName);
+                    sb.AppendFormat("<div  style='font-size:25px'><strong>{0}、{1}评分</strong></div>", tip[bigTip], reportDto.FirstOrDefault(p => p.ItemId == item).ItemName);
                     bigTip++;
                     int smallTip = 1;
                     foreach (var itemDetail in reportDto.Where(p => p.ItemId == item))
                     {
                         sb.AppendFormat("<p  style='font-size:20px'><strong>{0}、{1}</strong></p>", smallTip, itemDetail.DetailName);
-                        sb.AppendFormat("<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;我们建议：</strong>{0}</p>", itemDetail.Suggest);
+                        if (!string.IsNullOrWhiteSpace(itemDetail.Department))
+                        {
+                            sb.AppendFormat("<p><strong style='color:red;'>&nbsp;&nbsp;小科普：</strong><strong>{0}</strong></p>", itemDetail.Department);
+                        }
+                        sb.AppendFormat("<p><strong>&nbsp;&nbsp;我们建议：</strong>{0}</p>", itemDetail.Suggest);
                         smallTip++;
                     }
                 }
@@ -227,4 +238,3 @@ namespace NetWin.Client.SiteExamination.E_Services
         }
     }
 }
- 

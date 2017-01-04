@@ -26,11 +26,10 @@ namespace NetWin.Client.SiteExamination.E_Services
     {
         /// <summary>
         /// 执行入口
-        /// step1：检查数据库
-        /// step2：检查服务器更新（后期）
-        /// step3：检查体检资源
-        /// step4：挑选出可访问的首选域
-        /// step5：执行体检过程
+        /// step1：检查服务器更新（后期）
+        /// step2：检查体检资源
+        /// step3：挑选出可访问的首选域
+        /// step4：执行体检过程
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="siteUrl"></param>
@@ -50,15 +49,6 @@ namespace NetWin.Client.SiteExamination.E_Services
 
             try
             {
-                #region step1
-                var checkData = CheckData();
-                if (!checkData.Result)
-                {
-                    ResultModel.Result = false;
-                    ResultModel.Message = checkData.Message;
-                    return ResultModel;
-                }
-                #endregion
 
                 //新增一条资源检查记录
                 var id = SiteExaminationInfoRepository.Add(new SiteExaminationInfo()
@@ -84,15 +74,6 @@ namespace NetWin.Client.SiteExamination.E_Services
             }
 
             return ResultModel;
-        }
-
-        /// <summary>
-        /// 检查数据库
-        /// </summary>
-        /// <returns></returns>
-        private ReslutModel CheckData()
-        {
-            return InitRepository.SqliteInit();
         }
 
         /// <summary>

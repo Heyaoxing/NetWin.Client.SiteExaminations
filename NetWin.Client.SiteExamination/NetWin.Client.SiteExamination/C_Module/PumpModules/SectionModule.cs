@@ -139,8 +139,6 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         script.Remove();
                     foreach (var style in htmlDocument.DocumentNode.Descendants("style").ToArray())
                         style.Remove();
-                    foreach (var comment in htmlDocument.DocumentNode.SelectNodes("//comment()").ToArray())
-                        comment.Remove();//新增的代码
 
                     var node = htmlDocument.DocumentNode.SelectNodes("//img");
                     if (node != null)

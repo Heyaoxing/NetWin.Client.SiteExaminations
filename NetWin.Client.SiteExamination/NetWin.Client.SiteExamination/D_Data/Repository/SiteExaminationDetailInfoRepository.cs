@@ -31,7 +31,7 @@ namespace NetWin.Client.SiteExamination.D_Data.Repository
         /// <returns></returns>
         public static ItemDetailResultDto GetDetailResult(int siteId, int detailId)
         {
-            string sql = "select a.IsPass,a.Score,a.Result,b.Name,b.Require from SiteExaminationDetailInfo as a join ExaminationItemDetailConfig as b on a.DetailId=b.DetailId where a.SiteId=@SiteId and a.DetailId=@DetailId ";
+            string sql = "select a.IsPass,a.Score,a.Result,b.Name,b.Require,b.ItemId from SiteExaminationDetailInfo as a join ExaminationItemDetailConfig as b on a.DetailId=b.DetailId where a.SiteId=@SiteId and a.DetailId=@DetailId ";
             return SqLiteConnection.Query<ItemDetailResultDto>(sql, new { DetailId = detailId, SiteId = siteId }).FirstOrDefault();
         }
     }
