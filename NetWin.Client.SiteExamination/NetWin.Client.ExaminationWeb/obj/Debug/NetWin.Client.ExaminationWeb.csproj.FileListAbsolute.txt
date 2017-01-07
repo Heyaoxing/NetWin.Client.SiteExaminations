@@ -44,4 +44,3 @@ E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Cli
 E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.ExaminationWeb\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
 E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.ExaminationWeb\obj\Debug\NetWin.Client.ExaminationWeb.dll
 E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.ExaminationWeb\obj\Debug\NetWin.Client.ExaminationWeb.pdb
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.ExaminationWeb\obj\Debug\NetWin.Client.ExaminationWeb.csprojResolveAssemblyReference.cache

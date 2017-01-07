@@ -20,5 +20,6 @@ namespace NetWin.Client.SiteExamination.D_Data.Dto
         public string ItemName { set; get; }
         public string ItemId { set; get; }
         public string Department { set; get; }
+        public string Position { set; get; }
     }
 }

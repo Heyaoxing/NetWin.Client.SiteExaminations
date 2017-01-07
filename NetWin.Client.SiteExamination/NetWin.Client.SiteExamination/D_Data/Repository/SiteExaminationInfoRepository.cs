@@ -81,6 +81,7 @@ namespace NetWin.Client.SiteExamination.D_Data.Repository
                               a.IsPass,
                               a.Score as DetailScore,
                               a.Result,
+                              a.Position,
                               c.Name as DetailName,
                               c.Require,
                               c.Suggest,

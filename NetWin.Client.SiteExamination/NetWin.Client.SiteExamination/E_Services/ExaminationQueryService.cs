@@ -169,7 +169,7 @@ namespace NetWin.Client.SiteExamination.E_Services
                     {
                         table.Append("<tr>");
                         table.AppendFormat("<td  style='white-space:normal; display:block; width:80px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.DetailName);
-                        table.AppendFormat("<td  style='white-space:normal;display:block; width:220px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.Result);
+                        table.AppendFormat("<td  style='white-space:normal;display:block; width:220px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.IsPass ? itemDetail.Result : "位置:" + itemDetail.Position + "<br/>" + itemDetail.Result);
                         table.AppendFormat("<td  style='white-space:normal;display:block; width:150px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.Require);
                         table.AppendFormat("<td  style='white-space:normal;display:block; width:100px;text-align:center;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.IsPass ? "" : "需优化");
                         table.Append("</tr>");

@@ -35,5 +35,9 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// </summary>
         public int Score { set; get; }
 
+        /// <summary>
+        /// 结果所在的url
+        /// </summary>
+        public string Position { set; get; }
     }
 }

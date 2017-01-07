@@ -27,10 +27,14 @@
             <div class="col-md-12">
                 <div class="widget-user-header text-center">
                     <form action="@Url.Action("StartPage")" method="POST">
-
-                        <p class="text-red">@message</p>
                         <input class="form-control input-lg" placeholder="输入需要体检的网址,如:http://www.baidu.com" type="text" name="examinationUrl" id="examinationUrl" value="@url" style="width: 400px; display: inline;"/>
                         <input type="submit" class="btn  btn-default btn-lg" value="开始体检" style="margin-left: 20px;"/>
+                        @if (!string.IsNullOrWhiteSpace(message))
+                        {
+                            <div style="width: 600px; overflow: hidden;  margin: 0 auto; text-align: left; padding: 0 2em; text-indent: 2em;">
+                                 <p class="text-red"><strong>@Html.Raw(string.Format(message, "<br/>"))</strong></p>
+                            </div>
+                        }
                     </form>
                 </div>
             </div>

@@ -164,9 +164,9 @@ namespace NetWin.Client.SiteExamination.B_Common
         public static List<string> GetValidLinks(string htmlContent)
         {
             return GetLinks(htmlContent)
-                       .Except(GetStyleCount(htmlContent))
+                       .Except(GetStyleLinks(htmlContent))
                        .Except(GetImageLinks(htmlContent))
-                       .Except(GetJsLinks(htmlContent)).Distinct().ToList();
+                       .Except(GetJsLinks(htmlContent)).Distinct().Where(p => !string.IsNullOrEmpty(p) && p != "#").ToList();
         }
 
         /// <summary>
@@ -277,8 +277,8 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 const string jsPattern = "(?<=script[^>]*?src=\").*?(?=\")";
                 const string cssPattern = "(?<=link[^>]*?href=\").*?(?=\")";
-                const string imgPattern = "(?<=a[^>]*?href=\").*?(?=\")";
-                const string aPattern = "(?<=img[^>]*?src=\").*?(?=\")";
+                const string aPattern = "(?<=a[^>]*?href=\").*?(?=\")";
+                const string imgPattern = "(?<=img[^>]*?src=\").*?(?=\")";
                 MatchCollection jsMatch = Regex.Matches(htmlContent, jsPattern, RegexOptions.IgnoreCase);
                 MatchCollection cssMatch = Regex.Matches(htmlContent, cssPattern, RegexOptions.IgnoreCase);
                 MatchCollection imgMatch = Regex.Matches(htmlContent, imgPattern, RegexOptions.IgnoreCase);
@@ -296,11 +296,44 @@ namespace NetWin.Client.SiteExamination.B_Common
         }
 
         /// <summary>
+        /// 获取a标签中的链接,如果出现“/”开头的链接，则将域名添加上去 成为合法链接
+        /// </summary>
+        /// <param name="htmlContent"></param>
+        /// <param name="domainName">域名</param>
+        /// <returns></returns>
+        public static List<string> GetALinks(string htmlContent, string domainName)
+        {
+            List<string> links = new List<string>();
+            try
+            {
+                const string aPattern = "(?<=a[^>]*?href=\").*?(?=\")";
+                MatchCollection aMatch = Regex.Matches(htmlContent, aPattern, RegexOptions.IgnoreCase);
+                var alinks = from object link in aMatch where !link.ToString().Contains("#") select link.ToString().Trim();
+                foreach (var item in alinks)
+                {
+                    if (item.StartsWith("/"))
+                    {
+                        links.Add(domainName + item);
+                    }
+                    else if (CheckURLByString(item))
+                    {
+                        links.Add(item);
+                    }
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+            return links;
+        }
+
+        /// <summary>
         /// 获取所有样式文件链接
         /// </summary>
         /// <param name="htmlContent"></param>
         /// <returns></returns>
-        public static List<string> GetStyleCount(string htmlContent)
+        public static List<string> GetStyleLinks(string htmlContent)
         {
             List<string> links = new List<string>();
             try
@@ -317,11 +350,11 @@ namespace NetWin.Client.SiteExamination.B_Common
         }
 
         /// <summary>
-        /// 获取所有脚本文件链接
+        /// 获取所有图片文件链接
         /// </summary>
         /// <param name="htmlContent"></param>
         /// <returns></returns>
-        public static List<string> GetJsLinks(string htmlContent)
+        public static List<string> GetImageLinks(string htmlContent)
         {
             List<string> links = new List<string>();
             try
@@ -338,11 +371,11 @@ namespace NetWin.Client.SiteExamination.B_Common
         }
 
         /// <summary>
-        /// 获取所有图片文件链接
+        ///  获取所有脚本文件链接
         /// </summary>
         /// <param name="htmlContent"></param>
         /// <returns></returns>
-        public static List<string> GetImageLinks(string htmlContent)
+        public static List<string> GetJsLinks(string htmlContent)
         {
             List<string> links = new List<string>();
             try
@@ -491,8 +524,9 @@ namespace NetWin.Client.SiteExamination.B_Common
         {
             try
             {
-                string pattern = string.Format("<{0}.*?>(.*?)<\\/{0}>", dom);
-                return new Regex(pattern).Matches(htmlContent)[index].Groups[1].Value;
+                string pattern = string.Format(@"<{0}[^>]*?>([\s\S]*?)<\/{0}>", dom);
+                var result= new Regex(pattern).Matches(htmlContent)[index].Groups[1].Value;
+                return result;
             }
             catch
             {
@@ -508,9 +542,17 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// <returns></returns>
         public static string ReplaceHtmlTag(string html)
         {
-            string strText = Regex.Replace(html, "<[^>]+>", "");
-            strText = Regex.Replace(strText, "&[^;]+;", "");
-            return strText;
+            try
+            {
+                string strText = Regex.Replace(html, "<[^>]+>", "");
+                strText = Regex.Replace(strText, "&[^;]+;", "");
+                return strText;
+            }
+            catch (Exception exception)
+            {
+                LogHelper.Error("去除html标签异常："+exception.Message);
+            }
+            return html;
         }
 
         /// <summary>
@@ -535,6 +577,22 @@ namespace NetWin.Client.SiteExamination.B_Common
             return tags;
         }
 
+        /// <summary>
+        /// 过滤html注释
+        /// </summary>
+        /// <returns></returns>
+        public static string FilterNotes(string htmlContent)
+        {
+            try
+            {
+                return Regex.Replace(htmlContent, @"(?s)<!--.*?-->", "");
+            }
+            catch
+            {
+                // ignored
+            }
+            return htmlContent;
+        }
         #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         public InSite(string siteUrl, string currentUrl, string innerHtml, DateTime lastModified,long size, int level)
         {
             CurrentUrlUrl = currentUrl;
-            InnerHtml = innerHtml;
+            InnerHtml = RegexHelper.FilterNotes(innerHtml);
             Level = level;
             SiteUrl = siteUrl;
             LastModified = lastModified;
@@ -52,7 +52,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                return RegexHelper.ReplaceHtmlTag(InnerText);
+                return RegexHelper.ReplaceHtmlTag(InnerHtml);
             }
         }
 
@@ -68,8 +68,16 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                var count = Links.Count(p => p.Contains(DomainName));
+                var count = InsideLinks.Count;
                 return count;
+            }
+        }
+
+        public List<string> InsideLinks
+        {
+            get
+            {
+                return HttpLinks.Where(p => p.Contains(DomainName)).ToList();
             }
         }
 
@@ -80,7 +88,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                var count = Links.Count(p => !p.Contains(DomainName));
+                var count = HttpLinks.Count(p => !p.Contains(DomainName));
                 return count;
             }
         }
@@ -92,8 +100,8 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                return Links.Count(p =>
-                    p.Contains("#") || p.Contains("javascript:") || p.Contains("javascript:void()") ||
+                return Links.Count(p =>string.IsNullOrWhiteSpace(p)||
+                    p=="#" || p.Contains("javascript:") || p.Contains("javascript:void()") ||
                     p.Contains("javascript:void(0)"));
             }
         }
@@ -165,7 +173,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                return RegexHelper.GetStyleCount(InnerHtml).Count;
+                return RegexHelper.GetStyleLinks(InnerHtml).Count;
 
             }
         }
@@ -206,13 +214,14 @@ namespace NetWin.Client.SiteExamination.C_Module
             {
                 if (string.IsNullOrWhiteSpace(this.InnerHtml))
                     return new List<string>();
-                return RegexHelper.GetValidLinks(InnerHtml).Distinct().ToList();
+                var httplinks = RegexHelper.GetALinks(InnerHtml, DomainName);
+                return httplinks.Distinct().ToList();
             }
         }
 
         /// <summary>
         /// 标题
-        /// 限制返回不超过100字符的标题,太长的标题是有问题的
+        /// 限制返回不超过200字符的标题,太长的标题是有问题的
         /// </summary>
         public string Title
         {
@@ -221,8 +230,8 @@ namespace NetWin.Client.SiteExamination.C_Module
                 if (string.IsNullOrWhiteSpace(this.InnerHtml))
                     return string.Empty;
                 string title = RegexHelper.GetTitle(InnerHtml);
-                if (!string.IsNullOrWhiteSpace(title) && title.Length > 100)
-                    title = title.Substring(0, 100);
+                if (!string.IsNullOrWhiteSpace(title) && title.Length > 200)
+                    title = title.Substring(0, 200);
                 return title;
             }
         }
@@ -238,6 +247,20 @@ namespace NetWin.Client.SiteExamination.C_Module
                 if (string.IsNullOrWhiteSpace(this.InnerHtml))
                     return 0;
                 return RegexHelper.MatchCount(InnerHtml, @"<iframe");
+            }
+        }
+
+        /// <summary>
+        ///  Flash数量
+        /// </summary>
+        /// <returns></returns>
+        public int FlashCount
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(this.InnerHtml))
+                    return 0;
+                return RegexHelper.GetLinks(InnerHtml).Count(p=>p.EndsWith(".swf")||p.Contains(".swf?"));
             }
         }
 

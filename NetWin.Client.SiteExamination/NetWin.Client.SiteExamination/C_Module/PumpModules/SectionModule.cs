@@ -28,8 +28,8 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
             switch (AimsContainText)
             {
-
-                case "keyword":
+              
+                case "keywords":
                     AimsCount = site.KeyWords.Count;
                     break;
                 case "description":
@@ -45,17 +45,25 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     AimsCount = site.IframeCount;
                     break;
                 case "flash":
-                    AimsCount = site.IframeCount;
+                    AimsCount = site.FlashCount;
                     break;
                 case "title":
-                    AimsCount = site.Description.Length;
+                    AimsCount = site.Title.Length;
                     break;
                 case "strong":
                     AimsCount = site.StrongCount;
                     break;
                 case "jswithinbody":
-                    var body = RegexHelper.GetContentByDom(site.InnerHtml, "body");
+                    var body = RegexHelper.GetContentByDom(site.InnerHtml,"body");
                     AimsCount = RegexHelper.MatchCount(body, @"<script");
+                    if (AimsCount == 0)
+                    {
+                        AimsContent = "未检测到js放于body内";
+                    }
+                    else
+                    {
+                        AimsContent = "存在js放于body内";
+                    }
                     break;
                 case "nulllink":
                     AimsCount += site.EmptyLinkCount;
@@ -103,7 +111,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         var text = RegexHelper.GetContentByDom(item, "a");
                         if (string.IsNullOrWhiteSpace(href) || string.IsNullOrWhiteSpace(text))
                         {
-                            AimsCount = 1;
+                            AimsCount = 0;
                             AimsContent = "锚文本和锚链接出现为空的情况";
                             break;
                         }

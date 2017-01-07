@@ -115,32 +115,46 @@ namespace NetWin.Client.SiteExamination.E_Services
             try
             {
                 var responseMessage = HttpHelper.RequestSite(siteUrl);
-                var links = RegexHelper.GetValidLinks(responseMessage.InnerHtml).Where(p => p.Contains(RegexHelper.GetDomainName(siteUrl)));
-                if (!links.Any())
-                {
-                    reslutModel.Result = false;
-                    reslutModel.Message = "资源需要登录";
-                    return reslutModel;
-                }
 
-                //存放已经抓取过的网址
-                ConcurrentBag<string> spidered = new ConcurrentBag<string>();
-                Parallel.ForEach(links.Take(SysConfig.SpiderBatch), p =>
+                if (responseMessage.StatusCode == 200 || responseMessage.StatusCode == 301)
                 {
-                    var response = HttpHelper.RequestSite(p);
-                    spidered.Add(response.ResponseUrls);
-                });
+                    var links = RegexHelper.GetALinks(responseMessage.InnerHtml, siteUrl).Where(p => p.Contains(RegexHelper.GetDomainName(siteUrl)));
 
-                var distinct = spidered.Count - spidered.Distinct().Count();
-
-                if (spidered.Count != 0)
-                {
-                    double percent = (double)distinct / spidered.Count;
-                    if (percent >= 0.6)
+                    if (!links.Any())
                     {
                         reslutModel.Result = false;
-                        reslutModel.Message = "资源需要登录";
+                        reslutModel.Message = @"{0}对不起，您输入的网址可能存在以下情况：
+                                                {0}1、输入的网址不适合用本网站去推广优化，请更换网址或者大批量更改该网站内链
+                                                {0}2、该网站需要登录，搜索引擎无法识别，请更换网站推广优化
+                                                {0}3、该网站属于单页面网站，不利于推广优化，请更换网站推广优化";
+                        return reslutModel;
                     }
+
+                    //存放已经抓取过的网址
+                    ConcurrentBag<string> spidered = new ConcurrentBag<string>();
+                    Parallel.ForEach(links.Take(SysConfig.SpiderBatch), p =>
+                    {
+                        var response = HttpHelper.RequestSite(p);
+                        spidered.Add(response.ResponseUrls);
+                    });
+
+                    var distinct = spidered.Count - spidered.Distinct().Count();
+
+                    if (spidered.Count != 0)
+                    {
+                        double percent = (double)distinct / spidered.Count;
+                        if (percent >= 0.6)
+                        {
+                            reslutModel.Result = false;
+                            reslutModel.Message = "资源需要登录";
+                        }
+                    }
+                }
+                else
+                {
+                    reslutModel.Result = false;
+                    reslutModel.Message = "网址不能访问,请检查网址拼写是否正确!";
+                    return reslutModel;
                 }
             }
             catch (Exception exception)
@@ -291,10 +305,11 @@ namespace NetWin.Client.SiteExamination.E_Services
                         {
                             SiteId = param.Id,
                             DetailId = item.DetailId,
-                            IsPass = !item.IsPass,
+                            IsPass = item.IsPass,
                             Result = item.Result,
                             CreatedOn = item.ExaminationDateTime,
-                            Score = item.Score
+                            Score = item.Score,
+                            Position = item.Position
                         });
                     }
 
@@ -346,10 +361,11 @@ namespace NetWin.Client.SiteExamination.E_Services
                     {
                         SiteId = param.Id,
                         DetailId = item.DetailId,
-                        IsPass = !item.IsPass,
+                        IsPass = item.IsPass,
                         Result = item.Result,
                         CreatedOn = item.ExaminationDateTime,
-                        Score = item.Score
+                        Score = item.Score,
+                        Position = item.Position
                     });
                 }
                 return outSite;

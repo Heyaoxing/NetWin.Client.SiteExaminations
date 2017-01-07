@@ -48,24 +48,24 @@ namespace NetWin.Client.SiteExamination.A_Core.Enum
     public enum JudgeTypeEnum
     {
         /// <summary>
-        /// 大于等于目标统计值
+        /// 小于等于目标统计值
         /// </summary>
-        GreaterOrEqualByAims=100,
+        LessThanOrEqualByAims = 100,
 
         /// <summary>
-        /// 小于目标统计值
+        /// 大于目标统计值
         /// </summary>
-        LessThan = 200,
+         Greater= 200,
 
         /// <summary>
-        /// 大于等于目标值与僚机值比例
+        /// 小于等于目标值与僚机值比例
         /// </summary>
-        GreaterOrEqualByScale = 300,
+       LessThanEqualByScale = 300,
 
         /// <summary>
-        /// 大于等于目标值与僚机值比例
+        /// 大于目标值与僚机值比例
         /// </summary>
-        LessThanByScale = 400,
+       GreaterOrByScale = 400,
     }
 
     /// <summary>

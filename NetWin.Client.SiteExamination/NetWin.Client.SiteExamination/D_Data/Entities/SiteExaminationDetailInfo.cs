@@ -38,5 +38,10 @@ namespace NetWin.Client.SiteExamination.D_Data.Entities
         /// 体检评分
         /// </summary>
         public int Score { set; get; }
+
+        /// <summary>
+        /// 结果所在的url
+        /// </summary>
+        public string Position { set; get; }
     }
 }

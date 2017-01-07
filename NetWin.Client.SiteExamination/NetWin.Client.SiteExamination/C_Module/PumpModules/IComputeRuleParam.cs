@@ -12,6 +12,12 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         {
             Keywords=new Dictionary<string, int>();
         }
+
+        /// <summary>
+        /// 网址
+        /// </summary>
+        internal string SourceUrl { set; get; }
+
         /// <summary>
         /// 具体哪项检查项目的id
         /// </summary>
@@ -77,7 +83,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             get
             {
                 if (!string.IsNullOrWhiteSpace(_matchMessage))
-                    return _matchMessage.Replace("_COUNT_", AimsCount.ToString()).Replace("_CONTENT_", AimsContent);
+                    return _matchMessage.Replace("_COUNT_", AimsCount.ToString()).Replace("_CONTENT_", AimsContent).Replace("_SOURCE_", SourceUrl);
                 return string.Empty;
             }
         }

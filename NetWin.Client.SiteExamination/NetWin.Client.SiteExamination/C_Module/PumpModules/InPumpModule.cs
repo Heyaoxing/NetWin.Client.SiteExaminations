@@ -93,12 +93,13 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             foreach (var section in sectionModule)
             {
                 bool result = section.ComputeMethod(site);
-                if (isEnd || result)
+                if (isEnd || !result)
                 {
                     ExaminationResult examination = new ExaminationResult();
                     examination.DetailId = section.DetailId;
                     examination.IsPass = result;
                     examination.Score = section.Score;
+                    examination.Position = section.SourceUrl;
                     examination.Result = section.MatchMessage;
                     examination.ExaminationDateTime = DateTime.Now;
                     examinationResults.Add(examination);

@@ -24,19 +24,27 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
             switch (AimsContainText)
             {
+
                 case "h1":
                     AimsCount += site.H1Count;
                     break;
                 case "h2-h6":
                     AimsCount += site.H2Count + site.H3Count + site.H4Count + site.H5Count + site.H6Count;
                     break;
-
                 case "level":
                     if (site.Level <= 3)
                     {
                         AimsCount += 1;
                     }
                     WingManCount += 1;
+
+                    if (WingManCount != 0)
+                    {
+                        double percent=Convert.ToDouble(AimsCount)/Convert.ToDouble(WingManCount);
+                        string result=string.Format("{0:0.00%}",percent);
+                        AimsContent = "总体URL层级3（含）以内占比" + result;
+                    }
+
                     break;
                 case "insidelinkcount":
                     AimsCount += site.InsideLinkCount;
@@ -47,6 +55,17 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                 case "nullsite":
                      AimsCount += string.IsNullOrWhiteSpace(site.InnerText) ? 1 : 0;
                     WingManCount++;
+
+                    if (AimsCount != 0)
+                    {
+                        double percent = Convert.ToDouble(AimsCount)/Convert.ToDouble(WingManCount);
+                        string result = string.Format("{0:0.00%}", percent);
+                        AimsContent = "垃圾页面占比:" + result;
+                    }
+                    else
+                    {
+                        AimsContent = "垃圾页面占比:0";
+                    }
                     break;
                
                 case "dynamic":

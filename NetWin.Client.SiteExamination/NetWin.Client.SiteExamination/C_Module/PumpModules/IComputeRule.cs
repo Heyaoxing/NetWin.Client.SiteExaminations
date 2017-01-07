@@ -18,36 +18,48 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// </summary>
         internal bool ComputeMethod(InSite site)
         {
-            bool result = false;
-            ComputeCount(site);
-            switch (JudgeType)
+            if (site == null)
+                return true;
+
+            bool result = true;
+
+            SourceUrl = site.CurrentUrlUrl;
+            try
             {
-                case JudgeTypeEnum.GreaterOrEqualByAims:
-                    result = JudgeNumber <= AimsCount;
-                    break;
-                case JudgeTypeEnum.LessThan:
-                    result = JudgeNumber > AimsCount;
-                    break;
-                case JudgeTypeEnum.GreaterOrEqualByScale:
-                    if (WingManCount == 0)
-                    {
-                        result = JudgeNumber <= 0;
-                    }
-                    else
-                    {
-                        result = JudgeNumber <= (AimsCount / WingManCount);
-                    }
-                    break;
-                case JudgeTypeEnum.LessThanByScale:
-                    if (WingManCount == 0)
-                    {
-                        result = JudgeNumber > 0;
-                    }
-                    else
-                    {
-                        result = JudgeNumber > (AimsCount / WingManCount);
-                    }
-                    break;
+                ComputeCount(site);
+                switch (JudgeType)
+                {
+                    case JudgeTypeEnum.LessThanOrEqualByAims:
+                        result = JudgeNumber <= AimsCount;
+                        break;
+                    case JudgeTypeEnum.Greater:
+                        result = JudgeNumber > AimsCount;
+                        break;
+                    case JudgeTypeEnum.LessThanEqualByScale:
+                        if (WingManCount == 0)
+                        {
+                            result = JudgeNumber <= 0;
+                        }
+                        else
+                        {
+                            result = JudgeNumber <= (AimsCount / WingManCount);
+                        }
+                        break;
+                    case JudgeTypeEnum.GreaterOrByScale:
+                        if (WingManCount == 0)
+                        {
+                            result = JudgeNumber > 0;
+                        }
+                        else
+                        {
+                            result = JudgeNumber > (AimsCount / WingManCount);
+                        }
+                        break;
+                }
+            }
+            catch
+            {
+                // ignored
             }
             return result;
         }

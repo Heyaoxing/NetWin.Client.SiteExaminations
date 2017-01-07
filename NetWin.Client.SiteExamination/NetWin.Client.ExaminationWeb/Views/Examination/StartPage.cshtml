@@ -7,7 +7,7 @@
 <style type="text/css">
     .tag
     {
-        width: 300px;
+        width: 500px;
         height: 100px;
         border: 2px solid #999999;
         position: absolute;
@@ -22,7 +22,7 @@
         border-width: 20px;
         position: absolute;
         bottom: 25px;
-        left: 297px;
+        left: 497px;
         border-style: solid;
         border-color: transparent transparent transparent #999999;
         font-size: 0;
@@ -34,7 +34,7 @@
         border-width: 20px;
         position: absolute;
         bottom: 25px;
-        left: 295px;
+        left: 495px;
         border-style: solid;
         border-color: transparent transparent transparent #FFF;
         font-size: 0;
@@ -91,7 +91,6 @@
 }
 else
 {
-   
     <div class="row" style="margin-right: 0px">
         <div>
             <div class="box box-widget widget-user-2">
@@ -162,13 +161,16 @@ else
         </div>
     </div>
     <script type="text/javascript">
-
         var request = new Array();
         var siteId = 0;
         var checkSite_interval;
         var sitelUrl = '@url';
         $(function () {
-            $("#siteUrl").text(sitelUrl);
+            init();
+        });
+
+        function init() {
+             $("#siteUrl").text(sitelUrl);
            if ('@isHostory.ToString().ToLower()' == 'false') {
                checkSite_interval = setInterval(checkSite, "1000");
            } else {
@@ -177,8 +179,7 @@ else
               $("#siteUrl").text(sitelUrl);
               load('@siteId');
            }
-
-        });
+        }
 
         //登录检查
         function checkSite() {
@@ -190,7 +191,7 @@ else
             if (result.Result) {
                 start();
             } else {
-                window.location.href = "@Url.Action("Index", new { isLogin = true, message = "网站需要登陆才能看到内容", url = url })";
+                window.location.href = "@Url.Action("Index")?isLogin=true&message="+result.Message+"&url"+sitelUrl;
             }
         }
         var item_count = 0;
@@ -292,10 +293,11 @@ else
                 clearTimeout(interval);
                 $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检完成");
                 $("#Export").html("<a href='javascript:void(0);' onclick=\"ExportReport()\">生成报告</a>");
-                $("#features").html("<button class='btn btn-block btn-danger' onclick='start()'>重新体检</button>");
+                $("#features").html("<button class='btn btn-block btn-danger' onclick='restart()'>开始体检</button>");
                 $(".view_checking").css('display', 'none');
                 $(".view_result").css('display', 'block');
                 $("#result_text").html("您的网站体检得分是<span style='font-size:50px;'>" + score + "</span>分，建议您对网站进行优化");
+                url_input();
             }
 
             $("#process").css("width", (((item_count - request.length) / item_count).toFixed(2) * 100) + "%");
@@ -317,10 +319,11 @@ else
             if (json.Result) {
                 clearTimeout(interval);
                 $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检取消");
-                $("#features").html("<button class='btn btn-block btn-danger'  onclick='start()'>重新体检</button>");
+                $("#features").html("<button class='btn btn-block btn-danger'  onclick='restart()'>开始体检</button>");
                 $(".view_checking").css('display', 'none');
                 $(".view_result").css('display', 'block');
                 $("#result_text").html("体检被取消！目前您的网站发现有<span style='font-size:50px;'>" + problem + "</span>项问题！");
+                url_input();
             } else {
                 alert("取消失败：" + json.Message);
             }
@@ -374,6 +377,7 @@ else
             if (result.Result) {
                 var contentText = "<table>";
                 contentText += "<tr><td style='text-align:right;'>分析项:</td><td>"+result.Data.Name+"</td></tr>";
+                contentText += "<tr><td style='text-align:right;'>位置:</td><td>"+result.Data.Position+"</td></tr>";
                 contentText += "<tr><td style='text-align:right;'>分析结果:</td><td>"+result.Data.Result+"</td></tr>";
                 contentText += "<tr><td style='text-align:right;'>要求:</td><td>"+result.Data.Require+"</td></tr>";
                 contentText += "</table>";
@@ -386,6 +390,17 @@ else
 
         function modal_mouseout() {
             $(".tag").css("display", "none");
+        }
+
+
+        function url_input() {
+            $("#siteUrl").html("<input  placeholder='输入需要体检的网址,如:http://www.baidu.com' type='text' id='input_siteurl' value='"+sitelUrl+"' style='width:300px;color:black;'/>");
+        }
+
+        //重新体检
+        function restart() {
+           var url=$.trim($("#input_siteurl").val());
+           window.location.href = '@Url.Action("StartPage")?isHostory=false&siteId=0&examinationUrl=' + url;
         }
 
     </script>

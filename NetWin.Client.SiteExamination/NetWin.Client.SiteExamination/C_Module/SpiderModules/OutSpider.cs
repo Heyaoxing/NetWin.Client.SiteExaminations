@@ -31,12 +31,12 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
 
             try
             {
-                ResponseMessage responseMessage = HttpHelper.RequestSite(url, SysConfig.RequestSiteTimeOut);
+                ResponseMessage responseMessage = HttpHelper.RequestSite(url, 20);
                 return responseMessage;
             }
             catch (Exception exception)
             {
-                LogHelper.Error("获取外链网页内容异常：" + exception.Message + exception.StackTrace);
+                LogHelper.Error("网址:" + url + ",获取外链网页内容异常：" + exception.Message + exception.StackTrace);
             }
             return null;
         }
@@ -61,7 +61,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 var response = HttpHelper.RequestSite(domain);
                 outSite.StatusCode = response.StatusCode;
                 watch.Stop();
-                outSite.ResponseTime = watch.Elapsed.Seconds;
+                outSite.ResponseTime = watch.Elapsed.Milliseconds;
                 //首选域
                 string preferredDomain;
                 if (domain.Contains("www."))
@@ -180,7 +180,6 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 LogHelper.Error("爬去资源并封装为外部资源对象异常:" + exception.Message);
             }
             return outSite;
-
         }
     }
 }

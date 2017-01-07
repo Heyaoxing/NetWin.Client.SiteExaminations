@@ -27,6 +27,12 @@ namespace NetWin.Client.SiteExamination.D_Data.Dto
         /// 要求
         /// </summary>
         public string Require { set; get; }
+
+        /// <summary>
+        /// 结果所在的url
+        /// </summary>
+        public string Position { set; get; }
+
         /// <summary>
         /// 是否通过
         /// </summary>

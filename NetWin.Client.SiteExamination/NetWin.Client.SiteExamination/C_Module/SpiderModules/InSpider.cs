@@ -37,7 +37,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
             }
             catch (Exception exception)
             {
-                LogHelper.Error("获取内链网页内容异常：" + exception.Message + exception.StackTrace);
+                LogHelper.Error("网址为:" + url + ", 获取内链网页内容异常：" + exception.Message + exception.StackTrace);
             }
             return null;
         }
@@ -106,9 +106,9 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                                if (spiderResult != null)
                                {
                                    _concurrentQueue.Enqueue(spiderResult);
-                                   foreach (var item in spiderResult.HttpLinks)
+                                   foreach (var item in spiderResult.InsideLinks)
                                    {
-                                       if (!allSite.ContainsKey(item) || !item.EndsWith(".css") || !item.EndsWith(".js") || !item.EndsWith(".jpg") || !item.EndsWith(".jpeg") || !item.EndsWith(".gif") || !item.EndsWith(".png"))
+                                       if (!allSite.ContainsKey(item) || item.Contains(SeedSiteUrl) || !item.EndsWith(".css") || !item.EndsWith(".js") || !item.EndsWith(".jpg") || !item.EndsWith(".jpeg") || !item.EndsWith(".gif") || !item.EndsWith(".png"))
                                            allSite.GetOrAdd(item, levelCach + 1);
                                    }
                                }

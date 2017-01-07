@@ -83,13 +83,13 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// </summary>
         private string[] suffixs = new[] { ".com", ".net", "com.cn", ".org", ".gov.cn", ".edu", ".net.cn", ".cn" };
 
-        private string[] areas = new[] {"北京","天津","上海","重庆","河北","山西","台湾","辽宁","吉林","黑龙江","江苏","浙江","安徽","福建","江西","山东","河南","湖北",
-                                        "湖南","广东","甘肃","四川","山东","贵州","海南","云南","青海","陕西","广西","西藏","宁夏","新疆","内蒙","澳门","香港"};
+        private string[] areas = new[] {"北京","天津","上海","重庆","河北","山西","辽宁","吉林","黑龙江","江苏","浙江","安徽","福建","江西","山东","河南","湖北",
+                                        "湖南","广东","甘肃","四川","山东","贵州","海南","云南","青海","陕西","广西","西藏","宁夏","新疆","内蒙"};
         private ComputeRuleParam ComputeCount(OutSite site, ComputeRuleParam param)
         {
             if (site == null)
                 return param;
-
+            param.SourceUrl = site.Url;
             switch (param.AimsContainText)
             {
                 case "domainage":
@@ -103,7 +103,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     else
                     {
-                        param.AimsCount = 1;
+                        param.AimsCount = 0;
                         param.AimsContent = "域名未备案";
                     }
 
@@ -119,6 +119,12 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     break;
                 case "domainsuffix":
                     param.AimsCount = 0;
+                    var strings = site.Url.Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries);
+                    if (strings.Length > 1)
+                    {
+                        param.AimsContent = strings[strings.Length - 1];
+                    }
+
                     foreach (var item in suffixs)
                     {
                         var endsWith = site.Url.EndsWith(item);
@@ -140,18 +146,53 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     break;
                 case "robots":
-                    param.AimsCount = site.ExistRobots ? 1 : 0;
+                    if (site.ExistRobots)
+                    {
+                        param.AimsCount = 1;
+                        param.AimsContent = "存在";
+                    }
+                    else
+                    {
+                        param.AimsCount = 0;
+                        param.AimsContent = "不存在";
+                    }
                     break;
                 case "sitemap":
-                    param.AimsCount = site.ExistSitemap ? 1 : 0;
+                    if (site.ExistSitemap)
+                    {
+                        param.AimsCount = 1;
+                        param.AimsContent = "存在";
+                    }
+                    else
+                    {
+                        param.AimsCount = 0;
+                        param.AimsContent = "不存在";
+                    }
                     break;
                 case "preferred":
-                    param.AimsCount = site.IsPreferredDomain ? 1 : 0;
-                    param.AimsContent = site.PreferredDomain;
+
+                    if (site.IsPreferredDomain)
+                    {
+                        param.AimsCount = 1;
+                        param.AimsContent = "存在首选域";
+                    }
+                    else
+                    {
+                        param.AimsCount = 0;
+                        param.AimsContent = "不存在首选域";
+                    }
                     break;
                 case "logo":
-                    param.AimsCount = site.IsLogoContainsKeyWord ? 1 : 0;
-                    param.AimsContent = site.LogoAltAndTitle;
+                    if (site.IsLogoContainsKeyWord)
+                    {
+                        param.AimsCount = 1;
+                        param.AimsContent = "图片logo中的alt或title属性包含关键字:"+site.LogoAltAndTitle;
+                    }
+                    else
+                    {
+                        param.AimsCount = 0;
+                        param.AimsContent = "图片logo中的alt或title属性没有包含关键字";
+                    }
                     break;
             }
             return param;
@@ -166,13 +207,13 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             param = ComputeCount(site, param);
             switch (param.JudgeType)
             {
-                case JudgeTypeEnum.GreaterOrEqualByAims:
+                case JudgeTypeEnum.LessThanOrEqualByAims:
                     result = param.JudgeNumber <= param.AimsCount;
                     break;
-                case JudgeTypeEnum.LessThan:
+                case JudgeTypeEnum.Greater:
                     result = param.JudgeNumber > param.AimsCount;
                     break;
-                case JudgeTypeEnum.GreaterOrEqualByScale:
+                case JudgeTypeEnum.LessThanEqualByScale:
                     result = param.JudgeNumber <= (param.AimsCount / param.WingManCount);
                     break;
             }
@@ -183,6 +224,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             examinationResult.Score = param.Score;
             examinationResult.Result = param.MatchMessage;
             examinationResult.ExaminationDateTime = DateTime.Now;
+            examinationResult.Position = param.SourceUrl;
             return examinationResult;
         }
     }
