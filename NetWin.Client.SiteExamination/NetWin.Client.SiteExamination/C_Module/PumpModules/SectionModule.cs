@@ -12,10 +12,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
     /// </summary>
     internal class SectionModule : IComputeRule
     {
-        /// <summary>
-        /// 用于比较锚链接和锚文本
-        /// </summary>
-        List<Anchor> anchors = new List<Anchor>();
+       
 
         /// <summary>
         /// 目标数值统计方法
@@ -52,6 +49,15 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     break;
                 case "strong":
                     AimsCount = site.StrongCount;
+                    if (AimsCount == 0)
+                    {
+                        AimsContent = "未使用strong标签";
+                        SourceUrl = "全站";
+                    }
+                    else
+                    {
+                        AimsContent = "使用了strong标签";
+                    }
                     break;
                 case "jswithinbody":
                     var body = RegexHelper.GetContentByDom(site.InnerHtml,"body");
@@ -103,19 +109,15 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     break;
 
                 case "anchorlink":
+                    // 用于比较锚链接和锚文本
+                    List<Anchor> anchors = new List<Anchor>();
                     AimsCount = 0;
-                    var a = RegexHelper.GetDoms(site.InnerHtml, "a");
+                    var a = RegexHelper.GetDoms(site.InnerHtmlFilter, "a");
                     foreach (var item in a)
                     {
                         var href = RegexHelper.GetTagAttrValue(item, "a", "href");
                         var text = RegexHelper.GetContentByDom(item, "a");
-                        if (string.IsNullOrWhiteSpace(href) || string.IsNullOrWhiteSpace(text))
-                        {
-                            AimsCount = 0;
-                            AimsContent = "锚文本和锚链接出现为空的情况";
-                            break;
-                        }
-                        else
+                        if (!string.IsNullOrWhiteSpace(href))
                         {
                             anchors.Add(new Anchor()
                             {
@@ -126,10 +128,10 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                             var textCount = anchors.GroupBy(p => p.Text).Count(p => p.Count() > 1);
                             var hrefCount = anchors.GroupBy(p => p.Link).Count(p => p.Count() > 1);
 
-                            if (textCount > 1 || hrefCount > 1)
+                            if (textCount > 0 || hrefCount > 0)
                             {
                                 AimsCount = 1;
-                                AimsContent = "锚文本和链接不唯一";
+                                AimsContent = "锚文本或链接不唯一";
                                 break;
                             }
                         }

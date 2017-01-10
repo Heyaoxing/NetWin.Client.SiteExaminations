@@ -57,7 +57,7 @@ namespace NetWin.Client.SiteExamination.B_Common
                 responseMessage.StatusCode = Convert.ToInt32(webResponse.StatusCode);
                 responseMessage.LastModified = webResponse.LastModified;
                 responseMessage.ResponseUrls = webResponse.ResponseUri.ToString();
-                responseMessage.Size = bytes.Length/1024;
+                responseMessage.Size = bytes.Length / 1024;
                 webResponse.Close();
                 webRequest.GetResponse().Close();
             }
@@ -71,7 +71,7 @@ namespace NetWin.Client.SiteExamination.B_Common
                     responseMessage.ResponseUrls = response.ResponseUri.ToString();
                     response.Close();
                 }
-               
+
             }
             return responseMessage;
         }

@@ -96,6 +96,9 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     param.AimsCount = site.DomainAge;
                     break;
                 case "record":
+                    param.AimsCount = 0;
+                    param.AimsContent = "域名未备案";
+
                     if (site.IsRecord)
                     {
                         param.AimsCount = 1;
@@ -103,8 +106,14 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     else
                     {
-                        param.AimsCount = 0;
-                        param.AimsContent = "域名未备案";
+                        if (!string.IsNullOrWhiteSpace(site.DomainAddress))
+                        {
+                            if (areas.AsEnumerable().Count(p => site.DomainAddress.Contains(p)) > 0)
+                            {
+                                param.AimsCount = 1;
+                                param.AimsContent = "域名已备案";
+                            }
+                        }
                     }
 
                     break;
@@ -119,7 +128,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     break;
                 case "domainsuffix":
                     param.AimsCount = 0;
-                    var strings = site.Url.Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries);
+                    var strings = site.Url.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                     if (strings.Length > 1)
                     {
                         param.AimsContent = strings[strings.Length - 1];
@@ -186,7 +195,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     if (site.IsLogoContainsKeyWord)
                     {
                         param.AimsCount = 1;
-                        param.AimsContent = "图片logo中的alt或title属性包含关键字:"+site.LogoAltAndTitle;
+                        param.AimsContent = "图片logo中的alt或title属性包含关键字:" + site.LogoAltAndTitle;
                     }
                     else
                     {

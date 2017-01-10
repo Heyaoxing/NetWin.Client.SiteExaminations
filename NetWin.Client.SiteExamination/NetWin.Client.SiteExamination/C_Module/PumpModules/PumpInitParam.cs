@@ -52,5 +52,11 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// 匹配结果信息
         /// </summary>
         internal string MatchMessage { set; get; }
+
+
+        /// <summary>
+        /// 返回结果时机
+        /// </summary>
+        internal MomentType Moment { set; get; }
     }
 }

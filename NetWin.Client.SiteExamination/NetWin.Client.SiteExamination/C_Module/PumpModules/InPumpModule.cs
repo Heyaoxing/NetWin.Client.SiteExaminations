@@ -67,10 +67,11 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             computeRule.JudgeType = param.JudgeType;
             computeRule.JudgeNumber = param.JudgeNumber;
             computeRule.MatchMessage = param.MatchMessage;
+            computeRule.Moment = param.Moment;
             if (keyWords != null)
                 foreach (var keyword in keyWords.Distinct())
                 {
-                    computeRule.Keywords.Add(keyword,0);
+                    computeRule.Keywords.Add(keyword, 0);
                 }
 
             return computeRule;
@@ -87,24 +88,30 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             LogHelper.Info("进入数据处理入口");
             List<ExaminationResult> examinationResults = new List<ExaminationResult>();
 
+            if (!isEnd && site == null)
+            {
+                return examinationResults;
+            }
+
             #region 执行过程计算组件
             List<IComputeRule> sectionRemove = new List<IComputeRule>();
             //符合计算出结果的体检项目
             foreach (var section in sectionModule)
             {
-                bool result = section.ComputeMethod(site);
-                if (isEnd || !result)
-                {
-                    ExaminationResult examination = new ExaminationResult();
-                    examination.DetailId = section.DetailId;
-                    examination.IsPass = result;
-                    examination.Score = section.Score;
-                    examination.Position = section.SourceUrl;
-                    examination.Result = section.MatchMessage;
-                    examination.ExaminationDateTime = DateTime.Now;
-                    examinationResults.Add(examination);
-                    sectionRemove.Add(section);
-                }
+                var resultModel = section.ComputeMethod(site);
+                if (resultModel.Result)
+                    if (isEnd || (section.Moment == MomentType.Error && !resultModel.Data) || (section.Moment == MomentType.Normal && resultModel.Data))
+                    {
+                        ExaminationResult examination = new ExaminationResult();
+                        examination.DetailId = section.DetailId;
+                        examination.IsPass = resultModel.Data;
+                        examination.Score = section.Score;
+                        examination.Position = section.SourceUrl;
+                        examination.Result = section.MatchMessage;
+                        examination.ExaminationDateTime = DateTime.Now;
+                        examinationResults.Add(examination);
+                        sectionRemove.Add(section);
+                    }
             }
             //移除掉已经出结果的体检项目
             sectionModule.RemoveAll(p => sectionRemove.Contains(p));
@@ -115,12 +122,12 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             //符合计算出结果的体检项目
             foreach (var global in globalModule)
             {
-                bool result = global.ComputeMethod(site);
+                var resultModel = global.ComputeMethod(site);
                 if (isEnd)
                 {
                     ExaminationResult examination = new ExaminationResult();
                     examination.DetailId = global.DetailId;
-                    examination.IsPass = result;
+                    examination.IsPass = resultModel.Data;
                     examination.Score = global.Score;
                     examination.Result = global.MatchMessage;
                     examination.ExaminationDateTime = DateTime.Now;

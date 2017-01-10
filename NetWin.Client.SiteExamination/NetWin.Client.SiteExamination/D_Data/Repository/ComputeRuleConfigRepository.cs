@@ -16,7 +16,7 @@ namespace NetWin.Client.SiteExamination.D_Data.Repository
         /// <returns></returns>
         public static List<PumpInitParam> GetInPumpInitParams()
         {
-            string sql = "select a.DetailId,a.Score,b.ComputeType,b.AimsContainText,b.WingManContainText,b.JudgeType,b.JudgeNumber,b.MatchMessage  from ExaminationItemDetailConfig as a join ComputeRuleConfig as b on a.RuleId=b.RuleId join ExaminationItemConfig as c on c.ItemId=a.ItemId where a.IsEnable=1 and c.IsEnable=1 and b.SpiderType=1;";
+            string sql = "select a.DetailId,a.Score,b.ComputeType,b.AimsContainText,b.WingManContainText,b.JudgeType,b.JudgeNumber,b.MatchMessage,b.Moment  from ExaminationItemDetailConfig as a join ComputeRuleConfig as b on a.RuleId=b.RuleId join ExaminationItemConfig as c on c.ItemId=a.ItemId where a.IsEnable=1 and c.IsEnable=1 and b.SpiderType=1;";
             return SqLiteConnection.Query<PumpInitParam>(sql).ToList();
         }
 
@@ -26,7 +26,7 @@ namespace NetWin.Client.SiteExamination.D_Data.Repository
         /// <returns></returns>
         public static List<PumpInitParam> GetOutPumpInitParams()
         {
-            string sql = "select a.DetailId,a.Score,b.ComputeType,b.AimsContainText,b.WingManContainText,b.JudgeType,b.JudgeNumber,b.MatchMessage  from ExaminationItemDetailConfig as a join ComputeRuleConfig as b on a.RuleId=b.RuleId join ExaminationItemConfig as c on c.ItemId=a.ItemId where a.IsEnable=1 and c.IsEnable=1 and b.SpiderType=2;";
+            string sql = "select a.DetailId,a.Score,b.ComputeType,b.AimsContainText,b.WingManContainText,b.JudgeType,b.JudgeNumber,b.MatchMessage,b.Moment  from ExaminationItemDetailConfig as a join ComputeRuleConfig as b on a.RuleId=b.RuleId join ExaminationItemConfig as c on c.ItemId=a.ItemId where a.IsEnable=1 and c.IsEnable=1 and b.SpiderType=2;";
             return SqLiteConnection.Query<PumpInitParam>(sql).ToList();
         }
     }

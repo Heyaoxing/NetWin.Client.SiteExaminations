@@ -176,7 +176,7 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// <returns></returns>
         public static string GetTitle(string htmlContent)
         {
-            var reg = new Regex(@"<title[^>]*?>(.*)<\/title>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var reg = new Regex(@"<title[^>]*?>(.*?)<\/title>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
             return reg.Match(htmlContent).Groups[1].Value;
         }
 
@@ -311,9 +311,9 @@ namespace NetWin.Client.SiteExamination.B_Common
                 var alinks = from object link in aMatch where !link.ToString().Contains("#") select link.ToString().Trim();
                 foreach (var item in alinks)
                 {
-                    if (item.StartsWith("/"))
+                    if (item.StartsWith("/") || item.StartsWith("\\"))
                     {
-                        links.Add(domainName + item);
+                        links.Add(new Uri(new Uri(domainName), item).ToString());
                     }
                     else if (CheckURLByString(item))
                     {
@@ -484,7 +484,7 @@ namespace NetWin.Client.SiteExamination.B_Common
             try
             {
                 string pattern = string.Format("(?<={0}[^>]*?{1}=\").*?(?=\")", dom, attribute);
-                return new Regex(pattern).Matches(htmlContent)[index].Groups[1].Value;
+                return Match(htmlContent,pattern);
             }
             catch
             {
@@ -586,6 +586,23 @@ namespace NetWin.Client.SiteExamination.B_Common
             try
             {
                 return Regex.Replace(htmlContent, @"(?s)<!--.*?-->", "");
+            }
+            catch
+            {
+                // ignored
+            }
+            return htmlContent;
+        }
+
+        /// <summary>
+        /// 过滤js脚本
+        /// </summary>
+        /// <returns></returns>
+        public static string FilterJs(string htmlContent)
+        {
+            try
+            {
+                return Regex.Replace(htmlContent, @"(?s)<script.*?</script>", "");
             }
             catch
             {

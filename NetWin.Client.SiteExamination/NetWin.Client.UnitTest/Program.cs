@@ -32,7 +32,7 @@ namespace NetWin.Client.UnitTest
             try
             {
                ExaminationExecuteService execute=new ExaminationExecuteService();
-               execute.Start(100, "http://www.gushiwen.org");
+               execute.Start(100, "http://192.168.4.129/");
             }
             catch (Exception exception)
             {

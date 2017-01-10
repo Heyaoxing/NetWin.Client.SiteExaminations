@@ -46,14 +46,14 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
         /// 爬取资源并封装为内部资源对象
         /// </summary>
         /// <param name="url"></param>
-        /// <param name="level"></param>
+        /// <param name="depth"></param>
         /// <returns></returns>
-        private InSite GetSite(string url, int level)
+        private InSite GetSite(string url, int depth)
         {
             var response = SpiderSite(url);
             if (response==null)
                 return null;
-            InSite inSite = new InSite(SeedSiteUrl, url, response.InnerHtml, response.LastModified, response.Size, level);
+            InSite inSite = new InSite(SeedSiteUrl, url, response.InnerHtml, response.LastModified, response.Size, depth);
             return inSite;
         }
 
@@ -100,16 +100,16 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                        {
                            try
                            {
-                               int levelCach = 0;
-                               allSite.TryGetValue(p, out levelCach);
-                               var spiderResult = inSpider.GetSite(p, levelCach);
+                               int depth = 0;
+                               allSite.TryGetValue(p, out depth);
+                               var spiderResult = inSpider.GetSite(p, depth);
                                if (spiderResult != null)
                                {
                                    _concurrentQueue.Enqueue(spiderResult);
                                    foreach (var item in spiderResult.InsideLinks)
                                    {
                                        if (!allSite.ContainsKey(item) || item.Contains(SeedSiteUrl) || !item.EndsWith(".css") || !item.EndsWith(".js") || !item.EndsWith(".jpg") || !item.EndsWith(".jpeg") || !item.EndsWith(".gif") || !item.EndsWith(".png"))
-                                           allSite.GetOrAdd(item, levelCach + 1);
+                                           allSite.GetOrAdd(item, depth + 1);
                                    }
                                }
                                spidered.Add(p);

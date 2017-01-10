@@ -102,4 +102,13 @@ namespace NetWin.Client.SiteExamination.A_Core.Enum
         Error,
         All
     }
+
+    /// <summary>
+    /// 返回结果时机
+    /// </summary>
+    public enum MomentType
+    {
+        Error=100,
+        Normal=200
+    }
 }

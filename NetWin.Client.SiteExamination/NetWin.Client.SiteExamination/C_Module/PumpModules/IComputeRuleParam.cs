@@ -99,6 +99,11 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         internal decimal JudgeNumber { set; get; }
 
         /// <summary>
+        /// 返回结果时机
+        /// </summary>
+        internal MomentType Moment { set; get; }
+
+        /// <summary>
         /// 关键词统计
         /// </summary>
         internal Dictionary<string,int> Keywords { set; get; } 

@@ -81,6 +81,7 @@ namespace NetWin.Client.SiteExamination.D_Data.Base
                                                                             JudgeType            INTEGER,
                                                                             JudgeNumber          DECIMAL(2),
                                                                             MatchMessage         VARCHAR(100),
+                                                                            Moment               SMALLINT,
                                                                             primary key (RuleId)
                                                                             );";
 
@@ -137,41 +138,41 @@ namespace NetWin.Client.SiteExamination.D_Data.Base
                                                                         INSERT INTO ExaminationItemDetailConfig VALUES (35, 2, 35, '垃圾页面占比', 8, '垃圾页面占比不超过5%', 1, '您的网站页面垃圾页面过多呢。垃圾页面对于搜索引擎的友好性极差，这难以提升网站的优化效果。甚至会严重影响到网站的优化，进而被降权或者惩罚。因此呢记得处理一下垃圾页面，要不然百度可不喜欢您的网站了呢。','');";
 
         protected const string InsertComputeRuleConfig = @"delete from  ComputeRuleConfig;
-                                                                        INSERT INTO ComputeRuleConfig VALUES (1, 1, 1, 'description', '', 200, 80, ' 描述字数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (2, 1, 1, 'keywords', '', 100, 3, ' 关键字字数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (3, 1, 2, 'domainage', '', 100, 12, '域名年龄为:_COUNT_个月');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (4, 1, 2, 'record', '', 100, 1, ' _CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (5, 1, 2, 'responsetime', '', 200, 3000, '服务器响应时间为:_COUNT_毫秒');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (6, 1, 2, 'compress', '', 100, 0, '压缩比为:_COUNT_%');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (7, 1, 2, 'expiredate', '',100, 12, '_COUNT_月');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (8, 1, 2, 'domainsuffix', '', 100, 1, '域名后缀为: _CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (9, 1, 2, 'statuscode', '', 100, 200, '服务器状态码:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (10, 1, 2, 'domainaddress', '', 100, 1, '_CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (11, 1, 2, 'robots', null, 100, 1, '_CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (12, 1, 2, 'sitemap', null, 100, 1, '_CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (13, 1, 1, 'iframe', null, 200, 1, ' iframe出现次数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (14, 1, 1, 'flash', null, 200, 1, ' flash出现次数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (15, 1, 1, 'title', null, 200, 30, ' 标题字数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (16, 1, 1, 'jswithinbody', null, 100, 1, '_CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (17, 2, 1, 'h1', null, 100, 1, ' 出现标签数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (18, 2, 1, 'h2-h6', null, 100, 1, ' h2-h6出现数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (19, 1, 1, 'nulllink', null, 200, 1, ' 存在空链接');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (20, 2, 1, 'level', null, 300, 0.8, '_CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (21, 2, 1, 'insidelinkcount', null, 100, 100, '内部链接数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (22, 2, 1, 'outsidelinkcount', null, 100, 1000, '外链数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (23, 1, 1, 'css', null, 200, 5, '  css:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (24, 1, 1, 'js', null, 200,5, '  js:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (25, 2, 1, 'dynamic', null, 100, 1, ' 存在动态链接:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (26, 1, 1, 'size', null, 200, 200, ' 网页大小:_COUNT_ KB');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (27, 2, 1, 'keywordtime', null, 100, 5, ' 关键字出现次数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (28, 1, 2, 'preferred', null, 100, 1, '_CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (29, 1, 1, 'desccontainsword', null, 100, 3, ' 描述关键词出现次数:_COUNT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (30, 1, 2, 'logo', null, 100, 1, '_CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (31, 1, 1, 'contentimg', null, 100, 1, ' _CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (32, 1, 1, 'anchorlink', null, 100, 1, ' _CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (33, 1, 1, 'imgdescript', null, 100, 1, ' _CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (34, 1, 1, 'strong', null, 100, 1, ' _CONTENT_');
-                                                                        INSERT INTO ComputeRuleConfig VALUES (35, 2, 1, 'nullsite', null, 300, 0.5, '_CONTENT_');";
+                                                                        INSERT INTO ComputeRuleConfig VALUES (1, 1, 1, 'description', '', 200, 80, ' 描述字数:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (2, 1, 1, 'keywords', '', 100, 3, ' 关键字数:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (3, 1, 2, 'domainage', '', 100, 12, '域名年龄为:_COUNT_个月',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (4, 1, 2, 'record', '', 100, 1, ' _CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (5, 1, 2, 'responsetime', '', 200, 3000, '服务器响应时间为:_COUNT_毫秒',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (6, 1, 2, 'compress', '', 100, 0, '压缩比为:_COUNT_%',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (7, 1, 2, 'expiredate', '',100, 12, '_COUNT_月',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (8, 1, 2, 'domainsuffix', '', 100, 1, '域名后缀为: _CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (9, 1, 2, 'statuscode', '', 100, 200, '服务器状态码:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (10, 1, 2, 'domainaddress', '', 100, 1, '_CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (11, 1, 2, 'robots', null, 100, 1, '_CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (12, 1, 2, 'sitemap', null, 100, 1, '_CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (13, 1, 1, 'iframe', null, 200, 1, '出现iframe',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (14, 1, 1, 'flash', null, 200, 1, ' 出现flash',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (15, 1, 1, 'title', null, 200, 31, ' 标题字数:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (16, 1, 1, 'jswithinbody', null, 200, 1, '_CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (17, 2, 1, 'h1', null, 100, 1, ' 出现标签数:_COUNT_',200);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (18, 2, 1, 'h2-h6', null, 100, 1, ' h2-h6出现数:_COUNT_',200);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (19, 1, 1, 'nulllink', null, 200, 1, ' 存在空链接',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (20, 2, 1, 'level', null, 300, 0.8, '_CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (21, 2, 1, 'insidelinkcount', null, 100, 100, '内部链接数:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (22, 2, 1, 'outsidelinkcount', null, 100, 1000, '外链数:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (23, 1, 1, 'css', null, 200, 5, '  css:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (24, 1, 1, 'js', null, 200,5, '  js:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (25, 2, 1, 'dynamic', null, 100, 1, ' 存在动态链接:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (26, 1, 1, 'size', null, 200, 200, ' 网页大小:_COUNT_ KB',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (27, 2, 1, 'keywordtime', null, 100, 5, ' 关键字出现次数:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (28, 1, 2, 'preferred', null, 100, 1, '_CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (29, 1, 1, 'desccontainsword', null, 100, 3, ' 描述关键词出现次数:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (30, 1, 2, 'logo', null, 100, 1, '_CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (31, 1, 1, 'contentimg', null, 100, 1, ' _CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (32, 1, 1, 'anchorlink', null, 200, 1, ' _CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (33, 1, 1, 'imgdescript', null, 200, 1, ' _CONTENT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (34, 1, 1, 'strong', null, 100, 1, ' _CONTENT_',200);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (35, 2, 1, 'nullsite', null, 400, 0.05, '_CONTENT_',100);";
 
         /// <summary>
         /// 初始化插入所有系统数据

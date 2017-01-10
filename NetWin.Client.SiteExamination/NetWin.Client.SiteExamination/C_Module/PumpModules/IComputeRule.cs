@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NetWin.Client.SiteExamination.A_Core.Enum;
+using NetWin.Client.SiteExamination.A_Core.Model;
 
 namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 {
@@ -13,20 +14,22 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             AimsCount = 0;
             WingManCount = 0;
         }
+
         /// <summary>
         /// 计算方法
         /// </summary>
-        internal bool ComputeMethod(InSite site)
+        internal ReslutModel<bool> ComputeMethod(InSite site)
         {
-            if (site == null)
-                return true;
-
+            ReslutModel<bool> reslutModel = new ReslutModel<bool>();
+            reslutModel.Result = false;
+            if (site != null)
+            {
+                SourceUrl = site.CurrentUrlUrl;
+                ComputeCount(site);
+            }
             bool result = true;
-
-            SourceUrl = site.CurrentUrlUrl;
             try
             {
-                ComputeCount(site);
                 switch (JudgeType)
                 {
                     case JudgeTypeEnum.LessThanOrEqualByAims:
@@ -48,20 +51,22 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     case JudgeTypeEnum.GreaterOrByScale:
                         if (WingManCount == 0)
                         {
-                            result = JudgeNumber > 0;
+                            result = JudgeNumber >= 0;
                         }
                         else
                         {
-                            result = JudgeNumber > (AimsCount / WingManCount);
+                            result = JudgeNumber >= (AimsCount / WingManCount);
                         }
                         break;
                 }
+                reslutModel.Result = true;
             }
             catch
             {
-                // ignored
+                reslutModel.Result = false;
             }
-            return result;
+            reslutModel.Data = result;
+            return reslutModel;
         }
         /// <summary>
         /// 目标数值统计方法

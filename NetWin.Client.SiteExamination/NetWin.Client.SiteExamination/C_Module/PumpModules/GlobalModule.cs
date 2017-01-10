@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NetWin.Client.SiteExamination.A_Core.Enum;
+using NetWin.Client.SiteExamination.B_Common;
 using NetWin.Client.SiteExamination.B_Common.Interface;
 
 namespace NetWin.Client.SiteExamination.C_Module.PumpModules
@@ -32,19 +33,26 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     AimsCount += site.H2Count + site.H3Count + site.H4Count + site.H5Count + site.H6Count;
                     break;
                 case "level":
-                    if (site.Level <= 3)
+                    if (site.CurrentUrlUrl.Contains("="))
+                        break;
+
+
+                    WingManCount += 1;
+
+                    var level = RegexHelper.MatchCount(site.CurrentUrlUrl.Replace(site.SiteUrl,""), "/");
+
+                    if (level <= 3)
                     {
                         AimsCount += 1;
                     }
-                    WingManCount += 1;
 
                     if (WingManCount != 0)
                     {
-                        double percent=Convert.ToDouble(AimsCount)/Convert.ToDouble(WingManCount);
-                        string result=string.Format("{0:0.00%}",percent);
+                        double percent = Convert.ToDouble(AimsCount) / Convert.ToDouble(WingManCount);
+                        string result = string.Format("{0:0.00%}", percent);
                         AimsContent = "总体URL层级3（含）以内占比" + result;
+                        LogHelper.Info(string.Format("总数:{0},三层内页数:{1}", WingManCount, AimsCount));
                     }
-
                     break;
                 case "insidelinkcount":
                     AimsCount += site.InsideLinkCount;
@@ -53,12 +61,12 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     AimsCount += site.OutsideLinkCount;
                     break;
                 case "nullsite":
-                     AimsCount += string.IsNullOrWhiteSpace(site.InnerText) ? 1 : 0;
+                    AimsCount += string.IsNullOrWhiteSpace(site.InnerText) ? 1 : 0;
                     WingManCount++;
 
                     if (AimsCount != 0)
                     {
-                        double percent = Convert.ToDouble(AimsCount)/Convert.ToDouble(WingManCount);
+                        double percent = Convert.ToDouble(AimsCount) / Convert.ToDouble(WingManCount);
                         string result = string.Format("{0:0.00%}", percent);
                         AimsContent = "垃圾页面占比:" + result;
                     }
@@ -67,7 +75,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         AimsContent = "垃圾页面占比:0";
                     }
                     break;
-               
+
                 case "dynamic":
                     AimsCount += site.IsDynamic ? 1 : 0;
                     break;

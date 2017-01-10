@@ -33,7 +33,7 @@
     <file relUrl="bin/System.Web.WebPages.Deployment.xml" publishTime="12/16/2016 09:07:55" />
     <file relUrl="admin-lte/css/skins/skin-purple-light.css" publishTime="12/27/2016 15:58:43" />
     <file relUrl="Scripts/npm.js" publishTime="12/27/2016 15:58:41" />
-    <file relUrl="bin/NetWin.Client.ExaminationWeb.dll" publishTime="01/07/2017 11:29:57" />
+    <file relUrl="bin/NetWin.Client.ExaminationWeb.dll" publishTime="01/10/2017 10:08:48" />
     <file relUrl="admin-lte/css/skins/_all-skins.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="admin-lte/css/skins/skin-red-light.min.css" publishTime="12/27/2016 15:58:43" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_55_fbf9ee_1x400.png" publishTime="12/16/2016 09:07:52" />
@@ -67,7 +67,7 @@
     <file relUrl="Content/bootstrap.min.css" publishTime="12/27/2016 15:58:41" />
     <file relUrl="Content/themes/base/minified/jquery.ui.theme.min.css" publishTime="12/16/2016 09:07:49" />
     <file relUrl="bin/zh-Hans/System.Web.WebPages.resources.dll" publishTime="07/10/2012 23:39:18" />
-    <file relUrl="Web.config" publishTime="01/07/2017 11:32:08" />
+    <file relUrl="Web.config" publishTime="01/10/2017 10:14:44" />
     <file relUrl="packages.config" publishTime="12/29/2016 09:48:19" />
     <file relUrl="admin-lte/css/skins/skin-red.min.css" publishTime="12/27/2016 15:58:43" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_65_ffffff_1x400.png" publishTime="12/16/2016 09:07:50" />
@@ -112,13 +112,13 @@
     <file relUrl="Content/themes/base/jquery.ui.button.css" publishTime="12/16/2016 09:07:50" />
     <file relUrl="Content/themes/base/minified/images/ui-icons_888888_256x240.png" publishTime="12/16/2016 09:07:49" />
     <file relUrl="Content/themes/base/jquery.ui.core.css" publishTime="12/16/2016 09:07:50" />
-    <file relUrl="Views/Examination/StartPage.cshtml" publishTime="01/07/2017 09:13:24" />
+    <file relUrl="Views/Examination/StartPage.cshtml" publishTime="01/10/2017 10:13:10" />
     <file relUrl="admin-lte/css/AdminLTE.css" publishTime="12/27/2016 16:40:14" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_65_ffffff_1x400.png" publishTime="12/16/2016 09:07:52" />
     <file relUrl="bin/System.Web.WebPages.Razor.xml" publishTime="12/16/2016 09:07:55" />
     <file relUrl="admin-lte/css/skins/skin-black.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="bin/System.Web.Mvc.dll" publishTime="12/16/2016 09:07:55" />
-    <file relUrl="bin/NetWin.Client.ExaminationWeb.pdb" publishTime="01/07/2017 11:29:57" />
+    <file relUrl="bin/NetWin.Client.ExaminationWeb.pdb" publishTime="01/10/2017 10:08:48" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_95_fef1ec_1x400.png" publishTime="12/16/2016 09:07:49" />
     <file relUrl="Content/themes/base/images/ui-icons_cd0a0a_256x240.png" publishTime="12/16/2016 09:07:50" />
     <file relUrl="bin/WebGrease.dll" publishTime="12/16/2016 09:07:57" />

@@ -377,7 +377,7 @@ else
             if (result.Result) {
                 var contentText = "<table>";
                 contentText += "<tr><td style='text-align:right;'>分析项:</td><td>"+result.Data.Name+"</td></tr>";
-                contentText += "<tr><td style='text-align:right;'>位置:</td><td>"+result.Data.Position+"</td></tr>";
+                contentText += "<tr><td style='text-align:right;'>位置:</td><td>"+(result.Data.Position==null?'未检查到':result.Data.Position)+"</td></tr>";
                 contentText += "<tr><td style='text-align:right;'>分析结果:</td><td>"+result.Data.Result+"</td></tr>";
                 contentText += "<tr><td style='text-align:right;'>要求:</td><td>"+result.Data.Require+"</td></tr>";
                 contentText += "</table>";
