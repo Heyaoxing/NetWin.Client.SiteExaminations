@@ -18,6 +18,11 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
         /// </summary>
         private string SeoUrl = "http://seo.chinaz.com/{0}";
 
+        /// <summary>
+        /// 查询反链数量
+        /// </summary>
+        private string OutUrl = "https://www.baidu.com/s?wd=domain%3A{0}";
+
         public OutSpider(string seedSiteUrl)
         {
             SeedSiteUrl = seedSiteUrl;
@@ -31,7 +36,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
 
             try
             {
-                ResponseMessage responseMessage = HttpHelper.RequestSite(url, 5);
+                ResponseMessage responseMessage = HttpHelper.RequestSite(url, 15);
                 return responseMessage;
             }
             catch (Exception exception)
@@ -66,7 +71,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 string preferredDomain;
                 if (domain.Contains("www."))
                 {
-                    preferredDomain = domain.Replace("www.","");
+                    preferredDomain = domain.Replace("www.", "");
                 }
                 else
                 {
@@ -89,46 +94,75 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 outSite.ExistSitemap = HttpHelper.GetStatusCode(domain + "/sitemap.xml") == 200 ? true : false;
 
 
-                #region http://seo.chinaz.com/
-                string whoisUrl = string.Format(SeoUrl, domain.Replace("http://", "").Replace("https://", ""));
-                var spiderSite = SpiderSite(whoisUrl);
-                if (spiderSite == null || string.IsNullOrWhiteSpace(spiderSite.InnerHtml))
-                    return outSite;
-
                 //logo有浮动标题和alt属性且皆为关键词
-                string imgTag = RegexHelper.GetLogoTag(response.InnerHtml);
-                if (!string.IsNullOrWhiteSpace(imgTag))
+                string logoContent = RegexHelper.GetContentByDom(response.InnerHtml, "div", "t_logo");
+                if (!string.IsNullOrWhiteSpace(logoContent))
                 {
-                    var alt = RegexHelper.GetLogoAlt(imgTag);
-                    var title = RegexHelper.GetLogoTitle(imgTag);
-                    if (outSite.Keywords.Contains(alt) || outSite.Keywords.Contains(title))
-                    {
-                        outSite.IsLogoContainsKeyWord = true;
-                        outSite.LogoAltAndTitle = string.Format("alt:{0},title:{1}", alt, title);
-                    }
-                    else
-                    {
-                        outSite.IsLogoContainsKeyWord = false;
-                        outSite.LogoAltAndTitle = string.Format("alt:{0},title:{1}", alt, title);
-                    }
+                    var alt = RegexHelper.GetLogoAlt(logoContent);
+                    var title = RegexHelper.GetLogoTitle(logoContent);
+
 
                     if (string.IsNullOrWhiteSpace(alt))
                     {
                         outSite.IsLogoContainsKeyWord = false;
-                        outSite.LogoAltAndTitle = "logo图片中不包含alt属性";
+                        outSite.LogoAltAndTitle = "logo图片中不包含alt属性值";
                     }
-
-                    if (string.IsNullOrWhiteSpace(title))
+                    else if (string.IsNullOrWhiteSpace(title))
                     {
                         outSite.IsLogoContainsKeyWord = false;
-                        outSite.LogoAltAndTitle = "logo图片中不包含title属性";
+                        outSite.LogoAltAndTitle = "logo图片中不包含title属性值";
                     }
+                    else if (!outSite.Keywords.Contains(alt))
+                    {
+                        outSite.IsLogoContainsKeyWord = false;
+                        outSite.LogoAltAndTitle = "logo图片中alt属性值不包含关键词";
+                    }
+                    else if (!outSite.Keywords.Contains(title))
+                    {
+                        outSite.IsLogoContainsKeyWord = false;
+                        outSite.LogoAltAndTitle = "logo图片中title属性值不包含关键词";
+                    }
+                    else
+                    {
+                        outSite.IsLogoContainsKeyWord = true;
+                        outSite.LogoAltAndTitle = string.Format("alt:{0},title:{1}", alt, title);
+                    }
+
 
                 }
                 else
                 {
                     outSite.IsLogoContainsKeyWord = false;
                 }
+
+
+
+                #region 查询反链
+
+                string searchUrl = SeedSiteUrl.Replace("http://", "").Replace("https://", "");
+                var html = HttpHelper.RequestSite(string.Format(OutUrl, searchUrl));
+                var count = TextHelper.Truncation(html.InnerHtml, "百度为您找到相关结果约", "个").Replace(",", "");
+                outSite.OutLinkCount = 0;
+                if (!string.IsNullOrWhiteSpace(count))
+                {
+                    try
+                    {
+                        outSite.OutLinkCount = Int32.Parse(count);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+                #endregion
+
+                #region http://seo.chinaz.com/
+                string whoisUrl = string.Format(SeoUrl, domain.Replace("http://", "").Replace("https://", ""));
+                var spiderSite = SpiderSite(whoisUrl);
+                if (spiderSite == null || string.IsNullOrWhiteSpace(spiderSite.InnerHtml))
+                    return outSite;
+
+
 
                 var whoisContent = spiderSite.InnerHtml;
                 if (whoisContent.Contains("获取不到Seo数据"))
@@ -152,7 +186,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                     var expireDate = TextHelper.Truncation(ageMessage, "过期时间为", ")");
                     outSite.ExpireDate = (DateTime.ParseExact(expireDate, "yyyy年MM月dd日", null) - DateTime.Now).Days / 30;
                     var date = TextHelper.Truncation(ageMessage, "（");
-                    LogHelper.Info("date"+date);
+                    LogHelper.Info("date" + date);
                     var year = Int32.Parse(string.IsNullOrWhiteSpace(TextHelper.Truncation(date, "年")) ? "0" : TextHelper.Truncation(date, "年"));
                     LogHelper.Info("year" + year);
                     var month = Int32.Parse(string.IsNullOrWhiteSpace(TextHelper.Truncation(date, "年", "月")) ? "0" : TextHelper.Truncation(date, "年", "月"));
@@ -169,6 +203,17 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 {
                     outSite.Compress = decimal.Parse(compress.Replace("%", ""));
                 }
+                string compressstr =RegexHelper.ReplaceHtmlTag(RegexHelper.GetContentByDomAttr(whoisContent, "div", "class", "MaLi03Row w150 brn", 0));
+                if (compressstr.Contains("否"))
+                {
+                    outSite.IsCompress = false;
+                }
+                else
+                {
+                    outSite.IsCompress = true;
+                }
+
+
                 //ip所在城市地址
                 outSite.DomainAddress = RegexHelper.GetContentByDom(RegexHelper.GetContentByDomAttr(whoisContent, "div", "class", "brn ipmW"), "a");
                 //是否备案

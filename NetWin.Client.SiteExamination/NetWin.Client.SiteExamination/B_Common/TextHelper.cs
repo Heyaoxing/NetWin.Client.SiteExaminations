@@ -102,13 +102,13 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// <param name="startStr"></param>
         /// <param name="endStr"></param>
         /// <returns></returns>
-        public static string Truncation(string str,string startStr,string endStr)
+        public static string Truncation(string str, string startStr, string endStr)
         {
             try
             {
                 int startIndex = str.IndexOf(startStr, StringComparison.OrdinalIgnoreCase) + startStr.Length;
                 int endIndex = str.IndexOf(endStr, StringComparison.OrdinalIgnoreCase);
-                return str.Substring(startIndex, endIndex-startIndex);
+                return str.Substring(startIndex, endIndex - startIndex);
             }
             catch
             {
@@ -170,7 +170,7 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// <param name="str"></param>
         /// <param name="endStr"></param>
         /// <returns></returns>
-        public static string Truncation(string str,  string endStr)
+        public static string Truncation(string str, string endStr)
         {
             try
             {
@@ -182,6 +182,30 @@ namespace NetWin.Client.SiteExamination.B_Common
                 // ignored
             }
             return string.Empty;
+        }
+
+
+
+        /// <summary>
+        /// 字符串每隔多少位数插入置顶字符
+        /// </summary>
+        /// <param name="str">需要处理的字符</param>
+        /// <param name="middle">指定插入的字符</param>
+        /// <param name="gap">间隔数</param>
+        /// <returns></returns>
+        public static string InsertString(string str, string middle, int gap)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return str;
+            StringBuilder sb = new StringBuilder();
+            var array = str.ToCharArray();
+            for (int i = 0; i < array.Length; i++)
+            {
+                sb.Append(array[i]);
+                if (i % gap == 0 && i != 0)
+                    sb.Append(middle);
+            }
+            return sb.ToString();
         }
 
 

@@ -49,6 +49,7 @@ namespace NetWin.Client.ExaminationWeb.Controllers
 
             if (!CheckURLByString(examinationUrl))
             {
+                ViewData["url"] = examinationUrl;
                 ViewData["isError"] = true;
                 ViewData["message"] = "输入的网址不合法!";
                 return View("Index");

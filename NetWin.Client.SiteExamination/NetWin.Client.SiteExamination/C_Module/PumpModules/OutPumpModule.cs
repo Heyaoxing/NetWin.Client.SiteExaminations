@@ -121,13 +121,23 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     param.AimsCount = site.ResponseTime;
                     break;
                 case "compress":
-                    param.AimsCount = site.Compress;
+                    if (site.IsCompress)
+                    {
+                        param.AimsCount = 1;
+                        param.AimsContent = "启用压缩";
+                    }
+                    else
+                    {
+                        param.AimsCount = 0;
+                        param.AimsContent = "未启用压缩";
+                    }
                     break;
                 case "expiredate":
                     param.AimsCount = site.ExpireDate;
                     break;
                 case "domainsuffix":
                     param.AimsCount = 0;
+                    param.AimsContent = "不是主流后缀";
                     var strings = site.Url.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                     if (strings.Length > 1)
                     {
@@ -140,7 +150,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         if (endsWith)
                         {
                             param.AimsCount = 1;
-                            param.AimsContent = item;
+                            param.AimsContent = "符合主流后缀";
                         }
                     }
                     break;
@@ -155,6 +165,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     break;
                 case "robots":
+                    param.SourceUrl = string.Empty;
                     if (site.ExistRobots)
                     {
                         param.AimsCount = 1;
@@ -167,6 +178,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     break;
                 case "sitemap":
+                    param.SourceUrl = string.Empty;
                     if (site.ExistSitemap)
                     {
                         param.AimsCount = 1;
@@ -179,7 +191,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     break;
                 case "preferred":
-
+                    param.SourceUrl = string.Empty;
                     if (site.IsPreferredDomain)
                     {
                         param.AimsCount = 1;
@@ -195,13 +207,18 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     if (site.IsLogoContainsKeyWord)
                     {
                         param.AimsCount = 1;
-                        param.AimsContent = "图片logo中的alt或title属性包含关键字:" + site.LogoAltAndTitle;
+                        param.AimsContent = "包含关键词:"+site.LogoAltAndTitle;
                     }
                     else
                     {
                         param.AimsCount = 0;
-                        param.AimsContent = "图片logo中的alt或title属性没有包含关键字";
+                        param.AimsContent = "未包含关键词";
                     }
+                    break;
+
+                case "outsidelinkcount":
+                    param.SourceUrl = string.Empty;
+                    param.AimsCount = site.OutLinkCount;
                     break;
             }
             return param;

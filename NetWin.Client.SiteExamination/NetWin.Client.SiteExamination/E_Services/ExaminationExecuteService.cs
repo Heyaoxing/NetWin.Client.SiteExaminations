@@ -118,15 +118,16 @@ namespace NetWin.Client.SiteExamination.E_Services
 
                 if (responseMessage.StatusCode == 200 || responseMessage.StatusCode == 301)
                 {
-                    var links = RegexHelper.GetALinks(responseMessage.InnerHtml, siteUrl).Where(p => p.Contains(RegexHelper.GetDomainName(siteUrl)));
+                    var links = RegexHelper.GetALinks(responseMessage.InnerHtml, siteUrl).Where(p => p.Contains(RegexHelper.GetDomainName(responseMessage.ResponseUrls))).Distinct();
 
                     if (!links.Any())
                     {
                         reslutModel.Result = false;
-                        reslutModel.Message = @"{0}对不起，您输入的网址可能存在以下情况：
-                                                {0}1、输入的网址不适合用本网站去推广优化，请更换网址或者大批量更改该网站内链
-                                                {0}2、该网站需要登录，搜索引擎无法识别，请更换网站推广优化
-                                                {0}3、该网站属于单页面网站，不利于推广优化，请更换网站推广优化";
+                        reslutModel.Message = @"对不起，您输入的网址可能存在以下情况：
+                                                {0}1.该网站需要登录，搜索引擎无法识别，请更换网站推广优化
+                                                {0}2.该网站属于单页面网站，不利于推广优化，请更换网站推广优化
+                                                {0}3.输入的网址不适合用本网站去推广优化，请更换网址或者大批量更改该网站内链
+                                                ";
                         return reslutModel;
                     }
 
@@ -146,7 +147,7 @@ namespace NetWin.Client.SiteExamination.E_Services
                         if (percent >= 0.6)
                         {
                             reslutModel.Result = false;
-                            reslutModel.Message = "资源需要登录";
+                            reslutModel.Message = "网站需要登陆才能看到内容";
                         }
                     }
                 }

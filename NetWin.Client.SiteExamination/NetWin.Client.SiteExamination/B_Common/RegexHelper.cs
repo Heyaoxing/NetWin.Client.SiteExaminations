@@ -53,6 +53,20 @@ namespace NetWin.Client.SiteExamination.B_Common
         {
             return Regex.Matches(input, pattern, RegexOptions.IgnoreCase).Count;
         }
+
+        /// <summary>
+        /// 字符串每隔多少位数插入置顶字符
+        /// </summary>
+        /// <param name="str">需要处理的字符</param>
+        /// <param name="middle">指定插入的字符</param>
+        /// <param name="gap">间隔数</param>
+        /// <returns></returns>
+        public static string InsertString(string str, string middle, int gap)
+        {
+            string pattern = @"(\w{" + gap + "}(?=[^$]))";
+            var result = Regex.Replace(str, @"(\w{4}(?=[^$]))", "$1-");
+            return result;
+        }
         #endregion
 
 
@@ -441,7 +455,7 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// </summary>
         /// <param name="htmlContent"></param>
         /// <returns></returns>
-        public static string GetLogoTag(string htmlContent)
+        public static string GetImgTag(string htmlContent)
         {
             try
             {
@@ -464,7 +478,26 @@ namespace NetWin.Client.SiteExamination.B_Common
         {
             try
             {
-                string pattern = "(?<=img[^>]*?id=\"t_logo\"[^>]*?alt=\").*?(?=\")";
+                string pattern = "(?<=img[^>]*?alt=\").*?(?=\")";
+                return Match(htmlContent, pattern);
+            }
+            catch
+            {
+                // ignored
+            }
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取移动云logo的title值
+        /// </summary>
+        /// <param name="htmlContent"></param>
+        /// <returns></returns>
+        public static string GetLogoTitle(string htmlContent)
+        {
+            try
+            {
+                string pattern = "(?<=img[^>]*?title=\").*?(?=\")";
                 return Match(htmlContent, pattern);
             }
             catch
@@ -493,24 +526,7 @@ namespace NetWin.Client.SiteExamination.B_Common
             return string.Empty;
         }
 
-        /// <summary>
-        /// 获取移动云logo的title值
-        /// </summary>
-        /// <param name="htmlContent"></param>
-        /// <returns></returns>
-        public static string GetLogoTitle(string htmlContent)
-        {
-            try
-            {
-                string pattern = "(?<=img[^>]*?id=\"t_logo\"[^>]*?title=\").*?(?=\")";
-                return Match(htmlContent, pattern);
-            }
-            catch
-            {
-                // ignored
-            }
-            return string.Empty;
-        }
+    
 
         /// <summary>
         /// 通过标签获得标签内文本
@@ -526,6 +542,31 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 string pattern = string.Format(@"<{0}[^>]*?>([\s\S]*?)<\/{0}>", dom);
                 var result= new Regex(pattern).Matches(htmlContent)[index].Groups[1].Value;
+                return result;
+            }
+            catch
+            {
+                // ignored
+            }
+            return string.Empty;
+        }
+
+
+        /// <summary>
+        /// 通过标签id获得标签内文本
+        /// 默认匹配第一个
+        /// </summary>
+        /// <param name="htmlContent"></param>
+        /// <param name="dom">标签</param>
+        /// <param name="id">id</param>
+        /// <param name="index">取第几个符合条件的匹配值</param>
+        /// <returns></returns>
+        public static string GetContentByDom(string htmlContent, string dom,string id, int index = 0)
+        {
+            try
+            {
+                string pattern = string.Format("<{0}[^>]*?id=\"{1}\"[^>]*?>([\\s\\S]*?)<\\/{0}>", dom, id);
+                var result = new Regex(pattern).Matches(htmlContent)[index].Groups[1].Value;
                 return result;
             }
             catch

@@ -108,7 +108,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                                    _concurrentQueue.Enqueue(spiderResult);
                                    foreach (var item in spiderResult.InsideLinks)
                                    {
-                                       if (!allSite.ContainsKey(item) || item.Contains(SeedSiteUrl) || !item.EndsWith(".css") || !item.EndsWith(".js") || !item.EndsWith(".jpg") || !item.EndsWith(".jpeg") || !item.EndsWith(".gif") || !item.EndsWith(".png"))
+                                       if (!allSite.ContainsKey(item) || item.Contains(SeedSiteUrl) || !item.EndsWith(".css") || !item.EndsWith(".js") || !item.EndsWith(".jpg") || !item.EndsWith(".jpeg") || !item.EndsWith(".gif") || !item.EndsWith(".png") || !item.EndsWith(".ico"))
                                            allSite.GetOrAdd(item, depth + 1);
                                    }
                                }

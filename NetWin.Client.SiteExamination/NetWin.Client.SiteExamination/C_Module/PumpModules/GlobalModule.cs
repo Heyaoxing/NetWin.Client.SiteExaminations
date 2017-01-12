@@ -57,10 +57,9 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                 case "insidelinkcount":
                     AimsCount += site.InsideLinkCount;
                     break;
-                case "outsidelinkcount":
-                    AimsCount += site.OutsideLinkCount;
-                    break;
+            
                 case "nullsite":
+                    SourceUrl = string.Empty;
                     AimsCount += string.IsNullOrWhiteSpace(site.InnerText) ? 1 : 0;
                     WingManCount++;
 
@@ -77,9 +76,22 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     break;
 
                 case "dynamic":
+                    SourceUrl = string.Empty;
                     AimsCount += site.IsDynamic ? 1 : 0;
-                    break;
+                    if (AimsCount > 0)
+                    {
+                        AimsContent = string.Format("存在动态链接数:{0}.原因可能如下：1.网站URL是否为静态，因为网站动态过长，不利于收录和网站排名；2.服务器未设置lastModified", AimsCount);
+                    }
+                    else
+                    {
+                        AimsContent = "未检查到动态链接";
+                    }
 
+                    if (site.IsDynamic)
+                    {
+                        LogHelper.Info(string.Format("存在动态网址:{0}", SourceUrl));
+                    }
+                    break;
                 case "keywordtime":
                     if (Keywords.Any())
                     {

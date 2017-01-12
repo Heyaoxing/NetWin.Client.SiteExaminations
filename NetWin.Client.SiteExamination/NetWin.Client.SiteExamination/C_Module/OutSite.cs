@@ -42,6 +42,11 @@ namespace NetWin.Client.SiteExamination.C_Module
         public decimal  Compress { set; get; }
 
         /// <summary>
+        /// 是否启用压缩
+        /// </summary>
+        public bool IsCompress { set; get; }
+
+        /// <summary>
         /// 到期时间单位月
         /// </summary>
         public int ExpireDate { set; get; }
@@ -96,6 +101,11 @@ namespace NetWin.Client.SiteExamination.C_Module
         /// 首页logo图片中包含的关键词
         /// </summary>
         public string LogoAltAndTitle { set; get; }
+
+        /// <summary>
+        /// 外链数(反链)
+        /// </summary>
+        public int  OutLinkCount { set; get; }
 
     }
 }

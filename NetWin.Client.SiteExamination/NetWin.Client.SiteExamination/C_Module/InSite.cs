@@ -377,7 +377,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (DateTime.Now.AddMinutes(5) > LastModified || DateTime.Now.AddMinutes(-5) <= LastModified)
+                if (DateTime.Now.AddMinutes(-5) < LastModified)
                     return true;
                 else
                     return false;

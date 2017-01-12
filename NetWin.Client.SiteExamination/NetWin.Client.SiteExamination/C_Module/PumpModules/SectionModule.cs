@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using HtmlAgilityPack;
 using NetWin.Client.SiteExamination.B_Common;
@@ -12,7 +13,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
     /// </summary>
     internal class SectionModule : IComputeRule
     {
-       
+
 
         /// <summary>
         /// 目标数值统计方法
@@ -25,7 +26,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
             switch (AimsContainText)
             {
-              
+
                 case "keywords":
                     AimsCount = site.KeyWords.Count;
                     break;
@@ -40,9 +41,27 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     break;
                 case "iframe":
                     AimsCount = site.IframeCount;
+                    if (AimsCount > 0)
+                    {
+                        AimsContent = "出现iframe标签";
+                    }
+                    else
+                    {
+                        AimsContent = "未检查出iframe标签";
+                        SourceUrl = string.Empty;
+                    }
                     break;
                 case "flash":
                     AimsCount = site.FlashCount;
+                    if (AimsCount > 0)
+                    {
+                        AimsContent = "出现flash";
+                    }
+                    else
+                    {
+                        AimsContent = "未检查出flash";
+                        SourceUrl = string.Empty;
+                    }
                     break;
                 case "title":
                     AimsCount = site.Title.Length;
@@ -57,14 +76,16 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     else
                     {
                         AimsContent = "使用了strong标签";
+                        SourceUrl = site.CurrentUrlUrl;
                     }
                     break;
                 case "jswithinbody":
-                    var body = RegexHelper.GetContentByDom(site.InnerHtml,"body");
+                    var body = RegexHelper.GetContentByDom(site.InnerHtml, "body");
                     AimsCount = RegexHelper.MatchCount(body, @"<script");
                     if (AimsCount == 0)
                     {
                         AimsContent = "未检测到js放于body内";
+                        SourceUrl = string.Empty;
                     }
                     else
                     {
@@ -72,17 +93,34 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     break;
                 case "nulllink":
-                    AimsCount += site.EmptyLinkCount;
+                    AimsCount = site.EmptyLinkCount;
+                    if (AimsCount > 0)
+                    {
+                        AimsContent = "存在空链接";
+                    }
+                    else
+                    {
+                        AimsContent = "未检查出空链接";
+                        SourceUrl = string.Empty;
+                    }
                     break;
                 case "size":
                     AimsCount = site.HtmlSize;
                     break;
                 case "desccontainsword":
-                    int time = Keywords.Count(item => site.Description.Contains(item.Key));
-                    AimsCount = time;
+                    var keys = Keywords.Where(p => site.Description.Contains(p.Key)).ToList();
+                    AimsCount = keys.Count;
+                    if (AimsCount > 3)
+                    {
+                        AimsContent = string.Join(",", keys.Take(5));
+                    }
+                    else
+                    {
+                        AimsContent = "仅出现:" + string.Join(",", keys);
+                    }
                     break;
                 case "contentimg":
-                    List<string> imgs = RegexHelper.GetImgs(site.InnerHtml);
+                    List<string> imgs = RegexHelper.GetImgs(site.InnerHtmlFilter);
                     AimsCount = 0;
                     foreach (var item in imgs)
                     {
@@ -105,6 +143,29 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         {
                             AimsContent = "alt和title属性不能为空";
                         }
+
+
+                        if (string.IsNullOrWhiteSpace(alt))
+                        {
+                            AimsContent = "alt属性值不能为空";
+                        }
+                        else if (string.IsNullOrWhiteSpace(title))
+                        {
+                            AimsContent = "title属性值不能为空";
+                        }
+                        else if (Keywords.ContainsKey(alt))
+                        {
+                            AimsContent = "alt属性值不为网页关键词";
+                        }
+                        else if (Keywords.ContainsKey(title))
+                        {
+                            AimsContent = "title属性值不为网页关键词";
+                        }
+                        else
+                        {
+                            AimsCount = 1;
+                            AimsContent = string.Format("alt:{0},title:{1}", alt, title);
+                        }
                     }
                     break;
 
@@ -112,6 +173,8 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     // 用于比较锚链接和锚文本
                     List<Anchor> anchors = new List<Anchor>();
                     AimsCount = 0;
+                    AimsContent = "锚文本链接唯一";
+                    SourceUrl = string.Empty;
                     var a = RegexHelper.GetDoms(site.InnerHtmlFilter, "a");
                     foreach (var item in a)
                     {
@@ -131,7 +194,8 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                             if (textCount > 0 || hrefCount > 0)
                             {
                                 AimsCount = 1;
-                                AimsContent = "锚文本或链接不唯一";
+                                AimsContent = "锚文本链接不唯一";
+                                SourceUrl = site.CurrentUrlUrl;
                                 break;
                             }
                         }
@@ -140,30 +204,39 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
                 case "imgdescript":
                     AimsCount = 0;
-
-                    HtmlDocument htmlDocument = new HtmlDocument();
-                    htmlDocument.LoadHtml(site.InnerHtml);
-
-                    //去掉注释、样式、和js代码:
-                    foreach (var script in htmlDocument.DocumentNode.Descendants("script").ToArray())
-                        script.Remove();
-                    foreach (var style in htmlDocument.DocumentNode.Descendants("style").ToArray())
-                        style.Remove();
-
-                    var node = htmlDocument.DocumentNode.SelectNodes("//img");
-                    if (node != null)
+                    AimsContent = "图片周围存在描述";
+                    SourceUrl = string.Empty;
+                    try
                     {
-                        foreach (var item in node)
+                        HtmlDocument htmlDocument = new HtmlDocument();
+                        htmlDocument.LoadHtml(site.InnerHtml);
+
+                        //去掉注释、样式、和js代码:
+                        foreach (var script in htmlDocument.DocumentNode.Descendants("script").ToArray())
+                            script.Remove();
+                        foreach (var style in htmlDocument.DocumentNode.Descendants("style").ToArray())
+                            style.Remove();
+
+                        var node = htmlDocument.DocumentNode.SelectNodes("//img");
+                        if (node != null)
                         {
-                            var parent = item.ParentNode.ParentNode.ParentNode;
-                            var text = RegexHelper.ReplaceHtmlTag(parent.InnerText);
-                            if (string.IsNullOrWhiteSpace(text))
+                            foreach (var item in node)
                             {
-                                AimsCount = 1;
-                                AimsContent = "图片周围不存在描述";
-                                break;
+                                var parent = item.ParentNode.ParentNode.ParentNode;
+                                var text = RegexHelper.ReplaceHtmlTag(parent.InnerText);
+                                if (string.IsNullOrWhiteSpace(text))
+                                {
+                                    AimsCount = 1;
+                                    AimsContent = "图片周围不存在描述";
+                                    SourceUrl = site.CurrentUrlUrl;
+                                    break;
+                                }
                             }
                         }
+                    }
+                    catch (Exception exception)
+                    {
+                        LogHelper.Error("检查图片周围存在描述异常:" + exception.Message);
                     }
                     break;
             }
