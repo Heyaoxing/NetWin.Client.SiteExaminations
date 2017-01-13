@@ -5,42 +5,42 @@
     string url = ViewData["url"] as string;
 
 }
-<section class="content ">
-    <div class="row">
-        <div class="col-md-12  box-widget widget-user-2  bg-blue">
-            <div class="col-md-12">
-                <div class="widget-user-header">
-                    <div class="widget-user-image">
-                        <img class="img-circle" src="../dist/img/user7-128x128.jpg" alt="假装有Logo">
-                        <h1>网站体检系统</h1>
-                    </div>
-                </div>
+<body class="index_body">
+    <div class="xn_index">
+        <div class="xn_index_head">
+            <div class="xn_index_head1">
+                <img src="@Url.Content("~/Content/images/xn_logo.png")" >
             </div>
-            <div class="col-md-12">
-                <div class="widget-user-header text-center">
-                    <div>
-                        <h2>网站体检</h2>
-                        <p>提供优质、完整的检测，量身定做更为优质的优化意见，帮助您全面了解自己、优化自己！</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="widget-user-header text-center">
-                    <form action="@Url.Action("StartPage")" method="POST">
-                        <input class="form-control input-lg" placeholder="输入需要体检的网址,如:http://www.baidu.com" type="text" name="examinationUrl" id="examinationUrl" value="@url" style="width: 400px; display: inline;"/>
-                        <input type="submit" class="btn  btn-default btn-lg" value="开始体检" style="margin-left: 20px;"/>
-                        @if (!string.IsNullOrWhiteSpace(message))
-                        {
-                            <div style="width: 600px; overflow: hidden;  margin: 0 auto; text-align: left; padding: 0 2em; text-indent: 2em;">
-                                 <p class="text-red"><strong>@Html.Raw(string.Format(message, "<br/>"))</strong></p>
-                            </div>
-                        }
-                    </form>
-                </div>
+            <div class="xn_index_head2">
+                <h2>
+                    网站体检系统</h2>
             </div>
         </div>
+        <div class="xn_index_cont">
+            <div class="xn_index_cont1">
+                <img src="@Url.Content("~/Content/images/xn_index_con.png")" >
+                <h2>
+                    网站体检</h2>
+                <p>
+                    提供优质、完整的检测，量身定做更为优质的优化意见，</p>
+                <p>
+                    帮助您全面了解自己、优化自己！</p>
+            </div>
+            <form action="@Url.Action("StartPage")" method="POST">
+            <input class="xn_text" placeholder="输入需要体检的网址,如:http://www.baidu.com" type="text" name="examinationUrl" id="examinationUrl" value="@url"/>
+            <input name="" value="开始体检" class="xn_btn" type="submit" id="submit_id"  />
+            </form>
+            @if (!string.IsNullOrWhiteSpace(message))
+            {
+                <div class="xn_index_cont2">
+                    <h2>
+                        <img style="margin-top:0px;" src="@Url.Content("~/Content/images/xn_web_gt.png")">@Html.Raw(string.Format(message, "<br/>"))</h2>
+                </div>
+            }
+        </div>
     </div>
-</section>
+</body>
+<script type="text/javascript" src="@Url.Content("~/Scripts/xn_web.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/chosen.input.js")"></script>
 <script type="text/javascript">
     //建立实例，第一个参数是实例对象的名称，第二个是最多显示的数量

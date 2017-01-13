@@ -52,7 +52,9 @@ mSift.prototype = {
        
         oObj.parentNode.insertBefore(oUL, oObj);
         _this.TgList = oUL;
-        oObj.onkeydown = oObj.onclick = function (e) { _this.Listen(this, e); };
+        oObj.onkeydown = oObj.onclick = function (e) {
+            _this.Listen(this, e); 
+        };
         oObj.onblur = function () { setTimeout(function () { _this.Clear(); }, 100); };
     },
     Complete: function () {
@@ -77,6 +79,7 @@ mSift.prototype = {
             case 13: //ENTER
                 _this.Target.blur();
                 _this.Select();
+                document.getElementById("submit_id").click();
                 return;
             case 38: //UP
                 _this.SelIndex = _this.SelIndex > 0 ? _this.SelIndex - 1 : _this.ReData.length - 1;
@@ -141,7 +144,7 @@ _this.oo + '.ChangeOn(this);' + _this.oo + '.SelIndex=' + i + ';" ><span onmouse
         else {
             _this.TgList.innerHTML = cResult;
             _this.TgList.style.cssText = 'display:block;position:absolute;background:#fff;border:#666 solid 1px;margin:-1px 0 0;padding: 5px;list-style:none;font-size:12px;';
-            _this.TgList.style.top = '76px';
+            _this.TgList.style.top = _this.Target.offsetTop + _this.Target.offsetHeight + 'px';
             _this.TgList.style.left = _this.Target.offsetLeft + 'px';
             _this.TgList.style.width = _this.Target.offsetWidth + 'px';
         }

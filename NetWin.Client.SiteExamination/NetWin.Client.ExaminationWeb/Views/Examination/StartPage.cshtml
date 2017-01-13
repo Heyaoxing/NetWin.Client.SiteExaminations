@@ -159,6 +159,7 @@
         var request = new Array();
         var siteId = 0;
         var checkSite_interval;
+        var score_interval;
         var sitelUrl = '@url';
         $(function () {
             init();
@@ -257,8 +258,10 @@
         //问题项
         var problem = 0;
         //请求体检结果
+         var cach_score = 0;
         function chat() {
             i++;
+            cach_score = 0;
             var cach = new Array();
             $(request).each(function (i, v) {
                 var result = jQuery.parseJSON(window.external.GetDetailResult(v[0], v[1]));
@@ -267,10 +270,11 @@
                       $("#detail_" + v[1]).text(result.Data.Score + "分");
                     } else {
                       $("#detail_name_" + v[1]).css('color','red');
-                     $("#detail_" + v[1]).html("<span onclick='modal_mouseover(this)'  siteId='"+v[0]+"' detailId='"+v[1]+"' ><img src='@Url.Content("~/Content/images/xn_web_basics_01.png")' class='icon_size' ></span>");
-                        score = score - result.Data.Score;
+                      $("#detail_" + v[1]).html("<span onclick='modal_mouseover(this)'  siteId='"+v[0]+"' detailId='"+v[1]+"' ><img src='@Url.Content("~/Content/images/xn_web_basics_01.png")' class='icon_size' ></span>");
+                     // score = score - result.Data.Score;
+                        cach_score=cach_score+result.Data.Score;
                         problem++;
-                        $("#score").text(score);
+                      //  $("#score").text(score);
                         $("#problem").text(problem);
                         $("#item_" + result.Data.ItemId).css('color', 'red');
                     }
@@ -279,13 +283,41 @@
                     cach.push(v);
                 }
             });
-
-        //    $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检中");
             request = cach;
 
+            if (cach_score != 0) {
+                scroeView();
+               score_interval = setInterval(scroeView, 50);
+            }
+
+            
+
+            
+
+        }
+
+
+        function scroeView() {
+            score--;
+            $("#score").text(score);
+            if (cach_score <= 0) {
+                clearTimeout(score_interval);
+            }
+            cach_score--;
+
+          
+          
+             var width=((((item_count - request.length) / item_count).toFixed(2) * 100) + i);
+             if (width < 95) {
+                 $("#process").animate({ "width": width + "%" }, 1000);
+             } else if ((((item_count - request.length) / item_count).toFixed(2) * 100) < 95) {
+                 $("#process").animate({ "width": 95 + "%" }, 1000);
+             } else {
+                 $("#process").animate({ "width": (((item_count - request.length) / item_count).toFixed(2) * 100)  + "%" }, 1000);
+             }
 
             if (request.length == 0) {
-                clearTimeout(interval);
+                clearTimeout(checkSite_interval);
                 $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检完成");
                 $("#Export").html("<a href='javascript:void(0);' onclick=\"ExportReport()\">生成报告</a>");
                 $("#features").html("<button class='xn_btn' type='button' style='background:#00A65A'  onclick='restart()'>开始体检</button>");
@@ -294,13 +326,14 @@
                 $("#result_text").html("<span>您的网站体检得分是<span style='font-size:50px;'>" + score + "</span>分，建议您对网站进行优化</span>");
                 url_input();
             }
-
-            $("#process").css("width", (((item_count - request.length) / item_count).toFixed(2) * 100) + "%");
+            
             if (score < 80 && score >= 50) {
                 warning();
             } else if (score < 50) {
                 danger();
             }
+
+
         }
 
         //导出体检报告
@@ -399,7 +432,7 @@
 
 
         function url_input() {
-            $("#siteUrl").html("<input  placeholder='输入需要体检的网址,如:http://www.baidu.com' type='text' id='input_siteurl' value='"+sitelUrl+"' style='width:300px;color:black;'/>");
+            $("#siteUrl").html("<input  placeholder='输入需要体检的网址,如:http://www.baidu.com' type='text' id='input_siteurl' value='"+sitelUrl+"' style='width:300px;display: inline-block;height: 30px;border:1px solid #b7aca8;border-radius: 5px;font-size: 20px;text-indent: 30px;line-height: 30px;	color: #000;'/>");
         }
 
         //重新体检
