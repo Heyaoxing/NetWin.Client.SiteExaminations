@@ -218,7 +218,8 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
                 case "outsidelinkcount":
                     param.SourceUrl = string.Empty;
-                    param.AimsCount = site.OutLinkCount;
+                  //  param.AimsCount = site.OutLinkCount;
+                    param.AimsCount = 0;
                     break;
             }
             return param;

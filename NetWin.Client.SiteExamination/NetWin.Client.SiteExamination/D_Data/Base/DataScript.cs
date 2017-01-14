@@ -159,7 +159,7 @@ namespace NetWin.Client.SiteExamination.D_Data.Base
                                                                         INSERT INTO ComputeRuleConfig VALUES (19, 1, 1, 'nulllink', null, 200, 1, ' _CONTENT_',100);
                                                                         INSERT INTO ComputeRuleConfig VALUES (20, 2, 1, 'level', null, 300, 0.8, '_CONTENT_',100);
                                                                         INSERT INTO ComputeRuleConfig VALUES (21, 2, 1, 'insidelinkcount', null, 100, 100, '内部链接数:_COUNT_',100);
-                                                                        INSERT INTO ComputeRuleConfig VALUES (22, 1, 2, 'outsidelinkcount', null, 100, 1000, '外链数:_COUNT_',100);
+                                                                        INSERT INTO ComputeRuleConfig VALUES (22, 1, 2, 'outsidelinkcount', null, 100, 1000, '外链数量过少',100);
                                                                         INSERT INTO ComputeRuleConfig VALUES (23, 1, 1, 'css', null, 200, 5, '  css:_COUNT_',100);
                                                                         INSERT INTO ComputeRuleConfig VALUES (24, 1, 1, 'js', null, 200,5, 'js:_COUNT_',100);
                                                                         INSERT INTO ComputeRuleConfig VALUES (25, 2, 1, 'dynamic', null, 200, 1, ' _CONTENT_',100);

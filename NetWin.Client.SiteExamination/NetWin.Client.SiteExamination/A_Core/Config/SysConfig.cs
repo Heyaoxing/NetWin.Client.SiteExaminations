@@ -46,7 +46,7 @@ namespace NetWin.Client.SiteExamination.A_Core.Config
         /// <summary>
         /// 抓取链接数量限制,-1为无限制
         /// </summary>
-        public static  int LinkAmountLimit = 50;
+        public static  int LinkAmountLimit = 500;
 
         /// <summary>
         /// 请求网站资源超时时间,单位为秒

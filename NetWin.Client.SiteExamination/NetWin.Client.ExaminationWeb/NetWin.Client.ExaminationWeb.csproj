@@ -198,6 +198,7 @@
     <Content Include="Content\images\xn_index_con.png" />
     <Content Include="Content\images\xn_logo.png" />
     <Content Include="Content\images\xn_result.png" />
+    <Content Include="Content\images\xn_result_ll.gif" />
     <Content Include="Content\images\xn_result_ll.png" />
     <Content Include="Content\images\xn_safe.png" />
     <Content Include="Content\images\xn_top.png" />

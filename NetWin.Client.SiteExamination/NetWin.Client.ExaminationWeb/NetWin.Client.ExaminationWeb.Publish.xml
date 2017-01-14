@@ -30,7 +30,7 @@
     <file relUrl="bin/System.Net.Http.xml" publishTime="12/16/2016 09:07:56" />
     <file relUrl="Content/bootstrap.css" publishTime="12/27/2016 15:58:42" />
     <file relUrl="bin/System.Web.Razor.dll" publishTime="12/16/2016 09:07:55" />
-    <file relUrl="Content/css/style.css" publishTime="01/12/2017 14:07:47" />
+    <file relUrl="Content/css/style.css" publishTime="01/13/2017 15:46:36" />
     <file relUrl="bin/System.Net.Http.Formatting.xml" publishTime="12/16/2016 09:07:55" />
     <file relUrl="Content/images/bg_03.jpg" publishTime="01/08/2017 16:41:10" />
     <file relUrl="Content/images/optimization_safe.png" publishTime="01/08/2017 23:50:58" />
@@ -40,7 +40,7 @@
     <file relUrl="Content/images/bg_06.jpg" publishTime="01/08/2017 16:42:18" />
     <file relUrl="bin/System.Web.WebPages.Deployment.xml" publishTime="12/16/2016 09:07:55" />
     <file relUrl="admin-lte/css/skins/skin-purple-light.css" publishTime="12/27/2016 15:58:43" />
-    <file relUrl="bin/NetWin.Client.ExaminationWeb.dll" publishTime="01/12/2017 16:24:35" />
+    <file relUrl="bin/NetWin.Client.ExaminationWeb.dll" publishTime="01/14/2017 11:49:44" />
     <file relUrl="admin-lte/css/skins/_all-skins.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="admin-lte/css/skins/skin-blue.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="admin-lte/css/skins/skin-red-light.min.css" publishTime="12/27/2016 15:58:43" />
@@ -80,7 +80,7 @@
     <file relUrl="Content/images/bg_02.jpg" publishTime="01/08/2017 16:40:07" />
     <file relUrl="Content/themes/base/minified/jquery.ui.theme.min.css" publishTime="12/16/2016 09:07:49" />
     <file relUrl="bin/zh-Hans/System.Web.WebPages.resources.dll" publishTime="07/10/2012 23:39:18" />
-    <file relUrl="Web.config" publishTime="01/12/2017 17:38:08" />
+    <file relUrl="Web.config" publishTime="01/14/2017 11:54:51" />
     <file relUrl="admin-lte/css/skins/skin-red.min.css" publishTime="12/27/2016 15:58:43" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_65_ffffff_1x400.png" publishTime="12/16/2016 09:07:50" />
     <file relUrl="bin/zh-Hans/System.Web.Http.resources.dll" publishTime="07/10/2012 23:39:16" />
@@ -129,7 +129,7 @@
     <file relUrl="Content/themes/base/jquery.ui.button.css" publishTime="12/16/2016 09:07:50" />
     <file relUrl="Content/themes/base/minified/images/ui-icons_888888_256x240.png" publishTime="12/16/2016 09:07:49" />
     <file relUrl="Content/themes/base/jquery.ui.core.css" publishTime="12/16/2016 09:07:50" />
-    <file relUrl="Views/Examination/StartPage.cshtml" publishTime="01/13/2017 14:11:31" />
+    <file relUrl="Views/Examination/StartPage.cshtml" publishTime="01/14/2017 11:44:13" />
     <file relUrl="Content/images/title.png" publishTime="01/11/2017 09:38:48" />
     <file relUrl="admin-lte/css/skins/skin-yellow.css" publishTime="12/27/2016 15:58:43" />
     <file relUrl="admin-lte/css/AdminLTE.css" publishTime="12/27/2016 16:40:14" />
@@ -137,7 +137,7 @@
     <file relUrl="bin/System.Web.WebPages.Razor.xml" publishTime="12/16/2016 09:07:55" />
     <file relUrl="admin-lte/css/skins/skin-black.css" publishTime="12/27/2016 15:58:44" />
     <file relUrl="bin/System.Web.Mvc.dll" publishTime="12/16/2016 09:07:55" />
-    <file relUrl="bin/NetWin.Client.ExaminationWeb.pdb" publishTime="01/12/2017 16:24:35" />
+    <file relUrl="bin/NetWin.Client.ExaminationWeb.pdb" publishTime="01/14/2017 11:49:44" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_glass_95_fef1ec_1x400.png" publishTime="12/16/2016 09:07:49" />
     <file relUrl="Content/themes/base/images/ui-icons_cd0a0a_256x240.png" publishTime="12/16/2016 09:07:50" />
     <file relUrl="bin/WebGrease.dll" publishTime="12/16/2016 09:07:57" />
@@ -146,7 +146,7 @@
     <file relUrl="bin/System.Web.Http.WebHost.dll" publishTime="12/16/2016 09:07:56" />
     <file relUrl="Content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png" publishTime="12/16/2016 09:07:52" />
     <file relUrl="bin/zh-Hans/System.Web.WebPages.Deployment.resources.dll" publishTime="07/10/2012 23:39:18" />
-    <file relUrl="Views/Examination/Index.cshtml" publishTime="01/13/2017 14:02:07" />
+    <file relUrl="Views/Examination/Index.cshtml" publishTime="01/14/2017 10:09:44" />
     <file relUrl="Scripts/xn_web.js" publishTime="01/11/2017 14:21:59" />
     <file relUrl="Content/images/xn_bottom.png" publishTime="01/08/2017 19:24:21" />
     <file relUrl="Content/fonts/fontawesome-webfont.svg" publishTime="12/27/2016 15:58:42" />
@@ -167,6 +167,7 @@
     <file relUrl="Content/images/Progressbar.png" publishTime="01/08/2017 23:33:33" />
     <file relUrl="Content/images/xn_index_con.png" publishTime="01/08/2017 17:03:18" />
     <file relUrl="Content/themes/base/images/ui-bg_glass_75_e6e6e6_1x400.png" publishTime="12/16/2016 09:07:52" />
+    <file relUrl="Content/images/xn_result_ll.gif" publishTime="01/14/2017 09:12:03" />
     <file relUrl="bin/EntityFramework.dll" publishTime="12/16/2016 09:07:39" />
     <file relUrl="bin/System.Web.Http.WebHost.xml" publishTime="12/16/2016 09:07:56" />
     <file relUrl="Scripts/jquery-ui-1.8.20.js" publishTime="12/16/2016 09:07:46" />
@@ -187,7 +188,7 @@
     <file relUrl="Content/css/font-awesome.css" publishTime="12/27/2016 15:58:42" />
     <file relUrl="Content/images/error.png" publishTime="12/30/2016 09:09:12" />
     <file relUrl="Content/images/xn_result.png" publishTime="01/08/2017 22:47:25" />
-    <file relUrl="Views/Web.config" publishTime="01/13/2017 14:17:56" />
+    <file relUrl="Views/Web.config" publishTime="12/16/2016 09:07:34" />
     <file relUrl="Content/themes/base/minified/images/ui-bg_flat_0_aaaaaa_40x100.png" publishTime="12/16/2016 09:07:50" />
     <file relUrl="Content/images/descript.png" publishTime="01/11/2017 09:39:07" />
     <file relUrl="Scripts/modernizr-2.5.3.js" publishTime="12/16/2016 09:07:54" />

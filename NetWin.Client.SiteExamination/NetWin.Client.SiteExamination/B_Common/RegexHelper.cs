@@ -593,7 +593,7 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 LogHelper.Error("去除html标签异常："+exception.Message);
             }
-            return html;
+            return "";
         }
 
         /// <summary>
