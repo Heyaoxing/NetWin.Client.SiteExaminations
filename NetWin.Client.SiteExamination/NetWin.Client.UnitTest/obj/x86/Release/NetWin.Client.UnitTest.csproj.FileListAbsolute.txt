@@ -1,9 +1,0 @@
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.UnitTest\bin\Release\NetWin.Client.UnitTest.exe
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.UnitTest\bin\Release\NetWin.Client.UnitTest.pdb
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.UnitTest\bin\Release\NetWin.Client.SiteExamination.dll
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.UnitTest\bin\Release\System.Data.SQLite.dll
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.UnitTest\bin\Release\NetWin.Client.SiteExamination.pdb
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.UnitTest\bin\Release\System.Data.SQLite.xml
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.UnitTest\obj\x86\Release\NetWin.Client.UnitTest.csprojResolveAssemblyReference.cache
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.UnitTest\obj\x86\Release\NetWin.Client.UnitTest.exe
-E:\SVN\Web\trunk\main\ShoveEIMS3.NetWin\NetWin.Client.SiteExamination\NetWin.Client.UnitTest\obj\x86\Release\NetWin.Client.UnitTest.pdb
