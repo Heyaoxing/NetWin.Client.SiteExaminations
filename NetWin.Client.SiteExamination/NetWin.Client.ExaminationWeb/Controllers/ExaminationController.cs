@@ -42,7 +42,7 @@ namespace NetWin.Client.ExaminationWeb.Controllers
                 return View("Index");
             }
             examinationUrl = examinationUrl.Trim();
-            if (!examinationUrl.Contains("http://"))
+            if (!examinationUrl.Contains("http://") && !examinationUrl.Contains("https://"))
             {
                 examinationUrl = "http://" + examinationUrl;
             }

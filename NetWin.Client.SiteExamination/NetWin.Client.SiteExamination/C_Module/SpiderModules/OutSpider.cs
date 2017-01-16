@@ -75,7 +75,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 }
                 else
                 {
-                    preferredDomain = domain.Replace("http://", "http://www.");
+                    preferredDomain = domain.Replace("http://", "http://www.").Replace("https://", "https://www.");
                 }
                 var responsePreferred = HttpHelper.RequestSite(preferredDomain);
                 if (responsePreferred.ResponseUrls == response.ResponseUrls)

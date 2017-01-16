@@ -31,10 +31,7 @@ namespace NetWin.Client.UnitTest
         {
             try
             {
-                ExaminationExecuteService execute = new ExaminationExecuteService();
-                execute.CheckSite("http://kugou.com/");
-
-              
+                var repost = RegexHelper.CheckURLByString("www.zhihu.com/question/54779059/answer/141149088");
             }
             catch (Exception exception)
             {
