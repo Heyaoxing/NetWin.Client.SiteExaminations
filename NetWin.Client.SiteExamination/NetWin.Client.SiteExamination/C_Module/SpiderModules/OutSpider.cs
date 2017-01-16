@@ -36,7 +36,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
 
             try
             {
-                ResponseMessage responseMessage = HttpHelper.RequestSite(url, 15);
+                ResponseMessage responseMessage = HttpHelper.RequestSite(url, 20);
                 return responseMessage;
             }
             catch (Exception exception)

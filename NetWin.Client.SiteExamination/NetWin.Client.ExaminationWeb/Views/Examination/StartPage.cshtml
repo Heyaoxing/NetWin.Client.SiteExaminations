@@ -411,10 +411,10 @@
                 var contentText = "<div class='xn_basics_close'> <img src='@Url.Content("~/Content/images/xn_close.png")' onclick='modal_mouseout()'> </div>";
                 contentText += "<table style='margin-top:5px;margin-left:5px;font-family:微软雅黑'>";
                 contentText += "<tr style='line-height:40px;'><td colspan='2' style='margin-left:2px;color:red;font-size:24px;font-family:微软雅黑;'>原因展示</td></tr>";
-                contentText += "<tr style='margin-top:10px;'><td style='width:70px;text-align:right;line-height:30px;margin-left:2px;font-family:微软雅黑'>分析项目:</td><td>"+result.Data.Name+"</td></tr>";
-                contentText += "<tr  valign='top'style='margin-top:30px;'><td style='width:70px;text-align:right;margin-left:2px;font-family:微软雅黑'>分析网址:</td><td>"+(result.Data.Position==null?'':result.Data.Position)+"</td></tr>";
-                contentText += "<tr valign='top' style='margin-top:30px;'><td style='width:70px;text-align:right;margin-left:2px;font-family:微软雅黑'>分析结果:</td><td>"+result.Data.Result+"</td></tr>";
-                contentText += "<tr valign='top' style='margin-top:30px;'><td  style='width:70px;text-align:right;margin-left:2px;font-family:微软雅黑'>要&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;求:</td><td>"+result.Data.Require+"</td></tr>";
+                contentText += "<tr style='margin-top:10px;line-height:30px;font-family:微软雅黑'><td style='width:65px;text-align:right;margin-left:2px;'>分析项目:</td><td>"+result.Data.Name+"</td></tr>";
+                contentText += "<tr valign='top'style='margin-top:30px;line-height:30px;font-family:微软雅黑'><td style='width:65px;text-align:right;margin-left:2px;'>分析网址:</td><td>"+(result.Data.Position==null?'':result.Data.Position)+"</td></tr>";
+                contentText += "<tr valign='top' style='margin-top:30px;line-height:30px;font-family:微软雅黑'><td style='width:65px;text-align:right;margin-left:2px;'>分析结果:</td><td>"+result.Data.Result+"</td></tr>";
+                contentText += "<tr valign='top' style='margin-top:30px;line-height:30px;font-family:微软雅黑'><td  style='width:65px;text-align:right;margin-left:2px;'>要&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;求:</td><td>"+result.Data.Require+"</td></tr>";
                 contentText += "</table>";
                 content.append(contentText);
             }
