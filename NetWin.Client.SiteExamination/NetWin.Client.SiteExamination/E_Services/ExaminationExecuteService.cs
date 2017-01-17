@@ -118,7 +118,7 @@ namespace NetWin.Client.SiteExamination.E_Services
 
                 if (responseMessage.StatusCode == 200 || responseMessage.StatusCode == 301)
                 {
-                    var links = RegexHelper.GetALinks(responseMessage.InnerHtml, siteUrl).Where(p => p.Contains(RegexHelper.GetDomainName(responseMessage.ResponseUrls))).Distinct();
+                    var links = RegexHelper.GetALinks(responseMessage.InnerHtml, siteUrl).Where(p => p.Contains(RegexHelper.GetDomainName(responseMessage.ResponseUrls,true))).Distinct();
 
                     if (!links.Any())
                     {

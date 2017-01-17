@@ -191,9 +191,22 @@ namespace NetWin.Client.SiteExamination.C_Module
         }
 
         /// <summary>
-        /// 种子地址域名
+        /// 种子地址域名,不带协议
         /// </summary>
         public string DomainName
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(SiteUrl))
+                    return string.Empty;
+                return RegexHelper.GetDomainName(SiteUrl,true);
+            }
+        }
+
+        /// <summary>
+        /// 种子地址域名,带协议
+        /// </summary>
+        public string DomainNameWithProtocol
         {
             get
             {
@@ -226,7 +239,7 @@ namespace NetWin.Client.SiteExamination.C_Module
             {
                 if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
                     return new List<string>();
-                var httplinks = RegexHelper.GetALinks(InnerHtmlFilter, DomainName);
+                var httplinks = RegexHelper.GetALinks(InnerHtmlFilter, DomainNameWithProtocol);
                 return httplinks.Distinct().ToList();
             }
         }

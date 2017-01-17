@@ -195,13 +195,13 @@ namespace NetWin.Client.SiteExamination.B_Common
         }
 
 
-
         /// <summary>
         /// 获取网站域名
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="removeProtocol">是否过滤协议</param>
         /// <returns></returns>
-        public static string GetDomainName(string url)
+        public static string GetDomainName(string url, bool removeProtocol=false)
         {
             try
             {
@@ -209,6 +209,8 @@ namespace NetWin.Client.SiteExamination.B_Common
                 string host = Match(url, pattern);
                 if (!string.IsNullOrWhiteSpace(host))
                     host = host.TrimEnd('/');
+                if (removeProtocol&&host != null)
+                   host = host.Replace("http://", "").Replace("https://", "").Replace("ftp://", "");
                 return host;
             }
             catch
