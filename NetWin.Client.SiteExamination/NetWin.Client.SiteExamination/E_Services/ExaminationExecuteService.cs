@@ -90,12 +90,13 @@ namespace NetWin.Client.SiteExamination.E_Services
         /// 不通过初始检查的,则不往下执行,也不存入数据库
         /// </summary>
         /// <param name="siteUrl"></param>
+        /// <param name="isReplace"></param>
         /// <returns></returns>
-        public ReslutModel CheckSite(string siteUrl)
+        public ReslutModel<string> CheckSite(string siteUrl, bool isReplace)
         {
-            ReslutModel reslutModel = new ReslutModel();
+            ReslutModel<string> reslutModel = new ReslutModel<string>();
             reslutModel.Result = true;
-
+            reslutModel.Data = siteUrl;
             if (string.IsNullOrWhiteSpace(siteUrl))
             {
                 reslutModel.Result = false;
@@ -115,10 +116,17 @@ namespace NetWin.Client.SiteExamination.E_Services
             try
             {
                 var responseMessage = HttpHelper.RequestSite(siteUrl);
+                if (isReplace&&responseMessage.StatusCode != 200 && responseMessage.StatusCode != 301)
+                {
+                    siteUrl = siteUrl.Replace("http://", "https://");
+                    responseMessage = HttpHelper.RequestSite(siteUrl);
+                    reslutModel.Data = siteUrl;
+                }
+
 
                 if (responseMessage.StatusCode == 200 || responseMessage.StatusCode == 301)
                 {
-                    var links = RegexHelper.GetALinks(responseMessage.InnerHtml, siteUrl).Where(p => p.Contains(RegexHelper.GetDomainName(responseMessage.ResponseUrls,true))).Distinct();
+                    var links = RegexHelper.GetALinks(responseMessage.InnerHtml, siteUrl).Where(p => p.Contains(RegexHelper.GetDomainName(responseMessage.ResponseUrls, true))).Distinct();
 
                     if (!links.Any())
                     {

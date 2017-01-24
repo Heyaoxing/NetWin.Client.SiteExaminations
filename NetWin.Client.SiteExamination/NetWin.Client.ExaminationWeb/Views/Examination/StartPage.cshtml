@@ -3,6 +3,7 @@
     string url = ViewData["url"] as string;
     bool isHostory = bool.Parse(ViewData["isHostory"].ToString());
     int siteId = int.Parse(ViewData["siteId"].ToString());
+    bool isReplace = bool.Parse(ViewData["isReplace"].ToString());
 }
 <style type="text/css">
     .tag
@@ -161,6 +162,7 @@
         var checkSite_interval;
         var score_interval;
         var sitelUrl = '@url';
+        var isReplace = '@isReplace';
         $(function () {
             init();
         });
@@ -183,8 +185,10 @@
             $(".view_result").css('display','none');
             $("#view").text("是否需要登录...");
             clearTimeout(checkSite_interval);
-            var result = jQuery.parseJSON(window.external.CheckSite(sitelUrl));
+            var result = jQuery.parseJSON(window.external.CheckSite(sitelUrl,isReplace));
             if (result.Result) {
+                sitelUrl = result.Data;
+              $("#siteUrl").text(sitelUrl);
                 start();
             } else {
                 window.location.href = "@Url.Action("Index")?isLogin=true&message="+result.Message+"&url"+sitelUrl;
@@ -255,22 +259,23 @@
         //问题项
         var problem = 0;
         //请求体检结果
-         var cach_score = 0;
+        var cach_score = 0;
+
         function chat() {
             i++;
             cach_score = 0;
             var cach = new Array();
-            $(request).each(function (i, v) {
+            $(request).each(function(i, v) {
                 var result = jQuery.parseJSON(window.external.GetDetailResult(v[0], v[1]));
                 if (result.Result) {
                     if (result.Data.IsPass) {
-                      $("#detail_" + v[1]).text(result.Data.Score + "分");
+                        $("#detail_" + v[1]).text(result.Data.Score + "分");
 
-                      $("#item_" + result.Data.ItemId).text(Number($("#item_" + result.Data.ItemId).text())+result.Data.Score);
+                        $("#item_" + result.Data.ItemId).text(Number($("#item_" + result.Data.ItemId).text()) + result.Data.Score);
 
                     } else {
-                      $("#detail_name_" + v[1]).css('color','red');
-                      $("#detail_" + v[1]).html("<span onclick='modal_mouseover(this)'  siteId='"+v[0]+"' detailId='"+v[1]+"' ><img src='@Url.Content("~/Content/images/xn_web_basics_01.png")' class='icon_size' ></span>");
+                        $("#detail_name_" + v[1]).css('color', 'red');
+                        $("#detail_" + v[1]).html("<span onclick='modal_mouseover(this)'  siteId='" + v[0] + "' detailId='" + v[1] + "' ><img src='@Url.Content("~/Content/images/xn_web_basics_01.png")' class='icon_size' ></span>");
                       //  cach_score=cach_score+result.Data.Score;
                         score = score - result.Data.Score;
                       $("#score").text(score);
@@ -312,23 +317,7 @@
             } else if (score < 50) {
                 danger();
             }
-
-//            if (cach_score != 0) {
-//                scroeView();
-//               score_interval = setInterval(scroeView, 50);
-//            }
-        }
-
-
-        function scroeView() {
-            cach_score--;
-            $("#score").text(score);
-            if (cach_score <= 0) {
-                clearTimeout(score_interval);
-                return;
-            }
-            score--;
-        }
+}
 
         //导出体检报告
         function ExportReport() {

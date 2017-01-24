@@ -65,10 +65,11 @@ namespace NetWin.Client.TestTools
         /// 不通过初始检查的,则不往下执行
         /// </summary>
         /// <param name="siteUrl"></param>
+        /// <param name="isReplace"></param>
         /// <returns></returns>
-        public string CheckSite(string siteUrl)
+        public string CheckSite(string siteUrl, bool isReplace)
         {
-            var result = examination.CheckSite(siteUrl);
+            var result = examination.CheckSite(siteUrl, isReplace);
             var json = TextHelper.ObjectToJson(result);
             return json;
         }
@@ -144,6 +145,7 @@ namespace NetWin.Client.TestTools
             var json = TextHelper.ObjectToJson(result);
             return json;
         }
+
         /// <summary>
         /// 导出文件
         /// </summary>
@@ -167,6 +169,7 @@ namespace NetWin.Client.TestTools
                 MessageBox.Show("导出失败:" + ex.Message);
             }
         }
+
         #endregion
     }
 }

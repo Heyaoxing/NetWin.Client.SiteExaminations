@@ -42,9 +42,11 @@ namespace NetWin.Client.ExaminationWeb.Controllers
                 return View("Index");
             }
             examinationUrl = examinationUrl.Trim();
+            bool isReplace = false;
             if (!examinationUrl.Contains("http://") && !examinationUrl.Contains("https://"))
             {
                 examinationUrl = "http://" + examinationUrl;
+                isReplace = true;
             }
 
             if (!CheckURLByString(examinationUrl))
@@ -55,6 +57,7 @@ namespace NetWin.Client.ExaminationWeb.Controllers
                 return View("Index");
             }
 
+            ViewData["isReplace"] = isReplace;
             ViewData["url"] = GetDomainName(examinationUrl);
             ViewData["isHostory"] = isHostory;
             ViewData["siteId"] = siteId;
