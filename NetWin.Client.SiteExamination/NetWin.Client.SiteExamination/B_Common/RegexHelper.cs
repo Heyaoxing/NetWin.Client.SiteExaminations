@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Linq;
+
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -162,7 +162,11 @@ namespace NetWin.Client.SiteExamination.B_Common
                 const string pattern = @"http://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?";
                 Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
                 MatchCollection matchCollection = regex.Matches(htmlContent);
-                links.AddRange(from object link in matchCollection select link.ToString().TrimEnd('\\').Trim());
+
+                foreach (var item in matchCollection)
+                {
+                    links.Add(item.ToString());
+                }
             }
             catch
             {
@@ -171,17 +175,6 @@ namespace NetWin.Client.SiteExamination.B_Common
             return links;
         }
 
-        /// <summary>
-        /// 获取排除掉资源文件后的有效链接
-        /// </summary>
-        /// <returns></returns>
-        public static List<string> GetValidLinks(string htmlContent)
-        {
-            return GetLinks(htmlContent)
-                       .Except(GetStyleLinks(htmlContent))
-                       .Except(GetImageLinks(htmlContent))
-                       .Except(GetJsLinks(htmlContent)).Distinct().Where(p => !string.IsNullOrEmpty(p) && p != "#").ToList();
-        }
 
         /// <summary>
         /// 获取网站标题
@@ -201,16 +194,16 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// <param name="url"></param>
         /// <param name="removeProtocol">是否过滤协议</param>
         /// <returns></returns>
-        public static string GetDomainName(string url, bool removeProtocol=false)
+        public static string GetDomainName(string url, bool removeProtocol = false)
         {
             try
             {
                 const string pattern = @"https?://(.*?)($|/)";
                 string host = Match(url, pattern);
-                if (!string.IsNullOrWhiteSpace(host))
+                if (!string.IsNullOrEmpty(host))
                     host = host.TrimEnd('/');
-                if (removeProtocol&&host != null)
-                   host = host.Replace("http://", "").Replace("https://", "").Replace("ftp://", "");
+                if (removeProtocol && host != null)
+                    host = host.Replace("http://", "").Replace("https://", "").Replace("ftp://", "");
                 return host;
             }
             catch
@@ -232,7 +225,7 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 var reg = new Regex(@"<meta.+?charset=[^\w]?([-\w]+)", RegexOptions.IgnoreCase);
                 string encodingStirng = reg.Match(htmlContent).Groups[1].Value;
-                if (string.IsNullOrWhiteSpace(encodingStirng) || encodingStirng == "“”")
+                if (string.IsNullOrEmpty(encodingStirng) || encodingStirng == "“”")
                     encodingStirng = "utf-8";
                 return encodingStirng;
             }
@@ -299,10 +292,22 @@ namespace NetWin.Client.SiteExamination.B_Common
                 MatchCollection cssMatch = Regex.Matches(htmlContent, cssPattern, RegexOptions.IgnoreCase);
                 MatchCollection imgMatch = Regex.Matches(htmlContent, imgPattern, RegexOptions.IgnoreCase);
                 MatchCollection aMatch = Regex.Matches(htmlContent, aPattern, RegexOptions.IgnoreCase);
-                links.AddRange(from object link in jsMatch select link.ToString().Trim());
-                links.AddRange(from object link in cssMatch select link.ToString().Trim());
-                links.AddRange(from object link in imgMatch select link.ToString().Trim());
-                links.AddRange(from object link in aMatch select link.ToString().Trim());
+                foreach (var item in jsMatch)
+                {
+                    links.Add(item.ToString());
+                }
+                foreach (var item in cssMatch)
+                {
+                    links.Add(item.ToString());
+                }
+                foreach (var item in imgMatch)
+                {
+                    links.Add(item.ToString());
+                }
+                foreach (var item in aMatch)
+                {
+                    links.Add(item.ToString());
+                }
             }
             catch
             {
@@ -324,7 +329,12 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 const string aPattern = "(?<=a[^>]*?href=\").*?(?=\")";
                 MatchCollection aMatch = Regex.Matches(htmlContent, aPattern, RegexOptions.IgnoreCase);
-                var alinks = from object link in aMatch where !link.ToString().Contains("#") select link.ToString().Trim();
+                var alinks = new List<string>();
+                foreach (var item in aMatch)
+                {
+                    if (!item.ToString().Contains("#"))
+                        alinks.Add(item.ToString());
+                }
                 foreach (var item in alinks)
                 {
                     if (item.StartsWith("/") || item.StartsWith("\\"))
@@ -356,7 +366,10 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 const string cssPattern = "(?<=link[^>]*?href=\").*?(?=\")";
                 MatchCollection cssMatch = Regex.Matches(htmlContent, cssPattern, RegexOptions.IgnoreCase);
-                links.AddRange(from object link in cssMatch select link.ToString().Trim());
+                foreach (var item in cssMatch)
+                {
+                    links.Add(item.ToString());
+                }
             }
             catch
             {
@@ -377,7 +390,10 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 const string aPattern = "(?<=img[^>]*?src=\").*?(?=\")";
                 MatchCollection cssMatch = Regex.Matches(htmlContent, aPattern, RegexOptions.IgnoreCase);
-                links.AddRange(from object link in cssMatch select link.ToString().Trim());
+                foreach (var item in cssMatch)
+                {
+                    links.Add(item.ToString());
+                }
             }
             catch
             {
@@ -398,7 +414,10 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 const string jsPattern = "(?<=script[^>]*?src=\").*?(?=\")";
                 MatchCollection cssMatch = Regex.Matches(htmlContent, jsPattern, RegexOptions.IgnoreCase);
-                links.AddRange(from object link in cssMatch select link.ToString().Trim());
+                foreach (var item in cssMatch)
+                {
+                    links.Add(item.ToString());
+                }
             }
             catch
             {
@@ -419,7 +438,10 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 const string pattern = "<img[^>]*?>";
                 MatchCollection match = Regex.Matches(htmlContent, pattern, RegexOptions.IgnoreCase);
-                imgs.AddRange(from object link in match select link.ToString().Trim());
+                foreach (var item in match)
+                {
+                    imgs.Add(item.ToString());
+                }
             }
             catch
             {
@@ -519,7 +541,7 @@ namespace NetWin.Client.SiteExamination.B_Common
             try
             {
                 string pattern = string.Format("(?<={0}[^>]*?{1}=\").*?(?=\")", dom, attribute);
-                return Match(htmlContent,pattern);
+                return Match(htmlContent, pattern);
             }
             catch
             {
@@ -528,7 +550,7 @@ namespace NetWin.Client.SiteExamination.B_Common
             return string.Empty;
         }
 
-    
+
 
         /// <summary>
         /// 通过标签获得标签内文本
@@ -543,7 +565,7 @@ namespace NetWin.Client.SiteExamination.B_Common
             try
             {
                 string pattern = string.Format(@"<{0}[^>]*?>([\s\S]*?)<\/{0}>", dom);
-                var result= new Regex(pattern).Matches(htmlContent)[index].Groups[1].Value;
+                var result = new Regex(pattern).Matches(htmlContent)[index].Groups[1].Value;
                 return result;
             }
             catch
@@ -563,7 +585,7 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// <param name="id">id</param>
         /// <param name="index">取第几个符合条件的匹配值</param>
         /// <returns></returns>
-        public static string GetContentByDom(string htmlContent, string dom,string id, int index = 0)
+        public static string GetContentByDom(string htmlContent, string dom, string id, int index = 0)
         {
             try
             {
@@ -588,12 +610,12 @@ namespace NetWin.Client.SiteExamination.B_Common
             try
             {
                 string strText = Regex.Replace(html, "<[^>]+>", "");
-                strText = Regex.Replace(strText, "&[^;]+;", "");
+                strText = Regex.Replace(strText, "&[^;]+;", "").Replace("\n", "").Replace("\t", "").Replace("\r", "");
                 return strText;
             }
             catch (Exception exception)
             {
-                LogHelper.Error("去除html标签异常："+exception.Message);
+                LogHelper.Error("去除html标签异常：" + exception.Message);
             }
             return "";
         }
@@ -611,7 +633,10 @@ namespace NetWin.Client.SiteExamination.B_Common
             {
                 string pattern = string.Format("<{0}[^>].*?>.*?</{0}>", dom);
                 MatchCollection match = Regex.Matches(htmlContent, pattern, RegexOptions.IgnoreCase);
-                tags.AddRange(from object link in match select link.ToString().Trim());
+                foreach (var item in match)
+                {
+                    tags.Add(item.ToString());
+                }
             }
             catch
             {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+
 using System.Text;
 using NetWin.Client.SiteExamination.A_Core.Config;
 using NetWin.Client.SiteExamination.B_Common;
@@ -31,12 +31,12 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
 
         public ResponseMessage SpiderSite(string url)
         {
-            if (string.IsNullOrWhiteSpace(url))
+            if (string.IsNullOrEmpty(url))
                 return null;
 
             try
             {
-                ResponseMessage responseMessage = HttpHelper.RequestSite(url, 20);
+                ResponseMessage responseMessage = HttpHelper.RequestSite(url, 10);
                 return responseMessage;
             }
             catch (Exception exception)
@@ -89,25 +89,25 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 }
 
                 //关键词
-                outSite.Keywords = RegexHelper.GetKeyWords(response.InnerHtml).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+                outSite.Keywords = new List<string>(RegexHelper.GetKeyWords(response.InnerHtml).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
                 outSite.ExistRobots = HttpHelper.GetStatusCode(domain + "/robots.txt") == 200 ? true : false;
                 outSite.ExistSitemap = HttpHelper.GetStatusCode(domain + "/sitemap.xml") == 200 ? true : false;
 
 
                 //logo有浮动标题和alt属性且皆为关键词
                 string logoContent = RegexHelper.GetContentByDom(response.InnerHtml, "div", "t_logo");
-                if (!string.IsNullOrWhiteSpace(logoContent))
+                if (!string.IsNullOrEmpty(logoContent))
                 {
                     var alt = RegexHelper.GetLogoAlt(logoContent);
                     var title = RegexHelper.GetLogoTitle(logoContent);
 
 
-                    if (string.IsNullOrWhiteSpace(alt))
+                    if (string.IsNullOrEmpty(alt))
                     {
                         outSite.IsLogoContainsKeyWord = false;
                         outSite.LogoAltAndTitle = "logo图片中不包含alt属性值";
                     }
-                    else if (string.IsNullOrWhiteSpace(title))
+                    else if (string.IsNullOrEmpty(title))
                     {
                         outSite.IsLogoContainsKeyWord = false;
                         outSite.LogoAltAndTitle = "logo图片中不包含title属性值";
@@ -143,7 +143,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 var html = HttpHelper.RequestSite(string.Format(OutUrl, searchUrl));
                 var count = TextHelper.Truncation(html.InnerHtml, "百度为您找到相关结果约", "个").Replace(",", "");
                 outSite.OutLinkCount = 0;
-                if (!string.IsNullOrWhiteSpace(count))
+                if (!string.IsNullOrEmpty(count))
                 {
                     try
                     {
@@ -159,7 +159,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 #region http://seo.chinaz.com/
                 string whoisUrl = string.Format(SeoUrl, domain.Replace("http://", "").Replace("https://", ""));
                 var spiderSite = SpiderSite(whoisUrl);
-                if (spiderSite == null || string.IsNullOrWhiteSpace(spiderSite.InnerHtml))
+                if (spiderSite == null || string.IsNullOrEmpty(spiderSite.InnerHtml))
                     return outSite;
 
 
@@ -180,16 +180,16 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
 
                 //域名年龄和过期信息
                 string ageMessage = RegexHelper.GetContentByDom(RegexHelper.GetContentByDomAttr(whoisContent, "div", "class", "w97-0 brn ml5 col-hint02"), "a");
-                if (!string.IsNullOrWhiteSpace(ageMessage))
+                if (!string.IsNullOrEmpty(ageMessage))
                 {
                     //到期时间
                     var expireDate = TextHelper.Truncation(ageMessage, "过期时间为", ")");
                     outSite.ExpireDate = (DateTime.ParseExact(expireDate, "yyyy年MM月dd日", null) - DateTime.Now).Days / 30;
                     var date = TextHelper.Truncation(ageMessage, "（");
                     LogHelper.Info("date" + date);
-                    var year = Int32.Parse(string.IsNullOrWhiteSpace(TextHelper.Truncation(date, "年")) ? "0" : TextHelper.Truncation(date, "年"));
+                    var year = Int32.Parse(string.IsNullOrEmpty(TextHelper.Truncation(date, "年")) ? "0" : TextHelper.Truncation(date, "年"));
                     LogHelper.Info("year" + year);
-                    var month = Int32.Parse(string.IsNullOrWhiteSpace(TextHelper.Truncation(date, "年", "月")) ? "0" : TextHelper.Truncation(date, "年", "月"));
+                    var month = Int32.Parse(string.IsNullOrEmpty(TextHelper.Truncation(date, "年", "月")) ? "0" : TextHelper.Truncation(date, "年", "月"));
                     //域名年龄
                     outSite.DomainAge = year * 12 + month;
                 }

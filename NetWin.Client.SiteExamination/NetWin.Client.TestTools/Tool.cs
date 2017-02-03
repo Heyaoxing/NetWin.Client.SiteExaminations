@@ -5,14 +5,15 @@ using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using NetWin.Client.SiteExamination.A_Core.Config;
 using NetWin.Client.SiteExamination.A_Core.Model;
 using NetWin.Client.SiteExamination.B_Common;
 using NetWin.Client.SiteExamination.D_Data.Dto;
 using NetWin.Client.SiteExamination.E_Services;
+using Newtonsoft.Json;
 
 namespace NetWin.Client.TestTools
 {
@@ -31,6 +32,7 @@ namespace NetWin.Client.TestTools
             ToolWb.Navigate(ConfigurationManager.AppSettings["ExaminationWeb_Url"]);
 
             NetWin.Client.SiteExamination.A_Core.Config.SysConfig.LinkAmountLimit = Int32.Parse(ConfigurationManager.AppSettings["LinkAmountLimit"] ?? "50");
+            SysConfig.IsDebug = true;
         }
 
         private void Tool_FormClosing(object sender, FormClosingEventArgs e)
@@ -45,7 +47,7 @@ namespace NetWin.Client.TestTools
             try
             {
                 string portName = RegistryHelper.GetRegistryData(Registry.LocalMachine, @"SOFTWARE\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", "NetWin.Client.TestTools.exe");
-                if (string.IsNullOrWhiteSpace(portName))
+                if (string.IsNullOrEmpty(portName))
                 {
                     RegistryHelper.SetRegistryData(Registry.LocalMachine, @"SOFTWARE\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", "NetWin.Client.TestTools.exe", "9999");
                 }
@@ -70,18 +72,18 @@ namespace NetWin.Client.TestTools
         public string CheckSite(string siteUrl, bool isReplace)
         {
             var result = examination.CheckSite(siteUrl, isReplace);
-            var json = TextHelper.ObjectToJson(result);
+            var json = JsonConvert.SerializeObject(result);
             return json;
         }
 
         /// <summary>
-        /// 查询需要体检的体检项
+        /// 查询需要体检的体检项历史记录
         /// </summary>
         /// <returns></returns>
         public string GetHistories(string siteUrl)
         {
             var result = ExaminationQueryService.GetHistories(siteUrl);
-            var json = TextHelper.ObjectToJson(result);
+            var json = JsonConvert.SerializeObject(result);
             return json;
         }
 
@@ -93,7 +95,7 @@ namespace NetWin.Client.TestTools
         public string GetSiteExaminationInfo(int siteId)
         {
             var result = ExaminationQueryService.GetSiteExaminationInfo(siteId);
-            var json = TextHelper.ObjectToJson(result);
+            var json = JsonConvert.SerializeObject(result);
             return json;
         }
 
@@ -104,7 +106,7 @@ namespace NetWin.Client.TestTools
         public string GetExaminationItem()
         {
             var result = ExaminationQueryService.GetExaminationItem();
-            var json = TextHelper.ObjectToJson(result);
+            var json = JsonConvert.SerializeObject(result);
             return json;
         }
 
@@ -118,7 +120,7 @@ namespace NetWin.Client.TestTools
         public string GetDetailResult(int siteId, int detailId)
         {
             var result = ExaminationQueryService.GetDetailResult(siteId, detailId);
-            var json = TextHelper.ObjectToJson(result);
+            var json = JsonConvert.SerializeObject(result);
             return json;
         }
 
@@ -131,7 +133,7 @@ namespace NetWin.Client.TestTools
         {
             long userId = 10000; //TODO: 犀牛云帐号
             var result = examination.Start(userId, siteUrl);
-            var json = TextHelper.ObjectToJson(result);
+            var json = JsonConvert.SerializeObject(result);
             return json;
         }
 
@@ -142,7 +144,7 @@ namespace NetWin.Client.TestTools
         public string Stop()
         {
             var result = examination.Stop();
-            var json = TextHelper.ObjectToJson(result);
+            var json = JsonConvert.SerializeObject(result);
             return json;
         }
 
@@ -156,7 +158,7 @@ namespace NetWin.Client.TestTools
                 string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Guid.NewGuid() + ".doc");
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "word文件 (*.doc)|*.docx";
-                saveFileDialog.FileName = "网站体检报告"+DateTime.Now.ToString("yyyyMMddHHmmss")+".doc";
+                saveFileDialog.FileName = "网站体检报告" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".doc";
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     ExaminationQueryService.GetExaminationReport(siteId, filePath);

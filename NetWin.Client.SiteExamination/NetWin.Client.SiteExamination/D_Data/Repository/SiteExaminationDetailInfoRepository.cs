@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
 using System.Text;
-using Dapper;
+using NetWin.Client.SiteExamination.B_Common;
 using NetWin.Client.SiteExamination.D_Data.Base;
 using NetWin.Client.SiteExamination.D_Data.Dto;
 using NetWin.Client.SiteExamination.D_Data.Entities;
+using Shove.Database;
 
 namespace NetWin.Client.SiteExamination.D_Data.Repository
 {
@@ -18,8 +19,11 @@ namespace NetWin.Client.SiteExamination.D_Data.Repository
         /// <returns></returns>
         public static long Add(SiteExaminationDetailInfo siteExaminationDetail)
         {
-            string sql = "insert into SiteExaminationDetailInfo(DetailId,SiteId,IsPass,Result,Score,CreatedOn,Position)values(@DetailId,@SiteId,@IsPass,@Result,@Score,@CreatedOn,@Position);select last_insert_rowid();";
-            var id = SqLiteConnection.ExecuteScalar<long>(sql, siteExaminationDetail);
+            string sql = string.Format("insert into SiteExaminationDetailInfo(DetailId,SiteId,IsPass,Result,Score,CreatedOn,Position)values({0},{1},{2},'{3}',{4},'{5}','{6}');select last_insert_rowid();", siteExaminationDetail.DetailId, siteExaminationDetail.SiteId,siteExaminationDetail.IsPass?1:0, siteExaminationDetail.Result, siteExaminationDetail.Score, siteExaminationDetail.CreatedOn, siteExaminationDetail.Position);
+            var result = SQLite.ExecuteScalar(SqLiteConnection,sql);
+            int id = 0;
+            if (result != null)
+                id = Shove._Convert.StrToInt(result.ToString(), 0);
             return id;
         }
 
@@ -31,8 +35,14 @@ namespace NetWin.Client.SiteExamination.D_Data.Repository
         /// <returns></returns>
         public static ItemDetailResultDto GetDetailResult(int siteId, int detailId)
         {
-            string sql = "select a.IsPass,a.Score,a.Position,a.Result,b.Name,b.Require,b.ItemId from SiteExaminationDetailInfo as a join ExaminationItemDetailConfig as b on a.DetailId=b.DetailId where a.SiteId=@SiteId and a.DetailId=@DetailId ";
-            return SqLiteConnection.Query<ItemDetailResultDto>(sql, new { DetailId = detailId, SiteId = siteId }).FirstOrDefault();
+            string sql = string.Format("select a.IsPass,a.Score,a.Position,a.Result,b.Name,b.Require,b.ItemId from SiteExaminationDetailInfo as a join ExaminationItemDetailConfig as b on a.DetailId=b.DetailId where a.SiteId={0} and a.DetailId={1} ", siteId, detailId);
+            DataTable dt = SQLite.Select(SqLiteConnection, sql);
+            if (dt!=null&&dt.Rows.Count > 0)
+            {
+            return DataTableHelper.GetEntity<ItemDetailResultDto>(dt);
+            }
+            
+                return null;
         }
     }
 }

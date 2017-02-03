@@ -10,10 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetWin.Client.SiteExamination</RootNamespace>
     <AssemblyName>NetWin.Client.SiteExamination</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,62 +36,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\Lib\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Shove">
+      <HintPath>..\Lib\Shove.dll</HintPath>
+    </Reference>
+    <Reference Include="Shove.Components">
+      <HintPath>..\Lib\Shove.Components.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.103.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.103\lib\net40\System.Data.SQLite.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.XML">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.XML.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="B_Common\HtmlAgilityPack\crc32.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\EncodingFoundException.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlAttribute.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlAttributeCollection.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlCmdLine.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlCommentNode.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlConsoleListener.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlDocument.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlDocument.PathMethods.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlDocument.Xpath.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlDocumentNode.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlElementFlag.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlElementNode.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlElementNodeBase.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlEntity.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlNameTable.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlNode.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlNode.Xpath.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlNodeCollection.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlNodeNavigator.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlNodeType.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlParseError.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlParseErrorCode.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlTextNode.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlWeb.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlWeb.Xpath.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\HtmlWebException.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\IOLibrary.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\MixedCodeDocument.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\MixedCodeDocumentCodeFragment.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\MixedCodeDocumentFragment.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\MixedCodeDocumentFragmentList.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\MixedCodeDocumentFragmentType.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\MixedCodeDocumentTextFragment.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\NameValuePair.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\NameValuePairList.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\Trace.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\Trace.FullFramework.cs" />
-    <Compile Include="B_Common\HtmlAgilityPack\Utilities.cs" />
+    <Compile Include="A_Core\Model\ConcurrentBag.cs" />
+    <Compile Include="A_Core\Model\ConcurrentDictionary.cs" />
+    <Compile Include="A_Core\Model\ConcurrentQueue.cs" />
+    <Compile Include="B_Common\DataTableHelper.cs" />
+    <Compile Include="B_Common\EnumerableHelper.cs" />
     <Compile Include="B_Common\LogHelper.cs" />
     <Compile Include="B_Common\RegistryHelper.cs" />
     <Compile Include="C_Module\PumpModules\IComputeRuleParam.cs" />
@@ -104,7 +76,6 @@
     <Compile Include="B_Common\Interface\IEntity.cs" />
     <Compile Include="B_Common\IoHelper.cs" />
     <Compile Include="B_Common\RegexHelper.cs" />
-    <Compile Include="B_Common\SqlMapper.cs" />
     <Compile Include="B_Common\TextHelper.cs" />
     <Compile Include="C_Module\OutSite.cs" />
     <Compile Include="C_Module\PumpModules\IComputeRule.cs" />
@@ -138,20 +109,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="B_Common\HtmlAgilityPack\HtmlAgilityPack.snk" />
+    <None Include="app.config" />
     <None Include="G_Document\Shove_SiteExamination.pdm" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="F_Api\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets'))" />
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

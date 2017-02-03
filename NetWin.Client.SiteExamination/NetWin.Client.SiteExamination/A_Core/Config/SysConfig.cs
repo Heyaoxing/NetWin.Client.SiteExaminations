@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 
 namespace NetWin.Client.SiteExamination.A_Core.Config
@@ -27,16 +27,16 @@ namespace NetWin.Client.SiteExamination.A_Core.Config
         /// 是否为调试模式,调试模式下会写日志
         /// </summary>
 #if DEBUG
-        public static readonly bool IsDebug = true;
+        public static bool IsDebug = false;
 #else
-        public static readonly bool IsDebug = false;
+        public static  bool IsDebug = false;
 #endif
 
         #region 采集器设置
         /// <summary>
         /// 每次批量爬取的资源数
         /// </summary>
-        public static readonly int SpiderBatch =5;
+        public static readonly int SpiderBatch =10;
 
         /// <summary>
         /// 抓取层级限制,-1为无限制
@@ -51,7 +51,7 @@ namespace NetWin.Client.SiteExamination.A_Core.Config
         /// <summary>
         /// 请求网站资源超时时间,单位为秒
         /// </summary>
-        public static readonly int RequestSiteTimeOut = 10;
+        public static readonly int RequestSiteTimeOut = 5;
 
         #endregion
     }

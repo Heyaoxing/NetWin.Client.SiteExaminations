@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Json;
+
 using System.Text;
 
 namespace NetWin.Client.SiteExamination.B_Common
@@ -117,21 +116,7 @@ namespace NetWin.Client.SiteExamination.B_Common
             return string.Empty;
         }
 
-        public static string Replace(string source, string match, string replacement)
-        {
-            char[] sArr = source.ToCharArray();
-            char[] mArr = match.ToCharArray();
-            char[] rArr = replacement.ToCharArray();
-            int idx = IndexOf(sArr, mArr);
-            if (idx == -1)
-            {
-                return source;
-            }
-            else
-            {
-                return new string(sArr.Take(idx).Concat(rArr).Concat(sArr.Skip(idx + mArr.Length)).ToArray());
-            }
-        }
+      
         /// <summary>
         /// 查找字符数组在另一个字符数组中匹配的位置
         /// </summary>
@@ -195,7 +180,7 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// <returns></returns>
         public static string InsertString(string str, string middle, int gap)
         {
-            if (string.IsNullOrWhiteSpace(str))
+            if (string.IsNullOrEmpty(str))
                 return str;
             StringBuilder sb = new StringBuilder();
             var array = str.ToCharArray();
@@ -209,23 +194,5 @@ namespace NetWin.Client.SiteExamination.B_Common
         }
 
 
-        // 从一个对象信息生成Json串
-        public static string ObjectToJson(object obj)
-        {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
-            MemoryStream stream = new MemoryStream();
-            serializer.WriteObject(stream, obj);
-            byte[] dataBytes = new byte[stream.Length];
-            stream.Position = 0;
-            stream.Read(dataBytes, 0, (int)stream.Length);
-            return Encoding.UTF8.GetString(dataBytes);
-        }
-        // 从一个Json串生成对象信息
-        public static object JsonToObject(string jsonString, object obj)
-        {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
-            MemoryStream mStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
-            return serializer.ReadObject(mStream);
-        }
     }
 }

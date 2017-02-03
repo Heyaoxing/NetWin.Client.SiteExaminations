@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using NetWin.Client.SiteExamination.B_Common;
 
@@ -11,7 +11,7 @@ namespace NetWin.Client.SiteExamination.C_Module
     /// </summary>
     public class InSite
     {
-        public InSite(string siteUrl, string currentUrl, string innerHtml, DateTime lastModified, long size, int depth)
+        public InSite(string siteUrl, string currentUrl, string innerHtml, DateTime lastModified, long size, int depth, int statusCode)
         {
             CurrentUrlUrl = currentUrl;
             InnerHtml = RegexHelper.FilterNotes(innerHtml);
@@ -19,6 +19,7 @@ namespace NetWin.Client.SiteExamination.C_Module
             SiteUrl = siteUrl;
             LastModified = lastModified;
             HtmlSize = size;
+            StatusCode = statusCode;
         }
 
         /// <summary>
@@ -39,6 +40,8 @@ namespace NetWin.Client.SiteExamination.C_Module
         /// 网页内容
         /// </summary>
         public readonly string InnerHtml;
+
+        public readonly int StatusCode;
 
         /// <summary>
         /// 过滤掉js后的html
@@ -88,7 +91,13 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                return HttpLinks.Where(p => p.Contains(DomainName)).ToList();
+                List<string> list = new List<string>();
+                foreach (var item in HttpLinks)
+                {
+                    if (item.Contains(DomainName))
+                        list.Add(item);
+                }
+                return list;
             }
         }
 
@@ -99,7 +108,14 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                var count = HttpLinks.Count(p => !p.Contains(DomainName));
+                var count = 0;
+
+                List<string> list = new List<string>();
+                foreach (var item in HttpLinks)
+                {
+                    if (item.Contains(DomainName))
+                        count++;
+                }
                 return count;
             }
         }
@@ -111,9 +127,17 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                return Links.Count(p => string.IsNullOrWhiteSpace(p) ||
-                    p == "#" || p.Contains("javascript:") || p.Contains("javascript:void()") ||
-                    p.Contains("javascript:void(0)"));
+                int count= 0;
+                foreach (var item in Links)
+                {
+                    if (string.IsNullOrEmpty(item) ||
+                        item == "#" || item.Contains("javascript:") || item.Contains("javascript:void()") ||
+                        item.Contains("javascript:void(0)"))
+                    {
+                        count++;
+                    }
+                }
+                return count;
             }
         }
 
@@ -129,10 +153,10 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return new List<string>();
 
-                return RegexHelper.GetKeyWords(InnerHtmlFilter).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+                return new List<string>(RegexHelper.GetKeyWords(InnerHtmlFilter).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
             }
         }
 
@@ -143,7 +167,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return string.Empty;
 
                 string descript = RegexHelper.GetDescription(InnerHtmlFilter);
@@ -197,9 +221,9 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(SiteUrl))
+                if (string.IsNullOrEmpty(SiteUrl))
                     return string.Empty;
-                return RegexHelper.GetDomainName(SiteUrl,true);
+                return RegexHelper.GetDomainName(SiteUrl, true);
             }
         }
 
@@ -210,7 +234,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(SiteUrl))
+                if (string.IsNullOrEmpty(SiteUrl))
                     return string.Empty;
                 return RegexHelper.GetDomainName(SiteUrl);
             }
@@ -223,9 +247,9 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtml))
+                if (string.IsNullOrEmpty(this.InnerHtml))
                     return new List<string>();
-                return RegexHelper.GetResources(this.InnerHtml).Distinct().ToList();
+                return EnumerableHelper.Distinct<string>(RegexHelper.GetResources(this.InnerHtml));
             }
         }
 
@@ -237,10 +261,10 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return new List<string>();
                 var httplinks = RegexHelper.GetALinks(InnerHtmlFilter, DomainNameWithProtocol);
-                return httplinks.Distinct().ToList();
+                return EnumerableHelper.Distinct<string>(httplinks);
             }
         }
 
@@ -252,10 +276,10 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return string.Empty;
                 string title = RegexHelper.GetTitle(InnerHtmlFilter);
-                if (!string.IsNullOrWhiteSpace(title) && title.Length > 200)
+                if (!string.IsNullOrEmpty(title) && title.Length > 200)
                     title = title.Substring(0, 200);
                 return title;
             }
@@ -269,7 +293,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return 0;
                 return RegexHelper.MatchCount(InnerHtmlFilter, @"<iframe");
             }
@@ -283,9 +307,18 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return 0;
-                return RegexHelper.GetLinks(InnerHtmlFilter).Count(p => p.EndsWith(".swf") || p.Contains(".swf?"));
+                var links = RegexHelper.GetLinks(InnerHtmlFilter);
+                int count = 0;
+                foreach (var item in links)
+                {
+                    if (item.EndsWith(".swf") || item.Contains(".swf?"))
+                    {
+                        count++;
+                    }
+                }
+                return count;
             }
         }
 
@@ -297,7 +330,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return 0;
                 return RegexHelper.MatchCount(InnerHtmlFilter, @"<strong");
             }
@@ -311,7 +344,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return 0;
                 return RegexHelper.MatchCount(InnerHtmlFilter, @"<h1");
             }
@@ -324,7 +357,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return 0;
                 return RegexHelper.MatchCount(InnerHtmlFilter, @"<h2");
             }
@@ -337,7 +370,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return 0;
                 return RegexHelper.MatchCount(InnerHtmlFilter, @"<h3");
             }
@@ -350,7 +383,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return 0;
                 return RegexHelper.MatchCount(InnerHtmlFilter, @"<h4");
             }
@@ -363,7 +396,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return 0;
                 return RegexHelper.MatchCount(InnerHtmlFilter, @"<h5");
             }
@@ -376,7 +409,7 @@ namespace NetWin.Client.SiteExamination.C_Module
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.InnerHtmlFilter))
+                if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return 0;
                 return RegexHelper.MatchCount(InnerHtmlFilter, @"<h6");
             }
@@ -391,7 +424,10 @@ namespace NetWin.Client.SiteExamination.C_Module
             get
             {
                 if (DateTime.Now.AddMinutes(-5) < LastModified)
+                {
+                    LogHelper.Info("动态网站:" + CurrentUrlUrl + ",缓存时间:" + LastModified);
                     return true;
+                }
                 else
                     return false;
             }

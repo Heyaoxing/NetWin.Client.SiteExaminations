@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using NetWin.Client.SiteExamination.A_Core.Enum;
 using NetWin.Client.SiteExamination.B_Common;
@@ -36,13 +36,13 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
             foreach (var item in param)
             {
-                if (item.ComputeType == ComputeTypeEnum.Global)
+                if (item.ComputeType == (int)ComputeTypeEnum.Global)
                 {
                     IComputeRule global = new GlobalModule();
                     global = LoadComputeRule(global, item, keyWords);
                     globalModule.Add(global);
                 }
-                else if (item.ComputeType == ComputeTypeEnum.Section)
+                else if (item.ComputeType == (int)ComputeTypeEnum.Section)
                 {
                     IComputeRule section = new SectionModule();
                     section = LoadComputeRule(section, item, keyWords);
@@ -60,7 +60,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         private IComputeRule LoadComputeRule(IComputeRule computeRule, PumpInitParam param, List<string> keyWords)
         {
             computeRule.DetailId = param.DetailId;
-            computeRule.SpiderType = param.SpiderType;
+            computeRule.SpiderType = (SpiderTypeEnum)param.SpiderType;
             computeRule.AimsContainText = param.AimsContainText;
             computeRule.Score = param.Score;
             computeRule.WingManContainText = param.WingManContainText;
@@ -69,7 +69,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             computeRule.MatchMessage = param.MatchMessage;
             computeRule.Moment = param.Moment;
             if (keyWords != null)
-                foreach (var keyword in keyWords.Distinct())
+                foreach (var keyword in EnumerableHelper.Distinct(keyWords))
                 {
                     computeRule.Keywords.Add(keyword, 0);
                 }
@@ -100,7 +100,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             {
                 var resultModel = section.ComputeMethod(site);
                 if (resultModel.Result)
-                    if (isEnd || (section.Moment == MomentType.Error && !resultModel.Data) || (section.Moment == MomentType.Normal && resultModel.Data))
+                    if (isEnd || (section.Moment == (int)MomentType.Error && !resultModel.Data) || (section.Moment == (int)MomentType.Normal && resultModel.Data))
                     {
                         ExaminationResult examination = new ExaminationResult();
                         examination.DetailId = section.DetailId;

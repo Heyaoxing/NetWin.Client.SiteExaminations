@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using NetWin.Client.SiteExamination.A_Core.Enum;
 using NetWin.Client.SiteExamination.B_Common;
@@ -46,7 +46,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         private ComputeRuleParam LoadComputeRule(ComputeRuleParam computeRule, PumpInitParam param)
         {
             computeRule.DetailId = param.DetailId;
-            computeRule.SpiderType = param.SpiderType;
+            computeRule.SpiderType = (SpiderTypeEnum)param.SpiderType;
             computeRule.Score = param.Score;
             computeRule.AimsContainText = param.AimsContainText;
             computeRule.WingManContainText = param.WingManContainText;
@@ -106,12 +106,17 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     else
                     {
-                        if (!string.IsNullOrWhiteSpace(site.DomainAddress))
+                        if (!string.IsNullOrEmpty(site.DomainAddress))
                         {
-                            if (areas.AsEnumerable().Count(p => site.DomainAddress.Contains(p)) > 0)
+
+                            foreach (var item in areas)
                             {
-                                param.AimsCount = 1;
-                                param.AimsContent = "域名已备案";
+                                if (site.DomainAddress.Contains(item))
+                                {
+                                    param.AimsCount = 1;
+                                    param.AimsContent = "域名已备案";
+                                    break;
+                                }
                             }
                         }
                     }
@@ -159,9 +164,16 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     break;
                 case "domainaddress":
                     param.AimsContent = site.DomainAddress;
-                    if (!string.IsNullOrWhiteSpace(site.DomainAddress))
+                    if (!string.IsNullOrEmpty(site.DomainAddress))
                     {
-                        param.AimsCount = areas.AsEnumerable().Count(p => site.DomainAddress.Contains(p));
+                        foreach (var item in areas)
+                        {
+                            if (site.DomainAddress.Contains(item))
+                            {
+                                param.AimsCount = 1;
+                                break;
+                            }
+                        }
                     }
                     break;
                 case "robots":
@@ -207,7 +219,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     if (site.IsLogoContainsKeyWord)
                     {
                         param.AimsCount = 1;
-                        param.AimsContent = "包含关键词:"+site.LogoAltAndTitle;
+                        param.AimsContent = "包含关键词:" + site.LogoAltAndTitle;
                     }
                     else
                     {
@@ -218,7 +230,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
                 case "outsidelinkcount":
                     param.SourceUrl = string.Empty;
-                  //  param.AimsCount = site.OutLinkCount;
+                    //  param.AimsCount = site.OutLinkCount;
                     param.AimsCount = 0;
                     break;
             }
@@ -234,13 +246,13 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             param = ComputeCount(site, param);
             switch (param.JudgeType)
             {
-                case JudgeTypeEnum.LessThanOrEqualByAims:
+                case(int) JudgeTypeEnum.LessThanOrEqualByAims:
                     result = param.JudgeNumber <= param.AimsCount;
                     break;
-                case JudgeTypeEnum.Greater:
+                case (int)JudgeTypeEnum.Greater:
                     result = param.JudgeNumber > param.AimsCount;
                     break;
-                case JudgeTypeEnum.LessThanEqualByScale:
+                case (int)JudgeTypeEnum.LessThanEqualByScale:
                     result = param.JudgeNumber <= (param.AimsCount / param.WingManCount);
                     break;
             }

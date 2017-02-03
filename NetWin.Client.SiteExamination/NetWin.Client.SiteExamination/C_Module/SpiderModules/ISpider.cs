@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using NetWin.Client.SiteExamination.B_Common;
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
 using System.Text;
-using Dapper;
+
 using NetWin.Client.SiteExamination.B_Common;
 using NetWin.Client.SiteExamination.D_Data.Base;
 using NetWin.Client.SiteExamination.D_Data.Entities;
@@ -17,16 +17,21 @@ namespace NetWin.Client.SiteExamination.D_Data.Repository
         /// <returns></returns>
         public static IEnumerable<ExaminationItemDetailConfig> Get()
         {
-            List<ExaminationItemDetailConfig> examinationItemDetailConfigs = new List<ExaminationItemDetailConfig>();
+            List<ExaminationItemDetailConfig> list = new List<ExaminationItemDetailConfig>();
             try
             {
-                examinationItemDetailConfigs = SqLiteConnection.Query<ExaminationItemDetailConfig>("select * from ExaminationItemDetailConfig where IsEnable=1").ToList();
+                const string sql = "select * from ExaminationItemDetailConfig where IsEnable=1";
+                DataTable dt = Shove.Database.SQLite.Select(SqLiteConnection, sql);
+                if (dt!=null&&dt.Rows.Count > 0)
+                {
+                    list = DataTableHelper.GetEntities<ExaminationItemDetailConfig>(dt);
+                }
             }
             catch (Exception exception)
             {
                 LogHelper.Error(exception);
             }
-            return examinationItemDetailConfigs;
+            return list;
         }
     }
 }

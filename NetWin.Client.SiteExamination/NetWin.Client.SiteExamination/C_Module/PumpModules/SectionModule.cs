@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Runtime.Serialization;
 using System.Text;
 using HtmlAgilityPack;
@@ -108,15 +108,38 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     AimsCount = site.HtmlSize;
                     break;
                 case "desccontainsword":
-                    var keys = Keywords.Where(p => site.Description.Contains(p.Key)).ToList();
-                    AimsCount = keys.Count;
-                    if (AimsCount > 3)
+                    var keys = new List<string>();
+
+                    if (site.StatusCode == 404)
                     {
-                        AimsContent = string.Join(",", keys.Take(5));
+                        AimsCount = 5;
+                        AimsContent = string.Empty;
+                        break;
+                    }
+
+                    foreach (var keyValuePair in Keywords)
+                    {
+                        if (site.Description.Contains(keyValuePair.Key))
+                        {
+                            keys.Add(keyValuePair.Key);
+                        }
+                    }
+                    AimsCount = keys.Count;
+                    if (AimsCount > 5)
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        for (var i = 0; i < 5; i++)
+                        {
+                            sb.Append(keys[i]);
+                            if (i != 4)
+                                sb.Append(",");
+                        }
+
+                        AimsContent = sb.ToString();
                     }
                     else
                     {
-                        AimsContent = "仅出现:" + string.Join(",", keys);
+                        AimsContent = "仅出现:" + string.Join(",", keys.ToArray());
                     }
                     break;
                 case "contentimg":
@@ -126,7 +149,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     {
                         string alt = RegexHelper.GetTagAttrValue(item, "img", "alt");
                         string title = RegexHelper.GetTagAttrValue(item, "img", "title");
-                        if (!string.IsNullOrWhiteSpace(alt) && !string.IsNullOrWhiteSpace(title))
+                        if (!string.IsNullOrEmpty(alt) && !string.IsNullOrEmpty(title))
                         {
                             if (Keywords.ContainsKey(alt) && Keywords.ContainsKey(title))
                             {
@@ -145,11 +168,11 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         }
 
 
-                        if (string.IsNullOrWhiteSpace(alt))
+                        if (string.IsNullOrEmpty(alt))
                         {
                             AimsContent = "alt属性值不能为空";
                         }
-                        else if (string.IsNullOrWhiteSpace(title))
+                        else if (string.IsNullOrEmpty(title))
                         {
                             AimsContent = "title属性值不能为空";
                         }
@@ -180,16 +203,15 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     {
                         var href = RegexHelper.GetTagAttrValue(item, "a", "href");
                         var text = RegexHelper.GetContentByDom(item, "a");
-                        if (!string.IsNullOrWhiteSpace(href))
+                        if (!string.IsNullOrEmpty(href))
                         {
+                            var textCount = anchors.FindAll(p => p.Text == text).Count;
+                            var hrefCount = anchors.FindAll(p => p.Link == href).Count;
                             anchors.Add(new Anchor()
                             {
                                 Text = text,
                                 Link = href
                             });
-
-                            var textCount = anchors.GroupBy(p => p.Text).Count(p => p.Count() > 1);
-                            var hrefCount = anchors.GroupBy(p => p.Link).Count(p => p.Count() > 1);
 
                             if (textCount > 0 || hrefCount > 0)
                             {
@@ -212,10 +234,18 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         htmlDocument.LoadHtml(site.InnerHtml);
 
                         //去掉注释、样式、和js代码:
-                        foreach (var script in htmlDocument.DocumentNode.Descendants("script").ToArray())
-                            script.Remove();
-                        foreach (var style in htmlDocument.DocumentNode.Descendants("style").ToArray())
-                            style.Remove();
+                        var scripts = htmlDocument.DocumentNode.Descendants("script");
+                        foreach (var item in scripts)
+                        {
+                            if (!item.Closed)
+                                item.Remove();
+                        }
+                        var styles = htmlDocument.DocumentNode.Descendants("style");
+                        foreach (var item in styles)
+                        {
+                            if (!item.Closed)
+                                item.Remove();
+                        }
 
                         var node = htmlDocument.DocumentNode.SelectNodes("//img");
                         if (node != null)
@@ -224,7 +254,11 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                             {
                                 var parent = item.ParentNode.ParentNode.ParentNode;
                                 var text = RegexHelper.ReplaceHtmlTag(parent.InnerText);
-                                if (string.IsNullOrWhiteSpace(text))
+                                if (text != null)
+                                {
+                                    text = text.Trim().Replace("\n", "").Replace("\t", "").Replace("\r", "");
+                                }
+                                if (string.IsNullOrEmpty(text))
                                 {
                                     AimsCount = 1;
                                     AimsContent = "图片周围不存在描述";

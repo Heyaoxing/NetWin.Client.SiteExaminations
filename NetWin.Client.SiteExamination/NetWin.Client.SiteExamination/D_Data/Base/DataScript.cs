@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 
 namespace NetWin.Client.SiteExamination.D_Data.Base
@@ -18,12 +18,12 @@ namespace NetWin.Client.SiteExamination.D_Data.Base
         protected const string CreateSiteExaminationInfo = @"create table SiteExaminationInfo (
                                                                     SiteId                   INTEGER                         not null,
                                                                     UserId               BIGINT,
-                                                                    SiteUrl              VARCHAR(200)                   not null default '',
+                                                                    SiteUrl             TEXT                   not null default '',
                                                                     Score                SMALLINT                        default 100,
-                                                                    CompletedOn          TIMESTAMP,
-                                                                    CreatedOn            TIMESTAMP,
+                                                                    CompletedOn          TEXT,
+                                                                    CreatedOn            TEXT,
                                                                     IsCompleted          SMALLINT,
-                                                                    CertificateNum       VARCHAR(20),
+                                                                    CertificateNum       TEXT,
                                                                     primary key (SiteId)
                                                                     );";
 
@@ -35,10 +35,10 @@ namespace NetWin.Client.SiteExamination.D_Data.Base
                                                                     DetailId             INTEGER,
                                                                     SiteId               INTEGER,
                                                                     IsPass               SMALLINT,
-                                                                    Result               VARCHAR(500),
-                                                                    Position             LONG VARCHAR,
+                                                                    Result               TEXT,
+                                                                    Position             TEXT,
                                                                     Score                INTEGER,
-                                                                    CreatedOn            TIMESTAMP,
+                                                                    CreatedOn            TEXT,
                                                                     primary key (DetailInfoId)
                                                                     );";
 
@@ -47,7 +47,7 @@ namespace NetWin.Client.SiteExamination.D_Data.Base
         /// </summary>
         protected const string CreateExaminationItemConfig = @"create table ExaminationItemConfig (
                                                                     ItemId               INTEGER                        not null,
-                                                                    Name                 VARCHAR(50),
+                                                                    Name                 TEXT,
                                                                     IsEnable             SMALLINT                       not null default 1,
                                                                     primary key (ItemId)
                                                                     );";
@@ -59,12 +59,12 @@ namespace NetWin.Client.SiteExamination.D_Data.Base
                                                                             DetailId             INTEGER                        not null,
                                                                             ItemId               INTEGER,
                                                                             RuleId               INTEGER,
-                                                                            Name                 VARCHAR(50),
+                                                                            Name                 TEXT,
                                                                             Score                INTEGER,
-                                                                            Require              VARCHAR(100),
+                                                                            Require              TEXT,
                                                                             IsEnable             SMALLINT                       not null default 1,
-                                                                            Suggest              LONG VARCHAR,
-                                                                            Department           LONG VARCHAR,
+                                                                            Suggest              TEXT,
+                                                                            Department           TEXT,
                                                                             primary key (DetailId)
                                                                             );";
 
@@ -102,12 +102,12 @@ namespace NetWin.Client.SiteExamination.D_Data.Base
                                                                insert into ExaminationItemConfig values(2,'网站优化度',1);";
         protected const string InsertExaminationItemDetailConfig = @"delete from  ExaminationItemDetailConfig;
                                                                         INSERT INTO ExaminationItemDetailConfig VALUES (1, 2, 1, 'description', 2, '描述字数需小于80字', 1, '哎呀，您的网站描述有点长呢。官方给出的标准可是在80个字（160个字符）以内哦，要不然不能完整显示，会出现省略号的，记得精简一下描述的话语哈。如下示例:<img src=http://test-tj.xiniu.com/content/images/descript.png >','');
-                                                                        INSERT INTO ExaminationItemDetailConfig VALUES (2, 2, 2, 'keywords', 2, '关键字需大于等于3个', 1, '您的网站keywords中没有包含关键词耶。keywords是网站管理者给网站页面设定的以便用户通过搜索引擎能搜到本网页的词汇，关键词代表了网站的市场定位。网站的首页关键词至关重要。首页网站关键词代表了网站主题内容，内页和栏目页的关键词一般紧扣页面主题，代表的是当前页面或者栏目内容的主体。直接影响网站排名，这可是优化的关键点呢，记得加上哦......','');
-                                                                        INSERT INTO ExaminationItemDetailConfig VALUES (3, 1, 3, '网站域名年龄', 1, '>=12Mouth', 1, '域名的注册时间越长，对于搜索引擎收录优化排名更加好哦，在不影响网站战略下，建议您这边选购老域名！','');
+                                                                        INSERT INTO ExaminationItemDetailConfig VALUES (2, 2, 2, 'keywords', 2, '关键字需大于等于3个', 0, '您的网站keywords中没有包含关键词耶。keywords是网站管理者给网站页面设定的以便用户通过搜索引擎能搜到本网页的词汇，关键词代表了网站的市场定位。网站的首页关键词至关重要。首页网站关键词代表了网站主题内容，内页和栏目页的关键词一般紧扣页面主题，代表的是当前页面或者栏目内容的主体。直接影响网站排名，这可是优化的关键点呢，记得加上哦......','');
+                                                                        INSERT INTO ExaminationItemDetailConfig VALUES (3, 1, 3, '网站域名年龄', 2, '>=12Mouth', 1, '域名的注册时间越长，对于搜索引擎收录优化排名更加好哦，在不影响网站战略下，建议您这边选购老域名！','');
                                                                         INSERT INTO ExaminationItemDetailConfig VALUES (4, 1, 4, '网站备案', 1, '网站需备案', 1, '网站一旦备案，可以使用国内空间啦！也不用担心用户访问网速稳慢，不仅收录与优化排名都会有好处的哦！还可以用户对网站信息提高信任度，建议您网站要备案！','');
                                                                         INSERT INTO ExaminationItemDetailConfig VALUES (5, 1, 5, '服务器响应时间', 3, '服务器响应时间小于3秒', 1, '服务器响应时间越快，不仅满足用户访问体验需求，也是搜索引擎与网站建立基础的信任度，利于爬取收录，才能更好的将网站优化发挥极致哦！亲，建议您购买合适国内主机，不宜内存与流量过少！','通俗的说就是网站的打开速度最好是在3秒以内');
                                                                         INSERT INTO ExaminationItemDetailConfig VALUES (6, 1, 6, '网站页面压缩', 1, '启用网站页面压缩', 1, '为了搜索引擎减少HTTP请求数，用户的页面访问速度，需将代码内容压缩一下哦！这边会将HTTP尽量减少！','');
-                                                                        INSERT INTO ExaminationItemDetailConfig VALUES (7, 1, 7, '域名到期时间', 1, '>=12Mouth', 1, '为了网站能够持续稳定的优化，需保证网站的连通率，以及给客户24小时在线的体验感，这边需要您将网站域名续费一年以上 。','');
+                                                                        INSERT INTO ExaminationItemDetailConfig VALUES (7, 1, 7, '域名到期时间', 2, '>=12Mouth', 1, '为了网站能够持续稳定的优化，需保证网站的连通率，以及给客户24小时在线的体验感，这边需要您将网站域名续费一年以上 。','');
                                                                         INSERT INTO ExaminationItemDetailConfig VALUES (8, 1, 8, '网站域名后缀', 1, '主流后缀', 1, '亲，选择这七中域名后缀是国家规定为正规域名后缀，而其他域名后缀是国家不认同的哦！只怕到时候国家政府发话禁止使用此域名后缀，那就得不偿失了，建议你从以上七中域名后缀选择哦！','');
                                                                         INSERT INTO ExaminationItemDetailConfig VALUES (9, 1, 9, '网站服务状态码', 1, 200, 1, '200代表正常索引返回，无任何异常。而301一般网站需改版时，设置301状态码，会使页面在线上保持一段时间新旧内容共存的呢！且新版内容已开始收录后，对新旧内容设置301跳转，将旧版内容指向新版对应内容。利于网站首选域的确定，对于同一资源页面多条路径的301重定向有助于URL权重的集中。301能够尽可能的降低网站因改版带来的流量损失，提高用户体验度，同时也会有利于网站优化哦!','通俗的说就是指网页链接状态码，提醒，可以适当的了解一下网页链接返回状态码的每个含义。');
                                                                         INSERT INTO ExaminationItemDetailConfig VALUES (10, 1, 10, '网站IP及所属地', 1, '大陆IP', 1, '网站的服务器主机一定要选择国内大陆备案的呢！即使香港与台湾的主机也不是长久之计哦！使用大陆备案域名即使网站被涉及被封站点了，也会很容易解决恢复站点呢！建议您使用国内备案之域名。','');

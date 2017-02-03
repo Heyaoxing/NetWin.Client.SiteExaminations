@@ -32,9 +32,9 @@
             nPosition += mSift_SeekTp(oObj.offsetParent, nDire, 0);
 
         }
-         return nPosition;
+        return nPosition;
     }
- }
+}
 
 function mSift(cVarName, nMax) { this.oo = cVarName; this.Max = nMax; }
 mSift.prototype = {
@@ -49,11 +49,11 @@ mSift.prototype = {
         var _this = this;
         var oUL = document.createElement('ul');
         oUL.style.display = 'none';
-       
+
         oObj.parentNode.insertBefore(oUL, oObj);
         _this.TgList = oUL;
         oObj.onkeydown = oObj.onclick = function (e) {
-            _this.Listen(this, e); 
+            _this.Listen(this, e);
         };
         oObj.onblur = function () { setTimeout(function () { _this.Clear(); }, 100); };
     },
@@ -98,11 +98,16 @@ mSift.prototype = {
     Get: function () {
         var _this = this;
         //调用历史记录
-        var siteurl = '';
+        var siteurl = "";
         if (typeof (_this.Target.value) != 'undefined') {
             siteurl = _this.Target.value;
         }
-        var historyjson = jQuery.parseJSON(window.external.GetHistories(siteurl));
+        //   var historyjson = jQuery.parseJSON(window.external.GetHistories(siteurl));
+        if (typeof (siteurl) == 'undefined'|| siteurl=="") {
+            siteurl = "http";
+        }
+        var historyjson = jQuery.parseJSON(window.CallCSharpMethod("GetHistories", ""+siteurl));
+   
         _this.Data = historyjson;
 
 
@@ -138,7 +143,7 @@ mSift.prototype = {
             }
             cResult += '<li style="padding:0 5px;line-height:20px;cursor:default; color:#222; text-align: left; " onmouseover="' +
 _this.oo + '.ChangeOn(this);' + _this.oo + '.SelIndex=' + i + ';" ><span onmousedown="' + _this.oo + '.Select();">'
-+ _this.ReData[i].SiteUrl.replace(cRegEx, function (s) { return '<span style="background:#ff9;font-weight:bold;font-style:normal;color:#e60;">' + s + '</span>'; }) + '<br/>上次体检时间:' + _this.ReData[i].CompletedOnString + '</span><a style="padding-left:50px;" onclick="SelectHistory(' + _this.ReData[i].SiteId + ')">查看历史记录</a>' + '</li>';
++ _this.ReData[i].SiteUrl.replace(cRegEx, function (s) { return '<span style="background:#ff9;font-weight:bold;font-style:normal;color:#e60;">' + s + '</span>'; }) + '<br/>上次体检时间:' + _this.ReData[i].CompletedOnString + '</span><a style="cursor:pointer;float:right;width:200px;font-size:18px;" onclick="SelectHistory(' + _this.ReData[i].SiteId + ')" alt="'  +_this.ReData[i].SiteId  +'">&nbsp;&nbsp;查看历史记录&nbsp;&nbsp;</a>' + '</li>';
         }
         if (cResult == '') { _this.Clear(); }
         else {

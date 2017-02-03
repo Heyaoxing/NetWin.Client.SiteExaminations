@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using NetWin.Client.SiteExamination.A_Core.Model;
@@ -32,16 +31,21 @@ namespace NetWin.Client.SiteExamination.E_Services
                 ExaminationItemDto dto = new ExaminationItemDto();
                 dto.Name = item.Name;
                 dto.ItemId = item.ItemId;
-                dto.ExaminationItemDetail = (from a in examinationDetail
-                                             where a.ItemId == item.ItemId
-                                             select new ExaminationItemDetailDto()
-                                            {
-                                                DetailId = a.DetailId,
-                                                Name = a.Name,
-                                                Score = a.Score,
-                                                Require = a.Require,
-                                                Suggest = a.Suggest
-                                            }).ToList();
+
+                foreach (var items in examinationDetail)
+                {
+                    if (items.ItemId == item.ItemId)
+                    {
+                        dto.ExaminationItemDetail .Add(new ExaminationItemDetailDto()
+                        {
+                            DetailId = items.DetailId,
+                            Name = items.Name,
+                            Score = items.Score,
+                            Require = items.Require,
+                            Suggest = items.Suggest
+                        });
+                    }
+                }
                 examinationItemDto.Add(dto);
             }
             return examinationItemDto;
@@ -108,7 +112,7 @@ namespace NetWin.Client.SiteExamination.E_Services
         public static void GetExaminationReport(int siteId, string filePath)
         {
             var report = SiteExaminationInfoRepository.GetExaminationReport(siteId);
-            if (report == null || !report.Any())
+            if (report == null || report.Count==0)
                 return;
 
             string content = CreateTable(report) + CreateOptimization(report);
@@ -155,9 +159,16 @@ namespace NetWin.Client.SiteExamination.E_Services
             table.Append("<div style='margin:0 auto;text-align:center;height:100%'>");
             try
             {
-                foreach (var item in reportDto.GroupBy(p => p.ItemId).Select(p => p.Key))
+                List<string> cachGroup = new List<string>();
+                foreach (var item in reportDto)
                 {
-                    table.AppendFormat("<p  style='font-size:20px;text-align:left;margin-top:10px;'><strong>{0}</strong></p>", reportDto.FirstOrDefault(p => p.ItemId == item).ItemName);
+                    if (cachGroup.Contains(item.ItemId))
+                    {
+                        continue;
+                    }
+
+                    cachGroup.Add(item.ItemId);
+                    table.AppendFormat("<p  style='font-size:20px;text-align:left;margin-top:10px;'><strong>{0}</strong></p>", reportDto.Find(p => p.ItemId == item.ItemId).ItemName);
                     table.Append("<table cellspacing='0' cellpadding='0' style='border-left:1px solid #000;border-top:1px solid #000;'>");
                     table.Append("<tr style='text-align:center;' >");
                     table.Append("<td style='border-bottom:1px solid #000;border-right:1px solid #000;border-top:1px solid #000;'>项目</td>");
@@ -165,11 +176,11 @@ namespace NetWin.Client.SiteExamination.E_Services
                     table.Append("<td style='border-bottom:1px solid #000;border-right:1px solid #000;border-top:1px solid #000;'>要求</td>");
                     table.Append("<td style='border-bottom:1px solid #000;border-right:1px solid #000;border-top:1px solid #000;'>建议</td>");
                     table.Append("</tr>");
-                    foreach (var itemDetail in reportDto.Where(p => p.ItemId == item))
+                    foreach (var itemDetail in reportDto.FindAll(p => p.ItemId == item.ItemId))
                     {
                         table.Append("<tr>");
                         table.AppendFormat("<td  style='white-space:normal; display:block; width:80px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.DetailName);
-                        if (string.IsNullOrWhiteSpace(itemDetail.Position))
+                        if (string.IsNullOrEmpty(itemDetail.Position))
                         {
                             table.AppendFormat("<td  style='white-space:normal;display:block; width:220px;border-bottom:1px solid #000;border-right:1px solid #000;'>{0}</td>", itemDetail.Result);
                         }
@@ -218,15 +229,22 @@ namespace NetWin.Client.SiteExamination.E_Services
             {
                 sb.Append("<div style='font-size:30px; float:right;'><strong>网站体检优化方案</strong></div>");
                 int bigTip = 1;
-                foreach (var item in reportDto.GroupBy(p => p.ItemId).Select(p => p.Key))
+                List<string> cachGroup = new List<string>();
+                foreach (var item in reportDto)
                 {
-                    sb.AppendFormat("<div  style='font-size:25px'><strong>{0}、{1}评分</strong></div>", tip[bigTip], reportDto.FirstOrDefault(p => p.ItemId == item).ItemName);
+                    if (cachGroup.Contains(item.ItemId))
+                    {
+                        continue;
+                    }
+                    cachGroup.Add(item.ItemId);
+
+                    sb.AppendFormat("<div  style='font-size:25px'><strong>{0}、{1}评分</strong></div>", tip[bigTip], reportDto.Find(p => p.ItemId == item.ItemId).ItemName);
                     bigTip++;
                     int smallTip = 1;
-                    foreach (var itemDetail in reportDto.Where(p => p.ItemId == item))
+                    foreach (var itemDetail in reportDto.FindAll(p => p.ItemId == item.ItemId))
                     {
                         sb.AppendFormat("<p  style='font-size:20px'><strong>{0}、{1}</strong></p>", smallTip, itemDetail.DetailName);
-                        if (!string.IsNullOrWhiteSpace(itemDetail.Department))
+                        if (!string.IsNullOrEmpty(itemDetail.Department))
                         {
                             sb.AppendFormat("<p><strong style='color:red;'>&nbsp;&nbsp;小科普：</strong><strong>{0}</strong></p>", itemDetail.Department);
                         }

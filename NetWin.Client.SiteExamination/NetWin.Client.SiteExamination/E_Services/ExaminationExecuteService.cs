@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using NetWin.Client.SiteExamination.A_Core.Config;
-using NetWin.Client.SiteExamination.A_Core.Enum;
 using NetWin.Client.SiteExamination.A_Core.Model;
 using NetWin.Client.SiteExamination.B_Common;
 using NetWin.Client.SiteExamination.C_Module;
@@ -24,6 +19,7 @@ namespace NetWin.Client.SiteExamination.E_Services
     /// </summary>
     public class ExaminationExecuteService
     {
+        private static readonly object _obj = new object();
         /// <summary>
         /// 执行入口
         /// step1：检查服务器更新（后期）
@@ -38,7 +34,7 @@ namespace NetWin.Client.SiteExamination.E_Services
         {
             ReslutModel<int> ResultModel = new ReslutModel<int>();
             ResultModel.Result = true;
-            if (string.IsNullOrWhiteSpace(siteUrl))
+            if (string.IsNullOrEmpty(siteUrl))
             {
                 ResultModel.Result = false;
                 ResultModel.Message = "启动失败,url为空!";
@@ -97,7 +93,7 @@ namespace NetWin.Client.SiteExamination.E_Services
             ReslutModel<string> reslutModel = new ReslutModel<string>();
             reslutModel.Result = true;
             reslutModel.Data = siteUrl;
-            if (string.IsNullOrWhiteSpace(siteUrl))
+            if (string.IsNullOrEmpty(siteUrl))
             {
                 reslutModel.Result = false;
                 reslutModel.Message = "启动失败,url为空!";
@@ -116,7 +112,7 @@ namespace NetWin.Client.SiteExamination.E_Services
             try
             {
                 var responseMessage = HttpHelper.RequestSite(siteUrl);
-                if (isReplace&&responseMessage.StatusCode != 200 && responseMessage.StatusCode != 301)
+                if (isReplace && responseMessage.StatusCode != 200 && responseMessage.StatusCode != 301)
                 {
                     siteUrl = siteUrl.Replace("http://", "https://");
                     responseMessage = HttpHelper.RequestSite(siteUrl);
@@ -126,9 +122,9 @@ namespace NetWin.Client.SiteExamination.E_Services
 
                 if (responseMessage.StatusCode == 200 || responseMessage.StatusCode == 301)
                 {
-                    var links = RegexHelper.GetALinks(responseMessage.InnerHtml, siteUrl).Where(p => p.Contains(RegexHelper.GetDomainName(responseMessage.ResponseUrls, true))).Distinct();
+                    var links = EnumerableHelper.Distinct(RegexHelper.GetALinks(responseMessage.InnerHtml, siteUrl).FindAll(p => p.Contains(RegexHelper.GetDomainName(responseMessage.ResponseUrls, true))));
 
-                    if (!links.Any())
+                    if (links.Count == 0)
                     {
                         reslutModel.Result = false;
                         reslutModel.Message = @"对不起，您输入的网址可能存在以下情况：
@@ -138,20 +134,24 @@ namespace NetWin.Client.SiteExamination.E_Services
                                                 ";
                         return reslutModel;
                     }
+                    spidered.Clear();
 
-                    //存放已经抓取过的网址
-                    ConcurrentBag<string> spidered = new ConcurrentBag<string>();
-                    Parallel.ForEach(links.Take(SysConfig.SpiderBatch), p =>
+                    for (int i = 0; i < (links.Count > 5 ?5: links.Count); i++)
                     {
-                        var response = HttpHelper.RequestSite(p);
-                        spidered.Add(response.ResponseUrls);
-                    });
+                        lock (_obj)
+                        {
+                            current++;
+                        }
+                        string url = links[i];
+                        ThreadPool.QueueUserWorkItem(WorkItem, url);
+                    }
 
-                    var distinct = spidered.Count - spidered.Distinct().Count();
+                    wh.WaitOne();
 
-                    if (spidered.Count != 0)
+                    var distinct = spidered.Count() - EnumerableHelper.Distinct(spidered.List).Count;
+                    if (spidered.Count() != 0)
                     {
-                        double percent = (double)distinct / spidered.Count;
+                        double percent = (double)distinct / spidered.Count();
                         if (percent >= 0.6)
                         {
                             reslutModel.Result = false;
@@ -171,6 +171,40 @@ namespace NetWin.Client.SiteExamination.E_Services
                 LogHelper.Error("体检资源登录检查异常:" + exception.Message);
             }
             return reslutModel;
+        }
+
+        //存放已经抓取过的网址
+        ConcurrentBag<string> spidered = new ConcurrentBag<string>();
+        /// <summary>
+        /// 当前正在运行的抓取网页线程总数
+        /// </summary>
+        static volatile int current = 0;
+        static EventWaitHandle wh = new AutoResetEvent(false);
+
+        private void WorkItem(object obj)
+        {
+            try
+            {
+                string url = (string)obj;
+                var response = HttpHelper.RequestSite(url);
+                lock (_obj)
+                {
+                    spidered.Add(response.ResponseUrls);
+                }
+            }
+            catch (Exception exception)
+            {
+                LogHelper.Error("登录检查抓取网页异常:" + exception.Message);
+            }
+
+            lock (obj)
+            {
+                current--;
+                if (current <= 0)
+                {
+                    wh.Set();
+                }
+            }
         }
 
         Thread inSiteThread;
@@ -221,12 +255,12 @@ namespace NetWin.Client.SiteExamination.E_Services
             try
             {
                 canStop = true;
+                inSiteThread.Interrupt();
                 while (true)
                 {
                     if (inSiteThread.ThreadState == ThreadState.Stopped)
                     {
                         inSiteThread.Abort();
-                        inSiteThread.DisableComObjectEagerCleanup();
                         LogHelper.Info("外部线程注销");
                         inSiteThread = null;
                         break;
@@ -290,10 +324,10 @@ namespace NetWin.Client.SiteExamination.E_Services
                 {
 
 
-                    InSite inSite;
-                    inSpider.CurrentQueue.TryDequeue(out inSite);
+                    var inSite = inSpider.CurrentQueue.Dequeue();
+
                     //判断是否是结束处理
-                    if (inSpider.CT.IsCancellationRequested && inSite == null)
+                    if (inSpider.CT && inSite == null)
                     {
                         isEnd = true;
                     }
@@ -307,7 +341,7 @@ namespace NetWin.Client.SiteExamination.E_Services
                     }
 
                     //将结果入库
-                    List<ExaminationResult> examinationResults = pumpModule.Process(inSite, isEnd);
+                    List<ExaminationResult> examinationResults = pumpModule.Process((InSite)inSite, isEnd);
                     foreach (var item in examinationResults)
                     {
                         SiteExaminationDetailInfoRepository.Add(new SiteExaminationDetailInfo()
@@ -325,7 +359,8 @@ namespace NetWin.Client.SiteExamination.E_Services
                     if (canStop)
                     {
                         isEnd = true;
-                        inSpider.CT.Cancel();
+                        inSpider.Cancel();
+                        inSpider.Abort();
                         LogHelper.Info("收到外部停止信息");
                     }
 
@@ -341,7 +376,7 @@ namespace NetWin.Client.SiteExamination.E_Services
             }
             catch (Exception exception)
             {
-                inSpider.CT.Cancel();
+                inSpider.Cancel();
                 LogHelper.Error("内部资源处理异常:" + exception.StackTrace + exception.Message);
             }
             watch.Stop();

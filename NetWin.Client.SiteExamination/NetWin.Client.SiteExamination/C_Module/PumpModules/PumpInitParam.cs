@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using NetWin.Client.SiteExamination.A_Core.Enum;
 
@@ -21,12 +21,12 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// <summary>
         /// 计算类型
         /// </summary>
-        public ComputeTypeEnum ComputeType { set; get; }
+        public int ComputeType { set; get; }
 
         /// <summary>
         /// 抓取类型
         /// </summary>
-        public SpiderTypeEnum SpiderType { set; get; }
+        public int SpiderType { set; get; }
 
         /// <summary>
         /// 目标匹配文本
@@ -41,7 +41,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// <summary>
         /// 判断类型
         /// </summary>
-        public JudgeTypeEnum JudgeType { set; get; }
+        public int JudgeType { set; get; }
 
         /// <summary>
         /// 判断线数值
@@ -51,12 +51,12 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// <summary>
         /// 匹配结果信息
         /// </summary>
-        internal string MatchMessage { set; get; }
+        public string MatchMessage { set; get; }
 
 
         /// <summary>
         /// 返回结果时机
         /// </summary>
-        internal MomentType Moment { set; get; }
+        public int Moment { set; get; }
     }
 }

@@ -81,7 +81,7 @@
         height: 25px;
     }
 </style>
-<body style="background-color: White;font-family:微软雅黑;">
+<body style="background-color: White; font-family: 微软雅黑;">
     <div class="tag">
         <em></em><span></span>
         <div>
@@ -104,8 +104,13 @@
                                         <img src="@Url.Content("~/Content/images/xn_logo.png")"/>
                                     </div>
                                     <div class="xn_index_head2">
-                                        <h3 style="margin-top:10px;font-family: 微软雅黑; font-weight: bold;font-size:30px;color:White">
+                                        <h3 style="margin-top: 10px; font-family: 微软雅黑; font-weight: bold; font-size: 30px;
+                                            color: White">
                                             网站体检系统</h3>
+                                    </div>
+                                    <div class="xn_index_head3">
+                                        <a href="javascript:void(0);" style="color: white;font-size: 18px; font-family: 微软雅黑; padding-top: 10px;" onclick="GoBack()">
+                                           < 返回首页</a>
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +128,9 @@
                                     <span id="url_view" style="text-align: left; font-size: 30px; color: White">目前查询的是:</span>
                                     <span style="text-align: left; font-size: 30px; color: White" id="siteUrl">@url</span>
                                     <span id="features" style="float: right; margin-top: 30px;">
-                                        <button class='xn_btn' disabled="disabled" style="background-color:#00A65A" type='button' onclick="stop()">取消</button>
+                                        <button class='xn_btn' disabled="disabled" style="background-color: #00A65A" type='button'
+                                            onclick="stop()">
+                                            取消</button>
                                     </span>
                                     <div class="progress progress-sm active view_checking" style="margin-top: 40px; height: 15px">
                                         <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
@@ -131,8 +138,10 @@
                                             <span class="sr-only">20% Complete</span>
                                         </div>
                                     </div>
-                                    <div style="margin-top: 40px; font-size: 20px;font-family: 微软雅黑; color: White;" class="view_checking">
-                                        <span>正在为您检测：</span><span class="text-muted" id="view"  style="font-family: 微软雅黑; color: White;" ></span></div>
+                                    <div style="margin-top: 40px; font-size: 20px; font-family: 微软雅黑; color: White;"
+                                        class="view_checking">
+                                        <span>正在为您检测：</span><span class="text-muted" id="view" style="font-family: 微软雅黑;
+                                            color: White;"></span></div>
                                     <div style="font-size: 20px; display: none;" class="view_result">
                                         <span id="result_text" style="color: white"></span>
                                     </div>
@@ -163,7 +172,9 @@
         var score_interval;
         var sitelUrl = '@url';
         var isReplace = '@isReplace';
+        var isStart = false;//是否进行体检
         $(function () {
+            success();
             init();
         });
 
@@ -172,7 +183,13 @@
            if ('@isHostory.ToString().ToLower()' == 'false') {
                checkSite_interval = setInterval(checkSite, "1000");
            } else {
-              var result = jQuery.parseJSON(window.external.GetSiteExaminationInfo('@siteId'));
+           //   var result = jQuery.parseJSON(window.external.GetSiteExaminationInfo('@siteId'));
+               var result;
+               try {
+                   result = jQuery.parseJSON(window.CallCSharpMethod("GetSiteExaminationInfo",""+@siteId));
+               } catch (e) {
+                   alert(e);
+               } 
                sitelUrl = result.SiteUrl;
               $("#siteUrl").text(sitelUrl);
               load('@siteId');
@@ -185,7 +202,14 @@
             $(".view_result").css('display','none');
             $("#view").text("是否需要登录...");
             clearTimeout(checkSite_interval);
-            var result = jQuery.parseJSON(window.external.CheckSite(sitelUrl,isReplace));
+            
+          //  var result = jQuery.parseJSON(window.external.CheckSite(sitelUrl,isReplace));
+            var result;
+            try {
+                result = jQuery.parseJSON(window.CallCSharpMethod("CheckSite",sitelUrl+","+(isReplace?1:0)));
+            } catch (e) {
+                alert(e);
+            } 
             if (result.Result) {
                 sitelUrl = result.Data;
               $("#siteUrl").text(sitelUrl);
@@ -197,6 +221,7 @@
         var item_count = 0;
         //启动体检
         function start() {
+            isStart = true;
             $("#Export").empty();
             $(".detailname").css('color','black');
             $(".itemname").css('color','black');
@@ -211,7 +236,14 @@
 
             $("#score").text(score);
             //调用启动体检
-            var startjson = jQuery.parseJSON(window.external.Start(sitelUrl));
+         //   var startjson = jQuery.parseJSON(window.external.Start(sitelUrl));
+            var startjson;
+            try {
+                 startjson = jQuery.parseJSON(window.CallCSharpMethod("Start",sitelUrl));
+            } catch (e) {
+                alert(e);
+            } 
+
             if (!startjson.Result) {
                 alert(startjson.Message);
             }
@@ -228,15 +260,21 @@
         function load(Ids) {
             siteId = Ids;
             item_count = 0;
-            var json = jQuery.parseJSON(window.external.GetExaminationItem());
+           // var json = jQuery.parseJSON(window.external.GetExaminationItem());
+            var json;
+            try {
+             json = jQuery.parseJSON(window.CallCSharpMethod("GetExaminationItem",""));
+            } catch (e) {
+                alert(e);
+            } 
             var list = $("#list");
             list.empty();
             var body = "";
             var viewItem = "";
             var param = [];
             $.each(json, function (i, v) {
-                body += "<div class='row' style='font-family:微软雅黑;border: none;'><div class='box box-default collapsed-box' style='margin: 0 auto; border: none;'><div class='box-header with-border' style='border-bottom:1px solid #eeeeee;'>";
-                body += "<h3 class='box-title col-md-1' style='width:200px;font-size:24px;'>" + v.Name + "</h3><div class='box-tools pull-right' ><span style='margin-right:50px;'>共"+v.ExaminationItemDetail.length+"项 <span style='visibility: hidden;margin-left:10px;' class='item_score'>得分<span  id='item_"+v.ItemId+"'>0</span>分</span></span><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-plus'></i></button></div></div>";
+                body += "<div class='row' style='font-family:微软雅黑;border: none;'><div class='box box-default' style='margin: 0 auto; border: none;'><div class='box-header with-border' style='border-bottom:1px solid #eeeeee;'>";
+                body += "<h3 class='box-title col-md-1' style='width:200px;font-size:24px;'>" + v.Name + "</h3><div class='box-tools pull-right' ><span style='margin-right:50px;'>共"+v.ExaminationItemDetail.length+"项 <span style='visibility: hidden;margin-left:10px;' class='item_score'>得分<span  id='item_"+v.ItemId+"'>0</span>分</span></span><button type='button' class='btn btn-box-tool' data-widget='collapse'><i class='fa fa-minus'></i></button></div></div>";
                 body += "<div class='box-body font_list' style='display: block;'>";
                 body += "<ul>";
                 $.each(v.ExaminationItemDetail, function (index, val) {
@@ -266,13 +304,18 @@
             cach_score = 0;
             var cach = new Array();
             $(request).each(function(i, v) {
-                var result = jQuery.parseJSON(window.external.GetDetailResult(v[0], v[1]));
+              //  var result = jQuery.parseJSON(window.external.GetDetailResult(v[0], v[1]));
+                var result;
+                try {
+                    result = jQuery.parseJSON(window.CallCSharpMethod("GetDetailResult",v[0]+","+v[1]));
+                } catch (e) {
+                    alert(e);
+                } 
                 if (result.Result) {
                     if (result.Data.IsPass) {
                         $("#detail_" + v[1]).text(result.Data.Score + "分");
 
                         $("#item_" + result.Data.ItemId).text(Number($("#item_" + result.Data.ItemId).text()) + result.Data.Score);
-
                     } else {
                         $("#detail_name_" + v[1]).css('color', 'red');
                         $("#detail_" + v[1]).html("<span onclick='modal_mouseover(this)'  siteId='" + v[0] + "' detailId='" + v[1] + "' ><img src='@Url.Content("~/Content/images/xn_web_basics_01.png")' class='icon_size' ></span>");
@@ -288,18 +331,17 @@
                 }
             });
             request = cach;
-
-
               var width=((((item_count - request.length) / item_count).toFixed(2) * 100) + i);
              if (width < 95) {
-                 $("#process").animate({ "width": width + "%" }, 1000);
+                 $("#process").css("width", width + "%");
              } else if ((((item_count - request.length) / item_count).toFixed(2) * 100) < 95) {
-                 $("#process").animate({ "width": 95 + "%" }, 1000);
+                 $("#process").css("width","95%");
              } else {
-                 $("#process").animate({ "width": (((item_count - request.length) / item_count).toFixed(2) * 100)  + "%" }, 1000);
+                 $("#process").css("width",(((item_count - request.length) / item_count).toFixed(2) * 100)  + "%");
              }
 
             if (request.length <= 0) {
+                isStart = false;
                 clearTimeout(interval);
                 $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检完成");
                 $(".item_score").css("visibility", "visible");
@@ -321,12 +363,24 @@
 
         //导出体检报告
         function ExportReport() {
-            window.external.ExportFile(siteId);
+            //window.external.ExportFile(siteId);
+            try {
+                window.CallCSharpMethod("ExportFile",""+siteId);
+            } catch (e) {
+                alert(e);
+            } 
         }
 
         //取消体检
         function stop() {
-            var json = jQuery.parseJSON(window.external.Stop());
+            isStart = false;
+            //var json = jQuery.parseJSON(window.external.Stop());
+            var json;
+            try {
+                json = jQuery.parseJSON(window.CallCSharpMethod("Stop",""));
+            } catch (e) {
+                alert(e);
+            } 
             if (json.Result) {
                 clearTimeout(interval);
                  $("#view_icon").attr("src", "@Url.Content("~/Content/images/cancel.png")");
@@ -395,7 +449,13 @@
             content.empty();
            var siteId= obj.attributes["siteId"].value;
            var detailId= obj.attributes["detailId"].value;
-            var result = jQuery.parseJSON(window.external.GetDetailResult(siteId, detailId));
+         //   var result = jQuery.parseJSON(window.external.GetDetailResult(siteId, detailId));
+            var result;
+            try {
+              result = jQuery.parseJSON(window.CallCSharpMethod("GetDetailResult",siteId+","+detailId));
+            } catch (e) {
+              alert(e);
+            } 
             if (result.Result) {
                 var contentText = "<div class='xn_basics_close'> <img src='@Url.Content("~/Content/images/xn_close.png")' onclick='modal_mouseout()'> </div>";
                 contentText += "<table style='margin-top:5px;margin-left:5px;font-family:微软雅黑'>";
@@ -407,7 +467,7 @@
                 contentText += "</table>";
                 content.append(contentText);
             }
-            $(".tag").css("margin-top",  obj.getBoundingClientRect().top+document.documentElement.scrollTop-$(".tag").height()/2+5);
+            $(".tag").css("margin-top",  obj.getBoundingClientRect().top +document.body.scrollTop -$(".tag").height()/2+5);
             $(".tag").css("margin-left", obj.getBoundingClientRect().left - $(".tag").width()-20);
             $(".tag").css("display", "block");
         }
@@ -418,13 +478,34 @@
 
 
         function url_input() {
-            $("#siteUrl").html("<input  placeholder='输入需要体检的网址,如:http://www.baidu.com' type='text' id='input_siteurl' value='"+sitelUrl+"' style='margin-top:30px;width:500px;display: inline-block;height: 58px;border:1px solid #b7aca8;border-radius: 5px;font-size: 20px;text-indent: 5px;line-height: 60px;	color: #000;'/>");
+            $("#siteUrl").html("<input onkeydown='OnEnter();'  placeholder='输入需要体检的网址,如:http://www.baidu.com' type='text' id='input_siteurl' value='"+sitelUrl+"' style='margin-top:30px;width:500px;display: inline-block;height: 58px;border:1px solid #b7aca8;border-radius: 5px;font-size: 20px;text-indent: 5px;line-height: 60px;	color: #000;'/>");
         }
 
         //重新体检
         function restart() {
+           isStart = true;
            var url=$.trim($("#input_siteurl").val());
            window.location.href = '@Url.Action("StartPage")?isHostory=false&siteId=0&examinationUrl=' + url;
         }
+
+       function OnEnter() {
+             var ev=window.event||arguments.callee.caller.arguments[0];
+            if (ev.keyCode == 13) {
+                restart();
+            }
+       }
+
+       //返回
+       function GoBack() {
+           if (isStart == true) {
+               if (confirm("体检正在进行,确定是否返回?")) {
+                   stop();
+                   window.location.href = '@Url.Action("Index")?isError=false&message=&url=' + sitelUrl;
+               }
+           } else {
+                   stop();
+                   window.location.href = '@Url.Action("Index")?isError=false&message=&url=' + sitelUrl;
+           }
+       }
 
 </script>

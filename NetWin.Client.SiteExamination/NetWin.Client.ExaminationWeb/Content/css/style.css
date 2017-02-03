@@ -21,6 +21,7 @@ input{ outline:none;}
 .xn_index_head1{ width:54px; height:54px; }
 .xn_index_head2{ margin-left:20px; height:54px;  line-height:54px; display: inline-block;}
 .xn_index_head2 h2{ font-weight:bold; color:#fff;font-size:30px;  }
+.xn_index_head3{ width:100px; height:54px; float:right; display: inline-block;color: white;padding-top: 10px; }
 
 .xn_index_cont{}
 

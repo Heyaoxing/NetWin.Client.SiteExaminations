@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using NetWin.Client.SiteExamination.A_Core.Enum;
 using NetWin.Client.SiteExamination.A_Core.Model;
@@ -32,13 +32,13 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             {
                 switch (JudgeType)
                 {
-                    case JudgeTypeEnum.LessThanOrEqualByAims:
+                    case (int)JudgeTypeEnum.LessThanOrEqualByAims:
                         result = JudgeNumber <= AimsCount;
                         break;
-                    case JudgeTypeEnum.Greater:
+                    case (int)JudgeTypeEnum.Greater:
                         result = JudgeNumber > AimsCount;
                         break;
-                    case JudgeTypeEnum.LessThanEqualByScale:
+                    case (int)JudgeTypeEnum.LessThanEqualByScale:
                         if (WingManCount == 0)
                         {
                             result = JudgeNumber <= 0;
@@ -48,7 +48,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                             result = JudgeNumber <= (AimsCount / WingManCount);
                         }
                         break;
-                    case JudgeTypeEnum.GreaterOrByScale:
+                    case (int)JudgeTypeEnum.GreaterOrByScale:
                         if (WingManCount == 0)
                         {
                             result = JudgeNumber >= 0;

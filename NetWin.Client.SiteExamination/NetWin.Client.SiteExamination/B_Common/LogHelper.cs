@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+
 using System.Text;
 using System.Threading;
 using NetWin.Client.SiteExamination.A_Core.Config;
@@ -57,7 +57,7 @@ namespace NetWin.Client.SiteExamination.B_Common
                 }
                 else
                 {
-                    return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log", DateTime.Now.ToString("yyyy-MM-dd"));
+                    return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log//"+DateTime.Now.ToString("yyyy-MM-dd"));
                 }
             }
         }
@@ -201,7 +201,7 @@ namespace NetWin.Client.SiteExamination.B_Common
                 foreach (FileInfo fi in fileInfoes)
                 {
                     string fileName = Path.GetFileNameWithoutExtension(fi.FullName).ToLower();
-                    if (fileName.Contains('(') && fileName.Contains(')'))
+                    if (fileName.Contains("(") && fileName.Contains(")"))
                     {
                         fileName = fileName.Substring(0, fileName.LastIndexOf('('));
                         switch (fileName)

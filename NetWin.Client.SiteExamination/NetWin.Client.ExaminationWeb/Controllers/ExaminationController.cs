@@ -28,8 +28,10 @@ namespace NetWin.Client.ExaminationWeb.Controllers
         /// <returns></returns>
         public ActionResult StartPage(string examinationUrl, int siteId=0, bool isHostory=false)
         {
+            bool isReplace = false;
             if (isHostory)
             {
+                ViewData["isReplace"] = isReplace;
                 ViewData["isHostory"] = isHostory;
                 ViewData["siteId"] = siteId;
                 return View();
@@ -42,7 +44,6 @@ namespace NetWin.Client.ExaminationWeb.Controllers
                 return View("Index");
             }
             examinationUrl = examinationUrl.Trim();
-            bool isReplace = false;
             if (!examinationUrl.Contains("http://") && !examinationUrl.Contains("https://"))
             {
                 examinationUrl = "http://" + examinationUrl;

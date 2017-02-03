@@ -28,7 +28,7 @@
             </div>
             <form action="@Url.Action("StartPage")" method="POST">
             <input class="xn_text" placeholder="输入需要体检的网址,如:http://www.baidu.com" type="text" name="examinationUrl" id="examinationUrl" value="@url"/>
-            <input name="" value="开始体检" class="xn_btn" type="submit" id="submit_id"  />
+            <input name="" value="开始体检" class="xn_btn" type="submit" id="submit_id" style="float:right;margin-right:30px;margin-top:-1px;" />
             </form>
             @if (!string.IsNullOrWhiteSpace(message))
             {

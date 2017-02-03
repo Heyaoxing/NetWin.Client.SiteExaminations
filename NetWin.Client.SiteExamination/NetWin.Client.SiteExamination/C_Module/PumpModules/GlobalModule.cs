@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using NetWin.Client.SiteExamination.A_Core.Enum;
 using NetWin.Client.SiteExamination.B_Common;
@@ -39,7 +39,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
                     WingManCount += 1;
 
-                    var level = RegexHelper.MatchCount(site.CurrentUrlUrl.Replace(site.SiteUrl,""), "/");
+                    var level = RegexHelper.MatchCount(site.CurrentUrlUrl.Replace(site.SiteUrl, ""), "/");
 
                     if (level <= 3)
                     {
@@ -55,12 +55,29 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     break;
                 case "insidelinkcount":
-                    AimsCount += site.InsideLinkCount;
+                    foreach (var item in site.InsideLinks)
+                    {
+                        if (!InsideLinks.Contains(item))
+                        {
+                            InsideLinks.Add(item);
+                        }
+                    }
+                    AimsCount = InsideLinks.Count;
                     break;
-            
+
                 case "nullsite":
+
+                    if (string.IsNullOrEmpty(site.InnerText) || site.StatusCode == 404)
+                    {
+                        LogHelper.Info("垃圾页面:" + SourceUrl);
+                    }
+
                     SourceUrl = string.Empty;
-                    AimsCount += string.IsNullOrWhiteSpace(site.InnerText) ? 1 : 0;
+                    if (string.IsNullOrEmpty(site.InnerText) || site.StatusCode == 404)
+                    {
+
+                        AimsCount = AimsCount + 1;
+                    }
                     WingManCount++;
 
                     if (AimsCount != 0)
@@ -73,11 +90,14 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     {
                         AimsContent = "垃圾页面占比:0";
                     }
+
+
                     break;
 
                 case "dynamic":
                     SourceUrl = string.Empty;
-                    AimsCount += site.IsDynamic ? 1 : 0;
+
+                    AimsCount += site.IsDynamic && site.StatusCode != 404 ? 1 : 0;
                     if (AimsCount > 0)
                     {
                         AimsContent = string.Format("存在动态链接数:{0}.原因可能如下：1.网站URL是否为静态，因为网站动态过长，不利于收录和网站排名；2.服务器未设置lastModified", AimsCount);
@@ -93,14 +113,14 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     break;
                 case "keywordtime":
-                    if (Keywords.Any())
+                    if (Keywords.Count > 0)
                     {
                         foreach (var item in site.KeyWords)
                         {
                             if (Keywords.ContainsKey(item))
                                 Keywords[item]++;
                         }
-                        AimsCount = Keywords.Min(p => p.Value);
+                        AimsCount = EnumerableHelper.Min(Keywords.Values);
                         StringBuilder sb = new StringBuilder();
                         foreach (var item in Keywords)
                         {

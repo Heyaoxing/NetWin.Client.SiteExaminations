@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using NetWin.Client.SiteExamination.A_Core.Enum;
 
@@ -11,6 +11,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         public ComputeRuleParam()
         {
             Keywords=new Dictionary<string, int>();
+            InsideLinks=new List<string>();
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(_aimsContainText))
+                if (!string.IsNullOrEmpty(_aimsContainText))
                     return _aimsContainText.ToLower();
                 return string.Empty;
             }
@@ -82,7 +83,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             set { _matchMessage = value; }
             get
             {
-                if (!string.IsNullOrWhiteSpace(_matchMessage))
+                if (!string.IsNullOrEmpty(_matchMessage))
                     return _matchMessage.Replace("_COUNT_", AimsCount.ToString()).Replace("_CONTENT_", AimsContent).Replace("_SOURCE_", SourceUrl);
                 return string.Empty;
             }
@@ -91,7 +92,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// <summary>
         /// 判断类型
         /// </summary>
-        internal JudgeTypeEnum JudgeType { set; get; }
+        internal int JudgeType { set; get; }
 
         /// <summary>
         /// 判断线数值
@@ -101,12 +102,17 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// <summary>
         /// 返回结果时机
         /// </summary>
-        internal MomentType Moment { set; get; }
+        internal int Moment { set; get; }
 
         /// <summary>
         /// 关键词统计
         /// </summary>
         internal Dictionary<string,int> Keywords { set; get; } 
+
+        /// <summary>
+        /// 内部链接数
+        /// </summary>
+        internal List<string> InsideLinks{set; get; } 
     }
 }
     

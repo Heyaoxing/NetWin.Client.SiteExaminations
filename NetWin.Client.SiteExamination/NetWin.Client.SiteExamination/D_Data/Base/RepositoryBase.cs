@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
+
 using System.Text;
-using Dapper;
+
 using NetWin.Client.SiteExamination.A_Core.Config;
 using NetWin.Client.SiteExamination.A_Core.Model;
 using NetWin.Client.SiteExamination.B_Common;
@@ -69,10 +69,15 @@ namespace NetWin.Client.SiteExamination.D_Data.Base
             {
                 SQLiteConnection.CreateFile(DataFilePath);
                 //初始化创建所有表
-                SqLiteConnection.Execute(CreateTable);
+                Execute(CreateTable);
                 //初始化插入所有系统数据
-                SqLiteConnection.Execute(InsertData);
+                Execute(InsertData);
             }
+        }
+
+        private static void Execute(string sql)
+        {
+            Shove.Database.SQLite.ExecuteNonQuery(SqLiteConnection, sql);
         }
     }
 }
