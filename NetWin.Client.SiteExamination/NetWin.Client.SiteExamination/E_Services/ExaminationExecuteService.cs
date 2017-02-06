@@ -163,6 +163,7 @@ namespace NetWin.Client.SiteExamination.E_Services
                 {
                     reslutModel.Result = false;
                     reslutModel.Message = "网址不能访问,请检查网址拼写是否正确!";
+                    LogHelper.Error("网址不能访问,请检查网址拼写是否正确!:"+reslutModel.Data);
                     return reslutModel;
                 }
             }

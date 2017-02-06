@@ -27,7 +27,7 @@ namespace NetWin.Client.SiteExamination.A_Core.Config
         /// 是否为调试模式,调试模式下会写日志
         /// </summary>
 #if DEBUG
-        public static bool IsDebug = false;
+        public static bool IsDebug = true;
 #else
         public static  bool IsDebug = false;
 #endif
@@ -51,7 +51,7 @@ namespace NetWin.Client.SiteExamination.A_Core.Config
         /// <summary>
         /// 请求网站资源超时时间,单位为秒
         /// </summary>
-        public static readonly int RequestSiteTimeOut = 5;
+        public static readonly int RequestSiteTimeOut = 8;
 
         #endregion
     }

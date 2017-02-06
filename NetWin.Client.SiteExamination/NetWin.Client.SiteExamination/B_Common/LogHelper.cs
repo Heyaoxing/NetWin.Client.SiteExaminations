@@ -292,9 +292,7 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// <param name="logType">日志类型</param>
         private static void WriteLog(string strLog, LogType logType)
         {
-            //调试模式下才会写日志
-            if (!SysConfig.IsDebug)
-                return;
+           
 
             if (String.IsNullOrEmpty(strLog))
             {
@@ -321,6 +319,10 @@ namespace NetWin.Client.SiteExamination.B_Common
             }
 
              strLog = strLog.Replace("\n", "\r\n");
+
+             //调试模式下才会写日志
+             if (!SysConfig.IsDebug)
+                 return;
 
             FileStream fs = null;
             try

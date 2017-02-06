@@ -51,7 +51,6 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         double percent = Convert.ToDouble(AimsCount) / Convert.ToDouble(WingManCount);
                         string result = string.Format("{0:0.00%}", percent);
                         AimsContent = "总体URL层级3（含）以内占比" + result;
-                        LogHelper.Info(string.Format("总数:{0},三层内页数:{1}", WingManCount, AimsCount));
                     }
                     break;
                 case "insidelinkcount":
@@ -66,11 +65,6 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     break;
 
                 case "nullsite":
-
-                    if (string.IsNullOrEmpty(site.InnerText) || site.StatusCode == 404)
-                    {
-                        LogHelper.Info("垃圾页面:" + SourceUrl);
-                    }
 
                     SourceUrl = string.Empty;
                     if (string.IsNullOrEmpty(site.InnerText) || site.StatusCode == 404)
@@ -107,10 +101,6 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         AimsContent = "未检查到动态链接";
                     }
 
-                    if (site.IsDynamic)
-                    {
-                        LogHelper.Info(string.Format("存在动态网址:{0}", SourceUrl));
-                    }
                     break;
                 case "keywordtime":
                     if (Keywords.Count > 0)

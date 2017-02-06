@@ -183,6 +183,8 @@
     <Content Include="Content\images\cancel.png" />
     <Content Include="Content\images\descript.png" />
     <Content Include="Content\images\error.png" />
+    <Content Include="Content\images\leftico.png" />
+    <Content Include="Content\images\line.png" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\optimization_safe.png" />
     <Content Include="Content\images\Progressbar.png" />
@@ -190,7 +192,11 @@
     <Content Include="Content\images\question2.png" />
     <Content Include="Content\images\scanning.gif" />
     <Content Include="Content\images\success.png" />
+    <Content Include="Content\images\tab01.png" />
+    <Content Include="Content\images\tab02.png" />
+    <Content Include="Content\images\tab03.png" />
     <Content Include="Content\images\title.png" />
+    <Content Include="Content\images\top.png" />
     <Content Include="Content\images\xn_basics_ts.png" />
     <Content Include="Content\images\xn_basic_tit_f1.png" />
     <Content Include="Content\images\xn_bottom.png" />

@@ -41,6 +41,10 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\Lib\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Shove">
       <HintPath>..\Lib\Shove.dll</HintPath>
     </Reference>
@@ -61,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetWin.Client.SiteExamination\NetWin.Client.SiteExamination.csproj">

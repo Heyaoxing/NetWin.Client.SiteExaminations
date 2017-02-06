@@ -85,7 +85,6 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
         /// <returns></returns>
         public List<ExaminationResult> Process(InSite site, bool isEnd)
         {
-            LogHelper.Info("进入数据处理入口");
             List<ExaminationResult> examinationResults = new List<ExaminationResult>();
 
             if (!isEnd && site == null)
@@ -139,7 +138,6 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
             globalRemove.RemoveAll(p => globalRemove.Contains(p));
             #endregion
 
-            LogHelper.Info("数据处理结束");
             return examinationResults;
         }
     }

@@ -52,7 +52,6 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
             if (response == null)
                 return null;
 
-            LogHelper.Info(string.Format("抓取网址:{0},状态码:{1}", url, response.StatusCode));
 
             InSite inSite = new InSite(SeedSiteUrl, url, response.InnerHtml, response.LastModified, response.Size, depth, response.StatusCode);
             return inSite;
@@ -155,13 +154,14 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                         }
 
                         except = EnumerableHelper.Except<string>(allSite.Keys, spidered.List);
+                        except.Remove(SeedSiteUrl);
+                        LogHelper.Info("except:" + except.Count);
                         if (except.Count == 0)
                         {
                             LogHelper.Info("网页数据抓取完成");
                             _ct = true;
                             break;
                         }
-                        LogHelper.Info(string.Format("except:{0},allSite:{1},spidered:{2}", except.Count, allSite.Count, spidered.Count()));
                     }
                     except.Clear();
                     LogHelper.Info("完成内站抓取,共需要爬取的数量为" + allSite.Count + ",共处理内站数量为:" + spidered.Count());
@@ -192,7 +192,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                     _concurrentQueue.Enqueue(spiderResult);
                     foreach (var item in spiderResult.InsideLinks)
                     {
-                        if (!allSite.ContainsKey(item) && item.Contains(SeedSiteUrl) && !item.EndsWith(".css") &&
+                        if (!allSite.ContainsKey(item)  && !item.EndsWith(".css") &&
                             !item.EndsWith(".js") && !item.EndsWith(".jpg") && !item.EndsWith(".jpeg") &&
                             !item.EndsWith(".gif") && !item.EndsWith(".png") && !item.EndsWith(".ico"))
                         {

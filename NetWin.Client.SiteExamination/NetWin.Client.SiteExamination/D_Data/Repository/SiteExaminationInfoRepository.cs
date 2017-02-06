@@ -50,11 +50,11 @@ namespace NetWin.Client.SiteExamination.D_Data.Repository
             string sql = string.Empty;
             if (string.IsNullOrEmpty(siteUrl))
             {
-                sql = "select SiteId,SiteUrl,CompletedOn from SiteExaminationInfo where IsCompleted=1  ORDER BY CompletedOn DESC LIMIT 10;";
+                sql = "select SiteId,SiteUrl,CompletedOn from SiteExaminationInfo where IsCompleted=1  ORDER BY CompletedOn DESC LIMIT 5;";
             }
             else
             {
-                sql = string.Format("select SiteId,SiteUrl,CompletedOn from SiteExaminationInfo where IsCompleted=1 and SiteUrl like '%{0}%' ORDER BY CompletedOn DESC LIMIT 10;", siteUrl.Trim());
+                sql = string.Format("select SiteId,SiteUrl,CompletedOn from SiteExaminationInfo where IsCompleted=1 and SiteUrl like '%{0}%' ORDER BY CompletedOn DESC LIMIT 5;", siteUrl.Trim());
             }
 
             DataTable dt = Shove.Database.SQLite.Select(SqLiteConnection, sql);

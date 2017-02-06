@@ -36,7 +36,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
 
             try
             {
-                ResponseMessage responseMessage = HttpHelper.RequestSite(url, 10);
+                ResponseMessage responseMessage = HttpHelper.RequestSite(url, 20);
                 return responseMessage;
             }
             catch (Exception exception)
@@ -186,9 +186,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                     var expireDate = TextHelper.Truncation(ageMessage, "过期时间为", ")");
                     outSite.ExpireDate = (DateTime.ParseExact(expireDate, "yyyy年MM月dd日", null) - DateTime.Now).Days / 30;
                     var date = TextHelper.Truncation(ageMessage, "（");
-                    LogHelper.Info("date" + date);
                     var year = Int32.Parse(string.IsNullOrEmpty(TextHelper.Truncation(date, "年")) ? "0" : TextHelper.Truncation(date, "年"));
-                    LogHelper.Info("year" + year);
                     var month = Int32.Parse(string.IsNullOrEmpty(TextHelper.Truncation(date, "年", "月")) ? "0" : TextHelper.Truncation(date, "年", "月"));
                     //域名年龄
                     outSite.DomainAge = year * 12 + month;

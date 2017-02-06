@@ -95,7 +95,7 @@ namespace NetWin.Client.SiteExamination.C_Module
                 foreach (var item in HttpLinks)
                 {
                     if (item.Contains(DomainName))
-                        list.Add(item);
+                        list.Add(item.TrimEnd('/'));
                 }
                 return list;
             }
@@ -425,7 +425,6 @@ namespace NetWin.Client.SiteExamination.C_Module
             {
                 if (DateTime.Now.AddMinutes(-5) < LastModified)
                 {
-                    LogHelper.Info("动态网站:" + CurrentUrlUrl + ",缓存时间:" + LastModified);
                     return true;
                 }
                 else
