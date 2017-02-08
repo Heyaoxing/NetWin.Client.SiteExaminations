@@ -39,9 +39,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
                     WingManCount += 1;
 
-                    var level = RegexHelper.MatchCount(site.CurrentUrlUrl.Replace(site.SiteUrl, ""), "/");
-
-                    if (level <= 3)
+                    if (!RegexHelper.CheckLevel(site.CurrentUrlUrl))
                     {
                         AimsCount += 1;
                     }
@@ -54,14 +52,15 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     break;
                 case "insidelinkcount":
-                    foreach (var item in site.InsideLinks)
-                    {
-                        if (!InsideLinks.Contains(item))
-                        {
-                            InsideLinks.Add(item);
-                        }
-                    }
-                    AimsCount = InsideLinks.Count;
+                    //foreach (var item in site.InsideLinks)
+                    //{
+                    //    if (!InsideLinks.Contains(item))
+                    //    {
+                    //        InsideLinks.Add(item);
+                    //    }
+                    //}
+                    if (site.SiteUrl != SourceUrl && site.StatusCode != 502 && site.StatusCode != 0)
+                        AimsCount += 1;
                     break;
 
                 case "nullsite":
@@ -69,10 +68,13 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     SourceUrl = string.Empty;
                     if (string.IsNullOrEmpty(site.InnerText) || site.StatusCode == 404)
                     {
-
                         AimsCount = AimsCount + 1;
                     }
-                    WingManCount++;
+
+                    if (site.StatusCode != 502 && site.StatusCode != 0)
+                    {
+                        WingManCount++;
+                    }
 
                     if (AimsCount != 0)
                     {

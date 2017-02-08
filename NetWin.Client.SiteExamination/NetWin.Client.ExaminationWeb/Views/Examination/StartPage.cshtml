@@ -99,7 +99,6 @@
             <div>
                 <div class="box box-widget widget-user-2">
                     <div class="widget-user-header bg-green xn_basic_tit" id="scrod_bg_color">
-                   
                         <div class="col-md-12">
                             <div class="widget-user-header">
                                 <div class="xn_index_head">
@@ -108,12 +107,12 @@
                                     </div>
                                     <div class="xn_index_head2">
                                         <h3 style="margin-top: 10px; font-family: 微软雅黑; font-weight: bold; font-size: 30px;
-                                                                                                                                                                                            color: White">
+                                            color: White">
                                             网站体检系统</h3>
                                     </div>
                                     <div class="xn_index_head3">
-                                        <a href="javascript:void(0);" style="color: white; font-size: 18px; font-family: 微软雅黑; padding-top: 10px;" onclick="GoBack()">
-                                            < 返回首页</a>
+                                        <a href="javascript:void(0);" style="color: white; font-size: 18px; font-family: 微软雅黑;
+                                            padding-top: 10px;" onclick="GoBack()">< 返回首页</a>
                                     </div>
                                 </div>
                             </div>
@@ -121,42 +120,51 @@
                         <div class="row">
                             <div class="xn_basic_tit_f">
                                 <div class="xn_basic_tit_f1">
-                                    <div class="xn_basic_tit_f11" style=" z-index:99; padding-left: -10px;">
-                                        <h2 id="score" style="font-family: 微软雅黑;">
+                                    <div class="xn_basic_tit_f11" style="z-index: 99; padding-left: -10px;">
+                                        <h2 id="score" class="scored" style="font-family: 微软雅黑; color:#00a65a;">
                                             100</h2>
-                                            <p style="font-family: 微软雅黑; font-size: 12px;">分</p>
+                                        <p  class="scored" style="font-family: 微软雅黑; font-size: 12px; color:#00a65a;">
+                                            分</p>
                                     </div>
                                     @*<img id="view_icon" src="@Url.Content("~/Content/images/xn_result_ll.png")" style="margin-left: 12px; margin-top: 5px;">*@
-                                    <p class="l-rollin rotate" style="background-image: url(../../Content/images/tab02.png)"></p>
-                                    <p class="l-scorll"></p>
+                                    <p class="l-rollin rotate" style="background-image: url(../../Content/images/tab02.png)">
+                                    </p>
+                                    <p class="l-scorll">
+                                    </p>
                                 </div>
                                 <div class="xn_basic_tit_f2">
                                     <span id="url_view" style="text-align: left; font-size: 30px; color: White">目前查询的是:</span>
-                                    <span style="text-align: left; font-size: 30px; color: White" id="siteUrl">@url</span>
-                                    <span id="features" style="float: right; margin-top: 30px;z-index: 99; position: absolute;">
-                                        <button class='xn_btn' disabled="disabled" style="background-color: #118D54; " type='button'
-                                            onclick="stop()">
-                                            取消</button>
+                                    <span style="text-align: left; font-size: 30px; color: White; width: 360px;" id="siteUrl">
                                     </span>
-                                    <div class="progress progress-sm active view_checking" style="margin-top: 40px; height: 15px; width: 510px;">
+                                    <div class="progress progress-sm active view_checking" style="margin-top: 40px; height: 15px;
+                                        width: 510px;">
                                         <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
-                                             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="process">
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="process">
                                             <span class="sr-only">20% Complete</span>
                                         </div>
                                     </div>
                                     <div style="margin-top: 40px; font-size: 20px; font-family: 微软雅黑; color: White;"
-                                         class="view_checking">
+                                        class="view_checking">
                                         <span>正在为您检测：</span><span class="text-muted" id="view" style="font-family: 微软雅黑;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              color: White;"></span></div>
+                                            color: White;"></span></div>
                                     <div style="font-size: 20px; display: none;" class="view_result">
                                         <span id="result_text" style="color: white"></span>
                                     </div>
                                 </div>
+                                <div class="xn_basic_tit_f3">
+                                    <span id="features" style="float: right; margin-top: 28px; z-index: 99; position: absolute;">
+                                        <button class='xn_btn' disabled="disabled" style="background-color: #118D54;" type='button'
+                                            onclick="stop()">
+                                            取消</button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                     <!--线条走动-->
-                    <p class="l-headline"></p>
-                    <p class="l-headline01"></p>
+                        <!--线条走动-->
+                        <p class="l-headline">
+                        </p>
+                        <p class="l-headline01">
+                        </p>
                     </div>
                     <div class="row">
                         <div class="xn_nav">
@@ -174,6 +182,7 @@
         </div>
     }
 </body>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.animate-colors-min.js")"></script>
 <script type="text/javascript">
         var request = new Array();
         var siteId = 0;
@@ -189,7 +198,11 @@
         });
 
         function init() {
+             if (sitelUrl.length > 20) {
+             $("#siteUrl").text(sitelUrl.substring(0,20)+"...");
+             } else {
              $("#siteUrl").text(sitelUrl);
+             }
            if ('@isHostory.ToString().ToLower()' == 'false') {
                $("#view").text("是否需要登录...");
                checkSite_interval = setInterval(checkSite, "1000");
@@ -202,7 +215,11 @@
                    alert(e);
                } 
                sitelUrl = result.SiteUrl;
-              $("#siteUrl").text(sitelUrl);
+             if (sitelUrl.length > 20) {
+             $("#siteUrl").text(sitelUrl.substring(0,20)+"...");
+             } else {
+             $("#siteUrl").text(sitelUrl);
+             }
               load('@siteId');
            }
         }
@@ -222,7 +239,12 @@
             } 
             if (result.Result) {
                 sitelUrl = result.Data;
-              $("#siteUrl").text(sitelUrl);
+
+             if (sitelUrl.length > 20) {
+             $("#siteUrl").text(sitelUrl.substring(0,20)+"...");
+             } else {
+             $("#siteUrl").text(sitelUrl);
+             }
                 start();
             } else {
                 window.location.href = "@Url.Action("Index")?isLogin=true&message="+result.Message+"&url"+sitelUrl;
@@ -331,9 +353,9 @@
                     } else {
                         $("#detail_name_" + v[1]).css('color', 'red');
                         $("#detail_" + v[1]).html("<span onclick='modal_mouseover(this)'  siteId='" + v[0] + "' detailId='" + v[1] + "' ><img src='@Url.Content("~/Content/images/xn_web_basics_01.png")' class='icon_size' ></span>");
-                      //  cach_score=cach_score+result.Data.Score;
-                        score = score - result.Data.Score;
-                      $("#score").text(score);
+                        cach_score=cach_score+result.Data.Score;
+                      //  score = score - result.Data.Score;
+                    //  $("#score").text(score);
                         problem++;
                         $("#problem").text(problem);
                     }
@@ -343,6 +365,10 @@
                 }
             });
             request = cach;
+            if (cach_score > 0) {
+                clearTimeout(interval);
+                score_interval=setInterval(ChangeScore, "80");
+            }
               var width=((((item_count - request.length) / item_count).toFixed(2) * 100) + i);
              if (width < 95) {
                  $("#process").css("width", width + "%");
@@ -352,30 +378,46 @@
                  $("#process").css("width",(((item_count - request.length) / item_count).toFixed(2) * 100)  + "%");
              }
 
-            if (request.length <= 0) {
-                isStart = false;
-                clearTimeout(interval);
-                $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检完成");
-                $(".item_score").css("visibility", "visible");
-                $("#Export").html("<a href='javascript:void(0);' onclick=\"ExportReport()\">生成报告</a>");
-                $("#features").html("<button class='xn_btn' type='button' style='background:#00A65A; z-index: 99;'  onclick='restart()'>开始体检</button>");
-                $(".view_checking").css('display', 'none');
-                $(".view_result").css('display', 'block');
-                $("#result_text").html("<span style='font-family:微软雅黑;'>您的网站体检得分是<span style='font-size:50px;'>" + score + "</span>分，建议您对网站进行优化</span>");
-                $("#url_view").css('display', 'none');
-                StopBackColor();
-                url_input();
-                $(".l-rollin").removeClass("rotate");
+               
+          
+}
+
+        var score_interval;
+        function ChangeScore() {
+            if (cach_score <= 0) {
+                clearTimeout(score_interval);
+                interval = setInterval(chat, "3000");
+                if (request.length <= 0&&cach_score <= 0) {
+                    isStart = false;
+                    clearTimeout(interval);
+                    $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检完成");
+                    $(".item_score").css("visibility", "visible");
+                    $("#Export").html("<a href='javascript:void(0);' onclick=\"ExportReport()\">生成报告</a>");
+                    $("#features").html("<button class='xn_btn' type='button' style=' z-index: 99;'  onclick='restart()'>开始体检</button>");
+                    $(".view_checking").css('display', 'none');
+                    $(".view_result").css('display', 'block');
+                    $("#result_text").html("<span style='font-family:微软雅黑;'>您的网站体检得分是<span style='font-size:50px;'>" + score + "</span>分，建议您对网站进行优化</span>");
+                    $("#url_view").css('display', 'none');
+                    StopBackColor();
+                    url_input();
+                    $(".l-rollin").removeClass("rotate");
+                }
+            } else {
+                cach_score = cach_score - 1;
+                score = score - 1;
+                $("#score").text(score);
             }
-            
+
+
             if (score < 80 && score >= 50) {
-               $(".l-rollin").css({ "background": "url(../../Content/images/tab03.png)" });
                 warning();
+                $(".l-rollin").css({ "background": "url(../../Content/images/tab03.png)" });
             } else if (score < 50) {
                 danger();
-               $(".l-rollin").css({ "background": "url(../../Content/images/tab01.png)" });
+                $(".l-rollin").css({ "background": "url(../../Content/images/tab01.png)" });
             }
-}
+          
+        }
 
         //导出体检报告
         function ExportReport() {
@@ -399,11 +441,12 @@
             } 
             if (json.Result) {
                 clearTimeout(interval);
-                 $("#view_icon").attr("src", "@Url.Content("~/Content/images/cancel.png")");
+                clearTimeout(score_interval);
+                $("#view_icon").attr("src", "@Url.Content("~/Content/images/cancel.png")");
                 $(".item_score").css("visibility", "visible");
                 $("#scrod_bg_color").css("background","url(@Url.Content("~/Content/images/basic_banner.png"))");
                 $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检取消");
-                $("#features").html("<button class='xn_btn' style='background:#00A65A; z-index: 99;' onclick='restart()'>开始体检</button>");
+                $("#features").html("<button class='xn_btn' style='z-index: 99;background-color:#FD9F5D;' onclick='restart()'>开始体检</button>");
                 $(".view_checking").css('display', 'none');
                 $(".view_result").css('display', 'block');
                 $("#result_text").html("<span>体检被取消！目前您的网站发现有<span style='font-size:50px;'>" + problem + "</span>项问题！<span>");
@@ -428,29 +471,26 @@
 
         function success() {
             clearColor();
-        //    $("#scrod_bg_color").css("background","url(@Url.Content("~/Content/images/optimization_safe.png"))");
             $("#scrod_bg_color").addClass("bg-green");
             $("#process").addClass("progress-bar-success");
-            $("#scrod").css("background-color", "darkturquoise");
+            $(".scored").css("color", "#00a65a");
             $(".xn_btn").css("background-color","#118D54");
         }
 
         function warning() {
             clearColor();
-        //    $("#scrod_bg_color").css("background","url(@Url.Content("~/Content/images/xn_safe.png"))");
             $("#scrod_bg_color").addClass("bg-yellow");
-            $("#process").addClass("progress-bar-warning");
-            $("#scrod").css("background-color", "#f0ad4e");
+            $("#process").css("background-color","#f39c12");
+            $(".scored").css("color","#f0ad4e");
             $(".xn_btn").css("background-color","#FD9F5D");
         }
 
         function danger() {
             clearColor();
-          //  $("#scrod_bg_color").css("background","url(@Url.Content("~/Content/images/xn_result.png"))");
             $("#scrod_bg_color").addClass("bg-red");
-            $("#process").addClass("progress-bar-danger");
-            $("#scrod").css("background-color", "#f45344");
-            $(".xn_btn").css("background-color","#E44007");
+            $("#process").css("background-color","#dd4b39");
+            $(".scored").css("color", "#f45344");
+            $(".xn_btn").css("background-color","#d7000f");
         }
 
 
@@ -522,7 +562,6 @@
                    window.location.href = '@Url.Action("Index")?isError=false&message=&url=' + sitelUrl;
                }
            } else {
-                   stop();
                    window.location.href = '@Url.Action("Index")?isError=false&message=&url=' + sitelUrl;
            }
        }

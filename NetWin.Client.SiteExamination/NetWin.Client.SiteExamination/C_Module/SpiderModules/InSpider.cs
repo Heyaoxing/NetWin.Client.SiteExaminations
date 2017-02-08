@@ -30,7 +30,13 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
 
             try
             {
-                ResponseMessage responseMessage = HttpHelper.RequestSite(url, SysConfig.RequestSiteTimeOut);
+                int timeout = SysConfig.RequestSiteTimeOut;
+                if (url == SeedSiteUrl)
+                {
+                    timeout = 30;
+                }
+
+                ResponseMessage responseMessage = HttpHelper.RequestSite(url, timeout);
                 return responseMessage;
             }
             catch (Exception exception)
@@ -92,7 +98,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
 
         private Thread spiderThread;
 
-        static EventWaitHandle wh = new AutoResetEvent(false);
+         EventWaitHandle wh = new AutoResetEvent(false);
         /// <summary>
         /// 当前正在运行的抓取网页线程总数
         /// </summary>
@@ -139,10 +145,12 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                             LogHelper.Info("抓取页:" + url);
                             ThreadPool.QueueUserWorkItem(WorkItem, url);
                         }
-
+                        LogHelper.Info("线程数:" + current);
                         if (current > 0)
                         {
+                            LogHelper.Info("等待通知");
                             wh.WaitOne(); // 等待通知
+                            LogHelper.Info("等待结束");
                         }
 
                         //判断是否达到系统设置的爬取数量限制
@@ -154,7 +162,6 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                         }
 
                         except = EnumerableHelper.Except<string>(allSite.Keys, spidered.List);
-                        except.Remove(SeedSiteUrl);
                         LogHelper.Info("except:" + except.Count);
                         if (except.Count == 0)
                         {
@@ -199,6 +206,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                             allSite.Add(item, depth + 1);
                         }
                     }
+                    LogHelper.Info(url + "的内链数:" + spiderResult.InsideLinks.Count);
                 }
             }
             catch (Exception exception)
@@ -212,6 +220,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 if (current <= 0)
                 {
                     wh.Set(); // 唤醒
+                    LogHelper.Info("执行了唤醒");
                 }
             }
         }

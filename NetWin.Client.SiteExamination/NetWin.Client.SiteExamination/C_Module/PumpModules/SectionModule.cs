@@ -110,7 +110,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                 case "desccontainsword":
                     var keys = new List<string>();
 
-                    if (site.StatusCode == 404)
+                    if (site.StatusCode == 404 || site.StatusCode == 502|| site.StatusCode ==0)
                     {
                         AimsCount = 5;
                         AimsContent = string.Empty;

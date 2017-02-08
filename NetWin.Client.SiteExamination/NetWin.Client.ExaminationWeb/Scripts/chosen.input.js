@@ -143,7 +143,7 @@ mSift.prototype = {
             }
             cResult += '<li style="padding:0 5px;line-h eight:20px;cursor:default; color:#222; text-align: left; " onmouseover="' +
 _this.oo + '.ChangeOn(this);' + _this.oo + '.SelIndex=' + i + ';" ><span onmousedown="' + _this.oo + '.Select();">'
-+ _this.ReData[i].SiteUrl.replace(cRegEx, function (s) { return '<span style="background:#ff9;font-weight:bold;font-style:normal;color:#e60;">' + s + '</span>'; }) + '<br/>上次体检时间:' + _this.ReData[i].CompletedOnString + '</span><a style="cursor:pointer;float:right;width:200px;font-size:18px;" onclick="SelectHistory(' + _this.ReData[i].SiteId + ')" t=' + _this.ReData[i].SiteId + '>&nbsp;&nbsp;查看历史记录&nbsp;&nbsp;</a>' + '</li>';
++ _this.ReData[i].SiteUrl.replace(cRegEx, function (s) { return '<span style="background:#ff9;font-weight:bold;font-style:normal;color:#e60;">' + s + '</span>'; }) + '<br/>上次体检时间:' + _this.ReData[i].CompletedOnString + '</span><a  onmousedown="selectHistory(' + this.ReData[i].SiteId + ')"  style="cursor:pointer;float:right;width:200px;font-size:18px;">&nbsp;&nbsp;查看历史记录&nbsp;&nbsp;</a>' + '</li>';
         }
         if (cResult == '') { _this.Clear(); }
         else {
@@ -173,5 +173,10 @@ _this.oo + '.ChangeOn(this);' + _this.oo + '.SelIndex=' + i + ';" ><span onmouse
             _this.SelIndex = 0;
         }
     }
+}
+
+
+function selectHistory(siteId) {
+    window.location.href = '/Examination/StartPage?examinationUrl=&isHostory=true&siteId=' + siteId;
 }
 

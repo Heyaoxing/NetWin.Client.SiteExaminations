@@ -72,6 +72,16 @@ namespace NetWin.Client.SiteExamination.B_Common
 
         #region 网页解析
 
+        /// <summary>
+        /// 判断是否三级外的url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static bool CheckLevel(string url)
+        {
+            const string pattern = @"https?://[\s\S]*?/[\s\S]*?/[\s\S]*?/[\s\S]*?/[\s\S]+";
+            return IsMatch(url, pattern);
+        }
 
         /// <summary>
         /// 匹配URL是否合法
@@ -245,8 +255,9 @@ namespace NetWin.Client.SiteExamination.B_Common
         {
             try
             {
-                const string pattern = "(?<=meta[^>]*?name=\"keywords\"[^>]*?content=\").*?(?=\")";
-                return Match(htmlContent, pattern);
+                const string pattern = "(?<=meta[^>]*?name[^>]*?=[^>]*?\"keywords\"[^>]*?content[^>]*?=[^>]*?\").*?(?=\")";
+                string result= Match(htmlContent, pattern);
+                return result;
             }
             catch (Exception)
             {
@@ -264,7 +275,7 @@ namespace NetWin.Client.SiteExamination.B_Common
         {
             try
             {
-                const string pattern = "(?<=meta[^>]*?name=\"description\"[^>]*?content=\").*?(?=\")";
+                const string pattern = "(?<=meta[^>]*?name[^>]*?=[^>]*?\"description\"[^>]*?content[^>]*?=[^>]*?\").*?(?=\")";
                 return Match(htmlContent, pattern);
             }
             catch (Exception)
@@ -327,7 +338,7 @@ namespace NetWin.Client.SiteExamination.B_Common
             List<string> links = new List<string>();
             try
             {
-                const string aPattern = "(?<=a[^>]*?href=\").*?(?=\")";
+                const string aPattern = "(?<=a[^>]*?href=[\"|']).*?(?=[\"|'])";
                 MatchCollection aMatch = Regex.Matches(htmlContent, aPattern, RegexOptions.IgnoreCase);
                 var alinks = new List<string>();
                 foreach (var item in aMatch)

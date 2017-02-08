@@ -264,6 +264,7 @@ namespace NetWin.Client.SiteExamination.E_Services
                         inSiteThread.Abort();
                         LogHelper.Info("外部线程注销");
                         inSiteThread = null;
+                        GC.Collect();
                         break;
                     }
                     else
@@ -362,6 +363,7 @@ namespace NetWin.Client.SiteExamination.E_Services
                         isEnd = true;
                         inSpider.Cancel();
                         inSpider.Abort();
+                        inSpider = null;
                         LogHelper.Info("收到外部停止信息");
                     }
 
@@ -377,11 +379,13 @@ namespace NetWin.Client.SiteExamination.E_Services
             }
             catch (Exception exception)
             {
+                inSpider.Abort();
                 inSpider.Cancel();
                 LogHelper.Error("内部资源处理异常:" + exception.StackTrace + exception.Message);
             }
             watch.Stop();
             LogHelper.Info("内部资源处理结束,总共用时(秒):" + watch.Elapsed.TotalSeconds);
+            GC.Collect();
         }
 
         /// <summary>

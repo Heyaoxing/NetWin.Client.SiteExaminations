@@ -27,7 +27,7 @@ namespace NetWin.Client.SiteExamination.A_Core.Config
         /// 是否为调试模式,调试模式下会写日志
         /// </summary>
 #if DEBUG
-        public static bool IsDebug = true;
+        public static bool IsDebug = false;
 #else
         public static  bool IsDebug = false;
 #endif
@@ -36,7 +36,7 @@ namespace NetWin.Client.SiteExamination.A_Core.Config
         /// <summary>
         /// 每次批量爬取的资源数
         /// </summary>
-        public static readonly int SpiderBatch =10;
+        public static readonly int SpiderBatch =5;
 
         /// <summary>
         /// 抓取层级限制,-1为无限制
