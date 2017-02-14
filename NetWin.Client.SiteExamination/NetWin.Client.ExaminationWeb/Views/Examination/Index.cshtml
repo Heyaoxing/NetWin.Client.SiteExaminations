@@ -47,4 +47,14 @@
     var oo = new mSift('oo', 10);
     //指定文本框对象建立特效
     oo.Create(document.getElementById('examinationUrl'));
+
+    if (navigator.appName == "Microsoft Internet Explorer") {
+        alert("请将犀牛云升级到最新版本再使用!");
+    } else {
+        try {
+            window.CallCSharpMethod("GetHistories", "http");
+        } catch (e) {
+            alert("请将犀牛云升级到最新版本再使用!");
+        }
+    }
 </script>

@@ -19,18 +19,24 @@ namespace NetWin.Client.SiteExamination.B_Common
         public static ResponseMessage RequestSite(string url, int timeOut = 10)
         {
             ResponseMessage responseMessage = new ResponseMessage();
+            ServicePointManager.DefaultConnectionLimit = 50;
+            HttpWebRequest webRequest = null;
+            HttpWebResponse webResponse = null;
             try
             {
+                webRequest = (HttpWebRequest)WebRequest.Create(url);
                 string htmlContent = string.Empty;
-                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
-                webRequest.Timeout = timeOut * 1000;//超时
+                webRequest.Timeout = timeOut * 1000; //超时
                 webRequest.Method = "GET"; //请求方法
+                webRequest.KeepAlive = false;
                 webRequest.Accept = "text/html"; //接受的内容
-                webRequest.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)"; ; //用户代理
-                webRequest.Credentials = CredentialCache.DefaultCredentials;
-                HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
+                webRequest.UserAgent =
+                    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.16 Safari/537.36";
+                ; //用户代理
+                //  webRequest.Credentials = CredentialCache.DefaultCredentials;
+                webResponse = (HttpWebResponse)webRequest.GetResponse();
 
-                string acceptEncoding = webResponse.Headers["Content-Encoding"] ?? "";//获得压缩格式
+                string acceptEncoding = webResponse.Headers["Content-Encoding"] ?? ""; //获得压缩格式
                 byte[] bytes;
                 if (acceptEncoding.Contains("gzip"))
                 {
@@ -51,7 +57,8 @@ namespace NetWin.Client.SiteExamination.B_Common
                 //判断不是utf8不转码,则进行在编码
                 if (encodingString.ToLower() != "utf-8")
                 {
-                    htmlContent = new StreamReader(IoHelper.BytesToStream(bytes), Encoding.GetEncoding(encodingString)).ReadToEnd();
+                    htmlContent =
+                        new StreamReader(IoHelper.BytesToStream(bytes), Encoding.GetEncoding(encodingString)).ReadToEnd();
                 }
                 responseMessage.InnerHtml = htmlContent;
                 responseMessage.StatusCode = Convert.ToInt32(webResponse.StatusCode);
@@ -72,6 +79,14 @@ namespace NetWin.Client.SiteExamination.B_Common
                     response.Close();
                 }
 
+            }
+            finally
+            {
+                if (webResponse != null)
+                    webResponse.Close();
+
+                if (webRequest != null) 
+                    webRequest.Abort();
             }
             return responseMessage;
         }

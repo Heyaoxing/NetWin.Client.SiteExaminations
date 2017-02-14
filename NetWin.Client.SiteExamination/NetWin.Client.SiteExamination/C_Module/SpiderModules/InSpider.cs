@@ -20,6 +20,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
             SeedSiteUrl = seedSiteUrl;
             _concurrentQueue = new ConcurrentQueue<InSite>();
             allSite = new ConcurrentDictionary();
+            _ct = false;
         }
 
         public string SeedSiteUrl { get; set; }
@@ -33,9 +34,8 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
                 int timeout = SysConfig.RequestSiteTimeOut;
                 if (url == SeedSiteUrl)
                 {
-                    timeout = 30;
+                    timeout = 20;
                 }
-
                 ResponseMessage responseMessage = HttpHelper.RequestSite(url, timeout);
                 return responseMessage;
             }
@@ -72,7 +72,7 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
         //存放所有链接
         private ConcurrentDictionary allSite;
         //是否停止抓取,根据资源是否爬去完成,或者是否达到系统设置的限制(SysConfig中设置)
-        private bool _ct = false;
+        private bool _ct;
 
         public bool CT
         {
@@ -98,11 +98,11 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
 
         private Thread spiderThread;
 
-         EventWaitHandle wh = new AutoResetEvent(false);
+        volatile EventWaitHandle wh;
         /// <summary>
         /// 当前正在运行的抓取网页线程总数
         /// </summary>
-        static volatile int current = 0;
+         volatile int current = 0;
 
         /// <summary>
         /// 取消线程
@@ -122,6 +122,8 @@ namespace NetWin.Client.SiteExamination.C_Module.SpiderModules
         /// <param name="url"></param>
         public void SpiderRun()
         {
+            wh = new AutoResetEvent(false);
+            current = 0;
             spiderThread = new Thread(() =>
             {
                 ConcurrentBag<string> spidered = new ConcurrentBag<string>();

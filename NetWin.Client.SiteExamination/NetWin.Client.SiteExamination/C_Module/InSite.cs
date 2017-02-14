@@ -263,7 +263,7 @@ namespace NetWin.Client.SiteExamination.C_Module
             {
                 if (string.IsNullOrEmpty(this.InnerHtmlFilter))
                     return new List<string>();
-                var httplinks = RegexHelper.GetALinks(InnerHtmlFilter, DomainNameWithProtocol);
+                var httplinks = RegexHelper.GetALinks(InnerHtmlFilter, CurrentUrlUrl);
                 return EnumerableHelper.Distinct<string>(httplinks);
             }
         }

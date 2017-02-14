@@ -111,6 +111,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="G_Document\Shove_SiteExamination.pdm" />
+    <None Include="G_Document\TJ对外API文档.docx" />
+    <None Include="G_Document\TJ概要设计方案.docx" />
+    <None Include="G_Document\体检系统设计流程.EAP" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="F_Api\" />

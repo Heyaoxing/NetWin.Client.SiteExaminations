@@ -26,8 +26,13 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
 
             switch (AimsContainText)
             {
-
                 case "keywords":
+                    if (site.StatusCode == 404 || site.StatusCode == 502 || site.StatusCode == 0)
+                    {
+                        AimsCount = 5;
+                        AimsContent = string.Empty;
+                        break;
+                    }
                     AimsCount = site.KeyWords.Count;
                     break;
                 case "description":
@@ -93,6 +98,12 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                     }
                     break;
                 case "nulllink":
+                    if (site.StatusCode == 404 || site.StatusCode == 502 || site.StatusCode == 0)
+                    {
+                        AimsContent = "未检查出空链接";
+                        SourceUrl = string.Empty;
+                        break;
+                    }
                     AimsCount = site.EmptyLinkCount;
                     if (AimsCount > 0)
                     {

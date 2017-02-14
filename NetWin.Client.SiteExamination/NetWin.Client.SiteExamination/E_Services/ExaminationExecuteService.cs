@@ -136,6 +136,8 @@ namespace NetWin.Client.SiteExamination.E_Services
                     }
                     spidered.Clear();
 
+                    wh = new AutoResetEvent(false);
+                    current = 0;
                     for (int i = 0; i < (links.Count > 5 ?5: links.Count); i++)
                     {
                         lock (_obj)
@@ -170,7 +172,7 @@ namespace NetWin.Client.SiteExamination.E_Services
             catch (Exception exception)
             {
                 LogHelper.Error("体检资源登录检查异常:" + exception.Message);
-            }
+            } 
             return reslutModel;
         }
 
@@ -179,15 +181,16 @@ namespace NetWin.Client.SiteExamination.E_Services
         /// <summary>
         /// 当前正在运行的抓取网页线程总数
         /// </summary>
-        static volatile int current = 0;
-        static EventWaitHandle wh = new AutoResetEvent(false);
+        private volatile int current = 0;
+
+        volatile EventWaitHandle wh;
 
         private void WorkItem(object obj)
         {
             try
             {
                 string url = (string)obj;
-                var response = HttpHelper.RequestSite(url);
+                var response = HttpHelper.RequestSite(url, 20);
                 lock (_obj)
                 {
                     spidered.Add(response.ResponseUrls);
@@ -264,7 +267,6 @@ namespace NetWin.Client.SiteExamination.E_Services
                         inSiteThread.Abort();
                         LogHelper.Info("外部线程注销");
                         inSiteThread = null;
-                        GC.Collect();
                         break;
                     }
                     else
@@ -385,7 +387,6 @@ namespace NetWin.Client.SiteExamination.E_Services
             }
             watch.Stop();
             LogHelper.Info("内部资源处理结束,总共用时(秒):" + watch.Elapsed.TotalSeconds);
-            GC.Collect();
         }
 
         /// <summary>

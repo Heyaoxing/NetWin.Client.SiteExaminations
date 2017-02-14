@@ -134,7 +134,7 @@
                                 </div>
                                 <div class="xn_basic_tit_f2">
                                     <span id="url_view" style="text-align: left; font-size: 30px; color: White">目前查询的是:</span>
-                                    <span style="text-align: left; font-size: 30px; color: White; width: 360px;" id="siteUrl">
+                                    <span style="text-align: left; font-size: 25px; color: White; width: 360px;" id="siteUrl">
                                     </span>
                                     <div class="progress progress-sm active view_checking" style="margin-top: 40px; height: 15px;
                                         width: 510px;">
@@ -145,7 +145,7 @@
                                     </div>
                                     <div style="margin-top: 40px; font-size: 20px; font-family: 微软雅黑; color: White;"
                                         class="view_checking">
-                                        <span>正在为您检测：</span><span class="text-muted" id="view" style="font-family: 微软雅黑;
+                                        <span id="title_tip">正在为您检测：</span><span class="text-muted" id="view" style="font-family: 微软雅黑;
                                             color: White;"></span></div>
                                     <div style="font-size: 20px; display: none;" class="view_result">
                                         <span id="result_text" style="color: white"></span>
@@ -153,7 +153,7 @@
                                 </div>
                                 <div class="xn_basic_tit_f3">
                                     <span id="features" style="float: right; margin-top: 28px; z-index: 99; position: absolute;">
-                                        <button class='xn_btn' disabled="disabled" style="background-color: #118D54;" type='button'
+                                        <button class='xn_btn' disabled="disabled" style="background-color:darkgray;" type='button'
                                             onclick="stop()">
                                             取消</button>
                                     </span>
@@ -192,7 +192,6 @@
         var isReplace = '@isReplace';
         var isStart = false;//是否进行体检
         $(function () {
-            success();
            StartBackColor();
             init();
         });
@@ -212,7 +211,7 @@
                try {
                    result = jQuery.parseJSON(window.CallCSharpMethod("GetSiteExaminationInfo",""+@siteId));
                } catch (e) {
-                   alert(e);
+                   alert("请将犀牛云升级到最新版本再使用!");
                } 
                sitelUrl = result.SiteUrl;
              if (sitelUrl.length > 20) {
@@ -235,7 +234,7 @@
             try {
                 result = jQuery.parseJSON(window.CallCSharpMethod("CheckSite",sitelUrl+","+(isReplace?1:0)));
             } catch (e) {
-                alert(e);
+                alert("请将犀牛云升级到最新版本再使用!");
             } 
             if (result.Result) {
                 sitelUrl = result.Data;
@@ -247,20 +246,22 @@
              }
                 start();
             } else {
-                window.location.href = "@Url.Action("Index")?isLogin=true&message="+result.Message+"&url"+sitelUrl;
+                window.location.href = "@Url.Action("Index")?isLogin=true&message=" + result.Message + "&url" + sitelUrl;
             }
         }
+
         var item_count = 0;
+
         //启动体检
         function start() {
-         
+
             isStart = true;
             $("#Export").empty();
-            $(".detailname").css('color','black');
-            $(".itemname").css('color','black');
+            $(".detailname").css('color', 'black');
+            $(".itemname").css('color', 'black');
             success();
-            $(".view_checking").css('display','block');
-            $(".view_result").css('display','none');
+            $(".view_checking").css('display', 'block');
+            $(".view_result").css('display', 'none');
             request = new Array();
             siteId = 0;
             i = 1;
@@ -269,13 +270,13 @@
 
             $("#score").text(score);
             //调用启动体检
-         //   var startjson = jQuery.parseJSON(window.external.Start(sitelUrl));
+            //   var startjson = jQuery.parseJSON(window.external.Start(sitelUrl));
             var startjson;
             try {
-                 startjson = jQuery.parseJSON(window.CallCSharpMethod("Start",sitelUrl));
+                startjson = jQuery.parseJSON(window.CallCSharpMethod("Start", sitelUrl));
             } catch (e) {
-                alert(e);
-            } 
+                alert("请将犀牛云升级到最新版本再使用!");
+            }
 
             if (!startjson.Result) {
                 alert(startjson.Message);
@@ -284,9 +285,15 @@
         }
 
         var interval;
+
         //启动定时器
         function run() {
-            $("#view").text("网站域名年龄");
+            if ('@isHostory.ToString().ToLower()' == 'false') {
+                $("#view").text("网站域名年龄");
+            } else {
+                $("#view").text("正在查询历史记录");
+                $("#title_tip").empty();
+            }
             interval = setInterval(chat, "3000");
             $("#features").html("<button class='xn_btn' type='button'  style='background-color:#118D54 ;z-index: 99;' onclick=\"stop()\">取消</button>");
         }
@@ -294,12 +301,11 @@
         function load(Ids) {
             siteId = Ids;
             item_count = 0;
-           // var json = jQuery.parseJSON(window.external.GetExaminationItem());
             var json;
             try {
              json = jQuery.parseJSON(window.CallCSharpMethod("GetExaminationItem",""));
             } catch (e) {
-                alert(e);
+                alert("请将犀牛云升级到最新版本再使用!");
             } 
             var list = $("#list");
             list.empty();
@@ -343,7 +349,7 @@
                 try {
                     result = jQuery.parseJSON(window.CallCSharpMethod("GetDetailResult",v[0]+","+v[1]));
                 } catch (e) {
-                    alert(e);
+                    alert("请将犀牛云升级到最新版本再使用!");
                 } 
                 if (result.Result) {
                     if (result.Data.IsPass) {
@@ -353,9 +359,9 @@
                     } else {
                         $("#detail_name_" + v[1]).css('color', 'red');
                         $("#detail_" + v[1]).html("<span onclick='modal_mouseover(this)'  siteId='" + v[0] + "' detailId='" + v[1] + "' ><img src='@Url.Content("~/Content/images/xn_web_basics_01.png")' class='icon_size' ></span>");
-                        cach_score=cach_score+result.Data.Score;
-                      //  score = score - result.Data.Score;
-                    //  $("#score").text(score);
+                        cach_score = cach_score + result.Data.Score;
+                        //  score = score - result.Data.Score;
+                        //  $("#score").text(score);
                         problem++;
                         $("#problem").text(problem);
                     }
@@ -365,6 +371,15 @@
                 }
             });
             request = cach;
+
+            if ('@isHostory.ToString().ToLower()' == 'true') {
+                score = score - cach_score;
+                $("#score").text(score);
+                cach_score = 0;
+                clearTimeout(interval);
+                ChangeScore();
+            }
+
             if (cach_score > 0) {
                 clearTimeout(interval);
                 score_interval=setInterval(ChangeScore, "80");
@@ -377,9 +392,6 @@
              } else {
                  $("#process").css("width",(((item_count - request.length) / item_count).toFixed(2) * 100)  + "%");
              }
-
-               
-          
 }
 
         var score_interval;
@@ -425,7 +437,7 @@
             try {
                 window.CallCSharpMethod("ExportFile",""+siteId);
             } catch (e) {
-                alert(e);
+                alert("请将犀牛云升级到最新版本再使用!");
             } 
         }
 
@@ -437,13 +449,13 @@
             try {
                 json = jQuery.parseJSON(window.CallCSharpMethod("Stop",""));
             } catch (e) {
-                alert(e);
+                alert("请将犀牛云升级到最新版本再使用!");
             } 
             if (json.Result) {
                 clearTimeout(interval);
                 clearTimeout(score_interval);
+                $("#score").text(score-cach_score);
                 $("#view_icon").attr("src", "@Url.Content("~/Content/images/cancel.png")");
-                $(".item_score").css("visibility", "visible");
                 $("#scrod_bg_color").css("background","url(@Url.Content("~/Content/images/basic_banner.png"))");
                 $("#view").text("定时执行:" + i + ",需要查询的数:" + request.length + ",状态:体检取消");
                 $("#features").html("<button class='xn_btn' style='z-index: 99;background-color:#FD9F5D;' onclick='restart()'>开始体检</button>");
@@ -454,10 +466,12 @@
                 $(request).each(function (i, v) {
                       $("#detail_" + v[1]).text("");
                 });
-
                 StopBackColor();
                 url_input();
+                $(".l-scorll").css("background","url(@Url.Content("~/Content/images/xn_basic_tit_f1.png"))");
                 $(".l-rollin").removeClass("rotate");
+                $(".l-rollin").css("background-image","");
+                $(".xn_basic_tit_f11").empty();
             } else {
                 alert("取消失败：" + json.Message);
             }
@@ -513,7 +527,7 @@
             try {
               result = jQuery.parseJSON(window.CallCSharpMethod("GetDetailResult",siteId+","+detailId));
             } catch (e) {
-              alert(e);
+              alert("请将犀牛云升级到最新版本再使用!");
             } 
             if (result.Result) {
                 var contentText = "<div class='xn_basics_close'> <img src='@Url.Content("~/Content/images/xn_close.png")' onclick='modal_mouseout()'> </div>";

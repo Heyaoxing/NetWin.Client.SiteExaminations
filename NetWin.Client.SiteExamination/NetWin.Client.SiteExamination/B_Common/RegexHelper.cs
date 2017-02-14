@@ -331,9 +331,9 @@ namespace NetWin.Client.SiteExamination.B_Common
         /// 获取a标签中的链接,如果出现“/”开头的链接，则将域名添加上去 成为合法链接
         /// </summary>
         /// <param name="htmlContent"></param>
-        /// <param name="domainName">域名</param>
+        /// <param name="currentUrl"></param>
         /// <returns></returns>
-        public static List<string> GetALinks(string htmlContent, string domainName)
+        public static List<string> GetALinks(string htmlContent, string currentUrl)
         {
             List<string> links = new List<string>();
             try
@@ -343,18 +343,19 @@ namespace NetWin.Client.SiteExamination.B_Common
                 var alinks = new List<string>();
                 foreach (var item in aMatch)
                 {
-                    if (!item.ToString().Contains("#"))
+                    string url = item.ToString();
+                    if (!url.Contains("#") && !url.Contains("javascript") && !string.IsNullOrEmpty(url))
                         alinks.Add(item.ToString());
                 }
                 foreach (var item in alinks)
                 {
-                    if (item.StartsWith("/") || item.StartsWith("\\"))
-                    {
-                        links.Add(new Uri(new Uri(domainName), item).ToString());
-                    }
-                    else if (CheckURLByString(item))
+                    if (CheckURLByString(item))
                     {
                         links.Add(item);
+                    }
+                    else
+                    {
+                        links.Add(new Uri(new Uri(currentUrl), item).ToString());
                     }
                 }
             }
