@@ -71,10 +71,7 @@ namespace NetWin.Client.SiteExamination.C_Module.PumpModules
                         AimsCount = AimsCount + 1;
                     }
 
-                    if (site.StatusCode != 502 && site.StatusCode != 0)
-                    {
-                        WingManCount++;
-                    }
+                    WingManCount++;
 
                     if (AimsCount != 0)
                     {
